@@ -1,35 +1,46 @@
 # Purpose of this script is to allow easy compiling of a C++ project.
 
-# Source directories (.cpp files)
-# If there are multiple dictories, separate by spaces
-SRCDIR   	= 
-# Directory where object files will be placed (.o files)
-OBJDIR   	= 
-# Compiled target name (executable)
-TARGET   	= 
-# Error Log
-ERRLOG 		= error.log
+# Source directories separated by space
+SRCDIR   = ./ src/
+
+# Directory where object files will be placed
+OBJDIR   = obj/
+
+# Include directories separated by space
+INCDIR   = include/
+
+# Directory where binary file will be placed
+BINDIR   = bin/
+
+# Name of the result file
+TARGET   = app
 
 # Retrive list of the source files
-SRCS      = $(wildcard $(addsuffix *.cpp,$(SRCDIR)))
+SRC      = $(wildcard $(addsuffix *.cpp,$(SRCDIR)))
+
 # Generate list of the object files
-OBJS      = $(addprefix $(OBJDIR), $(patsubst %.cpp, %.o, $(notdir $(SRCS))))
+OBJ      = $(addprefix $(OBJDIR), $(patsubst %.cpp, %.o, $(notdir $(SRC))))
 
 VPATH    = $(SRCDIR)
+
 # Compiler
 CXX      = g++
+
 # Compilation flags
 CXXFLAGS = -g -Wall -MMD
 
-# executable
-$(TARGET): $(OBJS)
-	@$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
+$(TARGET): $(OBJ)
+	@echo Linking object files...
+	@mkdir -p $(BINDIR)
+	@$(CXX) $(CXXFLAGS) -o $(BINDIR)$@ $(OBJ)
 
-# object files; @ makes it so that the commands aren't displayed in the console
 $(OBJDIR)%.o: %.cpp
+	@echo Compiling $< in $@...
 	@mkdir -p $(OBJDIR)
-	@$(CXX) $(CXXFLAGS) -c -o $@ $<
+	@$(CXX) $(CXXFLAGS) $(addprefix -I,$(INCDIR)) -c -o $@ $<
 
 .PHONY: clean
+
 clean:
-	rm -f $(OBJDIR)* $(TARGET) $(ERRLOG)
+	@$(RM) -r $(OBJDIR)
+	@$(RM) -r $(BINDIR)
