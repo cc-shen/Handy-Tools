@@ -1,0 +1,19 @@
+#!/bin/bash
+# Changes %20 into underscores, %2C into commas, and spaces into underscore.
+
+if [ "$#" -ne "1" ]; then
+	echo "Error: missin file extension!" 1>&2
+	exit 1
+fi
+
+for x in *.$1; do
+	mv -- "$x" "${x// /_}"
+done
+
+for x in *.$1; do
+    mv -- "$x" "${x//%20/_}"
+done
+
+for x in *.$1; do
+    mv -- "$x" "${x//%2C/,}"
+done
