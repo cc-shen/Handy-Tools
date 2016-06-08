@@ -1,0 +1,58 @@
+\documentclass[]{article}
+\usepackage[margin = 1.5in]{geometry}
+\setlength{\parindent}{0in}
+\usepackage{amsfonts, amssymb, amsthm, mathtools, tikz, qtree, float, ae, aecompl, color, cleveref}
+\usepackage[lined]{algorithm2e}
+\usepackage[T1]{fontenc}
+%% REMEMBER TO FILL THIS TO BE COURSE SPECIFIC
+\usepackage[pdftex,
+  pdfauthor={Charles Shen},
+  pdftitle={Placeholder Course: Course-Name},
+  pdfsubject={Lecture notes from Placeholder Course: at the University of Waterloo},
+  pdfkeywords={CS 241, course notes, notes, Waterloo, University of Waterloo},
+  pdfproducer={LaTeX},
+  pdfcreator={pdflatex}]{hyperref}
+
+\DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
+
+\definecolor{darkish-blue}{RGB}{25,103,185}
+
+\hypersetup{
+    colorlinks,
+    citecolor=darkish-blue,
+    filecolor=darkish-blue,
+    linkcolor=darkish-blue,
+    urlcolor=darkish-blue
+}
+
+\theoremstyle{definition}
+\newtheorem*{defn}{Definition}
+\newtheorem*{theorem}{Theorem}
+\newtheorem*{corollary}{Corollary}
+\newtheorem{ex}{Example}[section]
+
+\crefname{ex}{Example}{Example}
+
+\setlength{\marginparwidth}{1.5in}
+\newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
+
+\makeatletter
+\def\blfootnote{\gdef\@thefnmark{}\@footnotetext}
+\makeatother
+
+\begin{document}
+  \let\ref\Cref
+
+  \title{\bf{CS 241: Foundations of Sequential Programs}}
+  \date{Winter 2013, University of Waterloo \\ \center Notes written from Gordon Cormack's lectures.}
+  \author{Chris Thomson}
+
+  \blfootnote{Feel free to email feedback to me at \href{mailto:echen902@gmail.com}{echen902@gmail.com}.}
+  }
+
+  \maketitle
+  \newpage
+  \tableofcontents
+  \newpage
+
+\end{document}
