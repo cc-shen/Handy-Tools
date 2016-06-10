@@ -1,17 +1,14 @@
 \documentclass[]{article}
 \usepackage[margin = 1.5in]{geometry}
 \setlength{\parindent}{0in}
-\usepackage{amsfonts, amssymb, amsthm, mathtools, tikz, qtree, float, ae, aecompl, color, cleveref}
+\usepackage{amsfonts, amssymb, amsthm, mathtools, tikz, qtree, float}
 \usepackage[lined]{algorithm2e}
 \usepackage[T1]{fontenc}
+\usepackage{ae, aecompl, color}
 %% REMEMBER TO FILL THIS TO BE COURSE SPECIFIC
-\usepackage[pdftex,
-  pdfauthor={Charles Shen},
-  pdftitle={Placeholder Course: Course-Name},
-  pdfsubject={Lecture notes from Placeholder Course: at the University of Waterloo},
-  pdfkeywords={course notes, notes, Waterloo, University of Waterloo},
-  pdfproducer={LaTeX},
-  pdfcreator={pdflatex}]{hyperref}
+\usepackage[pdftex, pdfauthor={Charles Shen}, pdftitle={Placeholder Course: Course-Name}, pdfsubject={Lecture notes from Placeholder Course: at the University of Waterloo}, pdfkeywords={course notes, notes, Waterloo, University of Waterloo}, pdfproducer={LaTeX}, pdfcreator={pdflatex}]{hyperref}
+\usepackage{cleveref}
+\usepackage{wrapfig}
 
 \DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
 
@@ -35,6 +32,14 @@
 
 \setlength{\marginparwidth}{1.5in}
 \newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
+
+\newcommand{\includePicture}[2]{
+  \begin{figure}[H]
+  \centering
+  \scalebox{#1}{\includegraphics{#2}}
+  \caption{#3}
+  \end{figure}
+}
 
 \makeatletter
 \def\blfootnote{\gdef\@thefnmark{}\@footnotetext}
