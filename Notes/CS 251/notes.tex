@@ -108,6 +108,9 @@
   Within a group of bits, the bit in the 1's column is called the least significant bit (lsb), and the bit at the other end is called the most significant bit (msb). \\
   Within a word, the bytes are identified as least significant byte (LSB) through most significant byte (MSB). \\
 
+  \blfootnote{When adding operands with different signs, overflow cannot occur because the sum must be no larger than one of the operands.}
+  \newpage
+
   \subsection{Logic Gates}
   A circuit element that performs a basic logic function \\ \\
   \textbf{Single Input} \\
@@ -542,6 +545,329 @@ binary and those who can't.} \\
   When $CLK = 0$, the latch is \emph{opaque}.
   It blocks the new data from flowing through to $Q$, and $Q$ retains the old value. \\
   The D latch updates its state continuously $CLK = 1$.
-
+  \newpage
   \subsection{D Flip-Flop}
+  \begin{wrapfigure}{r}{0.3\textwidth}
+    \centering
+    \includegraphics[width=0.3\textwidth]{pictures/dFlipFlop.png}
+  \end{wrapfigure}
+  A \emph{D flip-flop} can be built from two back-to-back D latches controlled by complementary clocks. \\
+  The first latch, $L1$, is called the \emph{master}. \\
+  The second latch, $L2$, is called the \emph{slave}. \\
+  The node between them is named $N1$. \\
+  A symbol for the D flip-flop is given in the figure (b). \\
+  When the $\overline{Q}$ output is not needed, the symbol can be condensed as in figure (c). \\
+
+  When $CLK = 0$, the master latch is transparent and the slave is opaque.
+  The value at $D$ propagates through to $N1$. \\
+  When $CLK = 1$, the master goes opaque and the slave becomes transparent.
+  The value at $N1$ propagates through to $Q$, but $N1$ is cut off from $D$.
+  Hence, the value at $D$ immediately before the clock rises from 0 too 1 gets copied to $Q$ immediately after the clock rises. \\
+  At other times, $Q$ retains its old value, because there is always an opaque latch blocking the path between $D$ and $Q$. \\
+
+  A \emph{D flip-flop} copies $D$ to $Q$ on the rising edge of the clock, and remembers its state at all other times. \\
+
+  A D flip-flop is also known as a \emph{master-slave flip-flop}, an \emph{edge-triggered flip-flop}, or a \emph{positive edge-triggered flip-flop}.
+
+  \subsection{Register}
+  A $N$-bit register is a bank of $N$ flip-flops that share a common $CLK$ input, so that all bits of the register are updated at the same time. \\
+  Registers are the key building block of most sequential circuits. \\
+
+  For a 32-bit architectures, a register would typically have 32 flip-flops in parallel (i.e. one for each bit). \\
+  A \emph{register file} is a way of organizing registers. \\
+  \includePicture{1.0}{pictures/registerFile.png}{A register file.} \label{registerFile}
+
+  \subsubsection{Reading from a Register File}
+  The values of all 32 registers go through two multiplexers. \\
+  The first multiplexer determines which register value will be routed to the 1\textsuperscript{st} output. \\
+  The second multiplexer determines which register value will be routed to the 2\textsuperscript{nd} output. \\
+  It will take 5 select lines to uniquely identify each source register (when there are 32 registers).
+
+  \subsubsection{Writing to a Register File}
+  The address of the register $d$, is routed through a decoder which determines which D flip-flop to write to. \\
+  When the $d^{\text{th}}$ decoder line and the \emph{RegWrite} line are both 1, they pass a 1 through the $d^{\text{th}}$ AND gate and raise the $C$ input of the $d^{\text{th}}$ D flip-flop to 1. \\
+  The data will now be written to Register $\$d^{\text{th}}$.
+
+  \section{Finite State Machines}
+  Synchronous sequential circuits can be drawn in the forms called \emph{finite state machines (FSMs)}.
+  The name comes from a circuit with $k$ registers can be in one of a finite number ($2^{k}$) of unique states. \\
+  A FSM has $M$ inputs, $N$ outputs, and $k$ bits of state.
+  It also receives a clock and, optionally, a reset signal. \\
+  An FSM consists of two blocks of combinational logic, \emph{next state logic} and \emph{output logic}, and a register that stores the state.
+  On each clock edge, the FSM advances to the next state, which was computed based on the current state and inputs. \\
+  Finite state machines provides a systematic way to design synchronous sequential circuits given a functional specification.
+
+  Two general classes of finite state machines, characterized by their functional specifications. \\
+  In \emph{Moore machines}, the outputs depend only on the current state of the machine. \\
+  In \emph{Mealy machines}, the outputs depend on both the current state and the current inputs. \\
+
+  \subsection{State Transition Diagram}
+  \begin{wrapfigure}{r}{0.4\textwidth}
+    \centering
+    \includegraphics[width=0.4\textwidth]{pictures/stateTransistionDiagram.png}
+  \end{wrapfigure}
+  A \emph{state transition diagram} indicates all the possible states of the system and the transitions between these states. \\
+  In a state transition diagram, circles represent states and arcs represent transitions betweens states. \\
+  The transitions take place on the rising edge of the clock; the clock can hidden on the diagram because it is always present in a synchronous sequential circuit.
+  In addition, the clock only controls when the transitions should occur, whereas the diagram indicates which transitions occur. \\
+  If a state has multiple arcs leaving it, the arcs are labeled to show what input triggers each transition.
+  In the image, when in state $S0$, the system will remain in that state if $T_{A}$ is TRUE and move to $S1$ if $T_{A}$ is FALSE. \\
+  If a state has a single arc leaving it, that transition always occurs regardless of the inputs.
+  In the image, when in state $S1$, the system will always move to $S2$. \\
+
+  \subsection{State Transition Table}
+  \includePicture{0.8}{pictures/stateTTableStateEncode.png}{Example Transition Table and its Encoding}
+  A \emph{state transition table} indicates for each state and input, what the next state, $S'$, should be.
+  If the next state does not depend on a particular input, the don't care symbol (X) is used. \\
+  To build a real circuit, the states and outputs must be assigned \emph{binary encodings}.
+
+  \subsection{State Encoding}
+  If the state and output encodings were selected arbitrarily, a different choice would have resulted in a different circuit. \\
+  Then how to determine the encoding that produces the circuit with the fewest logic gates or the shortest propagation delay?
+  There is not simply method to find the best encoding. \\
+  It is possible to choose a good encoding by inspection, so that related states share bits. \\
+
+  An important decision in state encoding is the choice between binary encoding and one-hot encoding. \\
+  With \emph{binary encoding}, each state is represented as a binary number.
+  Because $K$ binary numbers can be represented by $\log_{2}K$ bits, a system with $K$ states only needs $\log_{2}K$ bits of state. \\
+
+  In \emph{one-hot encoding},  a separate bit of state is used for each state.
+  It is called one-hot because only one bit is ``hot'' or TRUE at any time.
+  \begin{ex}
+    A one-hot encoded FSM with three states would have state encodings of 001, 010, and 100.
+  \end{ex}
+  Each bit of state is stored in a flip-flop, so one-hot encoding requires more flip-flops than binary encoding.
+  However, with one-hot encoding, the next-state and output logic is often simpler, so fewer gates are required. \\
+
+  Another encoding is the \emph{one-cold} encoding, in which $K$ states are represented with $K$ bits, exactly one of which is FALSE.
+
+  \subsection{FSM Review} \label{FSM_Review}
+  Finite state machines are a powerful way to systematically design sequential circuits from a written specification. \\
+  Procedure to design an FSM:
+  \begin{enumerate}
+    \item[>] Identify the inputs and outputs.
+    \item[>] Sketch a state transition diagram.
+    \item[>] For a Moore machine:
+    \begin{enumerate}
+      \item[-] Write a state transition table.
+      \item[-] Write an output table.
+    \end{enumerate}
+    \item[>] For a Mealy machine:
+    \begin{enumerate}
+      \item[-] Write a combined state transition and output table.
+    \end{enumerate}
+    \item[>] Select state encodings---selection affects the hardware design.
+    \item[>] Write Boolean equations for the next state and output logic.
+    \item[>] Sketch the circuit schematics.
+  \end{enumerate}
+
+  \section{Summary So Far}
+  In contrast to combinational logic, whose outputs depend solely on the current inputs, sequential logic outputs depend on both current and prior inputs.
+  Sequential logic remembers information about prior inputs.
+  This memory is called the state of the logic. \\
+
+  Sequential circuits can be difficult to analyze and are easy to design incorrectly.
+  An important element is the flip-flop, which receives a clock and an input, $D$, and produces an output, $Q$.
+  The flip-flop copies $D$ to $Q$ on the rising edge of the clock and otherwise remembers the old state of $Q$.
+  A group of flip-flops sharing a common clock is called a register.
+  Flip-flops may also receive reset or enable control signals. \\
+
+  Finite state machines are a powerful technique for designing sequential circuits.
+  For procedure on designing an FSM, refer to \ref{FSM_Review} (FSM Review). \\
+
+  Synchronous sequential circuits have a timing specification including to clock-to-$Q$ propagation and contamination delay, $t_{pcq}$ and $t_{ccq}$, and the setup and hold times, $t_{setup}$ and $t_{hold}$. \\
+  For correct operation, their inputs must be stable during an aperture time that starts a setup time before the rising edge of the clock and ends a hold time after the rising edge of the clock. \\
+
+  The minimum cycle time, $T_{c}$, of the system is equal to the propagation delay, $t_{pd}$, through combinational logic plus $t_{pcq} + t_{setup}$ of the register. \\
+  For correct operation, the contamination delay through the register and combinational logic must be greater than $t_{hold}$.
+  Hold time does not affect the cycle time. \\
+
+  Overall performance is measured in latency and throughput.
+  The latency is the time required for a token to pass from start to end.
+  The throughput is the number of tokens that the system can process per unit time.
+  Parallelism improves the system throughput.
+
+  \section{Memory Technologies}
+  There are four primary technologies used in memory hierarchies. \\
+  Main memory is implemented from DRAM (dynamic random access memory), while levels closer the processor (caches) uses SRAM (static random access memory). \\
+  DRAM is less costly per bit than SRAM, although it is substantially slower.
+  The price difference arises because DRAM uses significantly less area per bit of memory, and DRAMs thus have larger capacity for the same amount of silicon. \\
+
+  \subsection{SRAM Technology}
+  SRAMs are simply integrated circuits that are memory arrays with (usually) a single access port that can provide either a read or a write. \\
+  SRAMs have a fixed access time to any datum, though read and write access times may differ. \\
+  SRAMs don't need to refresh and so the access time is very close to the cycle time. \\
+  SRAMs typically use six to eight transistors per bit to prevent the information from being disturbed when read. \\
+  SRAM needs only minimal power to retain the charge in standby mode.
+
+  \subsection{DRAM Technology}
+  In a SRAM, as long as power is applied, the value can be kept indefinitely. \\
+  In a dynamic RAM, the value kept in a cell is stored as a charge in a capacitor.
+  A single transistor is then used to access this stored charge, either to read the value or to overwrite the charge stored there. \\
+  Because DRAMs use only a single transistors per bit of storage, they are much denser and cheaper per bit than SRAM. \\
+  As DRAMs store the charge on a capacitor, it cannot be kept indefinitely and must periodically be refreshed.
+  Hence this memory structure is dynamic, as opposed to the static storage in an SRAM cell. \\
+
+  To refresh the cell, we merely read its contents and write it back.
+  The charge can be kept for several ms.
+  If every bit had to be read out of the DRAM and then written back individually, the DRAM would be constantly refreshed, leaving no time to access it. \\
+  DRAMs use a two-level decoding structure, which allows the ability to refresh an entire \emph{row} (which shares a word line) with a read cycle followed immediately by a write cycle. \\
+
+  The row organization that helps with refresh also helps with performance.
+  To improve performance, DRAMs buffer rows for repeated access.
+  The buffer acts like a SRAM; by changing the address, random bits can be accessed in the buffer until the next row access.
+  This capability improves the access time significantly, since the access time to bits in the row is much lower.
+  When the row is in the buffer, it can be transferred by successive addresses at whatever the width of the DRAM is, or by specifying a block transfer and the starting address within the buffer. \\
+
+  To further improve the interface to processors, DRAMs added clocks which is called Synchronous DRAMs or SDRAMs.
+  The advantage is that the use of a clock eliminates the time for the memory and processor to synchronize.
+  The speed advantage of synchronous DRAMs come from the ability to transfer the bits in the burst without having to specify additional address bits.
+  Instead, the clock transfer the successive bits in a burst. \\
+  \emph{Double Data Rate} (DDR) SDRAM is the fastest currently available.
+  Data transfer on both the rising and falling edge of the clock, thereby getting twice as much bandwidth based on the clock rate and the data width. \\
+
+  Sustaining the bandwidth requires clever organization \emph{inside} the DRAM.
+  The DRAM can be internally organized, instead of just a faster row buffer, to read or write from multiple \emph{banks}, which each having its own row buffer.
+  Sending an address to several banks permits them all to read or write simultaneously.
+  The rotating access scheme is called \emph{address interleaving}.
+
+  \section{Multiplication}
+  \includePicture{0.9}{pictures/multiplication.png}{Multiplication Hardware Version 1.0}
+  The first operand is called the \emph{multiplicand} and the second the \emph{multiplier}.
+  The final result is called the \emph{product}. \\\
+  Number of bits in the product is considerably larger than the number in either the multiplicand or the multiplier.
+  If ignoring the sign bit, the length of the multiplication of an $n$-bit multiplicand and an $m$-bit multiplier is a product that is $n + m$ bits long.
+  So $n + m$ bits are required to represent all possible products.
+
+  \section{Floating Point}
+  A number in scientific notation that has no leading 0s is called a \emph{normalized} number, which is the usual way to write it. \\
+  \emph{Floating point} is computer arithmetic that represents numbers in which the binary point is not fixed. \\
+  A standard scientific notation for reals in normalized form offers tree advantages:
+  \begin{enumerate}
+    \item It simplifies exchange of data that includes floating-point numbers.
+    \item It simplifies the floating-point arithmetic algorithms to know that numbers will always be in this form.
+    \item It increases the accuracy of the numbers that can be stored in a word, since the unnecessary leading 0s are replaced by real digits to the right of the binary point.
+  \end{enumerate}
+
+  \subsection{Floating-Point Representation}
+  \includePicture{0.8}{pictures/mipsFloat.png}{Representation of a MIPS \emph{single precision} floating-point number.}
+  $s$ is the sign of the floating-point number (1 meaning negative).
+  \emph{exponent} is the value of the 8-bit exponent field (including the sign of the exponent).
+  \emph{fraction} is the 23-bit number. \\
+  Generally, floating-point numbers are of the form: $$(-1)^{s} \times F \times 2^{E}$$
+  F involves the value in the fraction field and E involves the value in the exponent field.
+
+  \blfootnote{\emph{overflow}: positive exponent becomes too large to fit in the exponent field}
+  \blfootnote{\emph{underflow}: negative exponent becomes too large to fit in the exponent field}
+
+  A \emph{double precision} floating-point number is represented in two 32-bit words.
+  The exponent is the value of the 11-bit exponent field.
+  Fraction is the 52-bit number in the fraction field. \\
+  \includePicture{0.85}{pictures/floatingPoints.png}{IEEE 754 encoding of floating-point numbers.}
+
+  This is also known as the \emph{IEEE 754 floating-point standard}.
+  This standard has greatly improved both the ease of porting floating-point programs and the quality of computer arithmetic. \\
+  In IEEE 754, the leading 1-bit of normalized binary number is implicit, so the number is actually 24 bits long in single precision. \\
+
+  For the fractional part, suppose we number the bits of the fraction from left to right $s1$, $s2$, $s3$, \dots, then the value is
+  $$(-1)^{S} \times (1 + (s1 \times 2^{-1}) + (s2 \times 2^{-2}) + (s3 \times 2^{-3}) + (s4 \times 2^{-4}) + \dots) \times 2^{E}$$
+
+  IEEE 754 uses a bias of 127 for single precision exponent. \\
+  The exponent bias for double precision is 1023. \\
+  So the value represented by a floating-point number is really
+  $$(-1)^{S} \times (1 + \text{Fraction}) \times 2^{(\text{Exponent} - \text{Bias})}$$
+
+  \subsection{Floating-Point Addition}
+  \begin{itemize}
+    \item[1.] Compare the exponents of the two numbers; shift the smaller number to the right until its exponent would match the larger exponent.
+    \item[2.] Add the significants.
+    \item[3.] Normalize the sum, either shifting right and incrementing the exponent or shifting left and decrementing the exponent.
+    \item[>] Overflow or underflow? If yes, Exception. Otherwise, continue.
+    \item[4.] Round the significant to the appropriate number of bits.
+    \item[>] Still normalized? If no, then step 3. Otherwise, done.
+  \end{itemize}
+  \includePicture{0.7}{pictures/floatingAddition.png}{Arithmetic unit for floating-point addition.}
+
+  \subsection{Floating-Point Multiplication}
+  \begin{itemize}
+    \item[1.] Add the biased exponents of the two numbers, subtracting the bias from the sum to get the new biased exponent.
+    \item[2.] Multiply the significants.
+    \item[3.] Normalize the product if necessary, shifting it right and incrementing the exponent.
+    \item[>] Overflow or underflow? If yes, Exception. Otherwise, continue.
+    \item[4.] Round the significant to the appropriate number of bits.
+    \item[>] Still normalized? If no, then Step 3. Otherwise, continue.
+    \item[5.] Set the sign of the product to positive if the signs of the original operands are the same; if they differ, make the sign negative.
+  \end{itemize}
+
+  \section{Introduction to the Processor}
+  A subset of the core MIPS instruction set will be examined:
+  \begin{enumerate} \label{instruction_classes}
+    \item[>] The memory-reference instructions \emph{load word} (lw) and \emph{store word} (sw)
+    \item[>] The arithmetic-logical instructions add, sub, AND, OR, and slt
+    \item[>] The branch instructions \emph{branch equal} (beq) and \emph{jump} (j)
+  \end{enumerate}
+  To implement those instructions, the first two steps are identical:
+  \begin{enumerate}
+    \item Send the \emph{program counter} (PC) to the memory that contains the code and fetch the instruction from that memory.
+    \item Read one or two registers, using fields of the instruction to select the registers to read. For the load word instruction, only need to read one register, but most other instructions require reading two registers.
+  \end{enumerate}
+  After the two steps, the required actions depend on the instruction class.
+  For each of the three instructions classes (\ref{instruction_classes}), the actions are largely the same, independent of the exact instruction. \\
+  The simplicity and regularity of the MIPS instruction set simplifies the implementation by making the execution of many of the instruction classes similar. \\
+
+  All instruction classes, except jump, use the arithmetic-logical unit (ALU) after reading the registers.
+  The memory-reference instructions use the ALU for an address calculation, the arithmetic-logical instructions for the operation execution, and branches for comparison. \\
+  After using the ALU, the actions required to complete various instruction classes differ. \\
+  A memory-reference instruction will need to access the memory either to read data for a load or write data for a store. \\
+  An arithmetic-logical or load instruction must write the data from the ALU or memory back into a register. \\
+  For a branch instruction, it may be required to change the next instruction address based on the comparison; otherwise, the PC should be incremented by 4 to get the address of the next instruction.
+
+  \section{Building a Data-path}
+  \includePicture{0.7}{pictures/readingFetchingInstruction.png}{A portion of the data-path used for fetching instructions and incrementing the program counter.}
+  A \emph{data-path element} is a unit used to operate within a processor.
+  In the MIPS implementation, the data-path element include the instruction and data memories, the register file, the ALU, and adders. \\
+  To execute any instruction, start by fetching the instruction from memory.
+  Then increment the program counter so that it points at the next instruction, 4 bytes later. \\
+  Refer to the figure above for how the elements are combined, forming a data-path that fetches instructions and increments the PC. \\
+
+  A \emph{R-type \emph{or} R-format} is an arithmetical-logical instruction since they perform. \\
+  All R-format instructions read two registers, perform an ALU operation on the contents of the register, and write the result to a register. \\
+
+  Through a register file, it contains the register state of the computer and the ALU needs to operate on the values read from the registers. \\
+  R-format instructions have three register operands, to read two data words from the register file and write one data word into the register file for each instruction. \\
+  For each data word to be read from the register, an input to the register file is needed that will carry the value that has been read from the registers. \\
+  To write a data word, two inputs are needed: one to specify the register number to be written and one to supply the \emph{data} to be written into the register. \\
+  The register file always outputs the contents of whatever register numbers are on the Read register inputs.
+  However, writes are controlled by the write control signal, which must be asserted for a write to occur at the clock edge. \\
+
+  Thus, we need a total of four inputs (three for register number and one for data) and two outputs (both for data).
+  The register number inputs are 5 bits wide to specify one of 32 registers ($32 = 2^{5}$), whereas the data input and two data output buses are each 32 bits wide (each word is 32 bits).
+
+  \subsection{R-Format ALU Operations}
+  Two elements are needed to implement R-format ALU operations: register file (\ref{registerFile}) and the ALU. \\
+
+  The register file contains all the registers and has two read ports and one write port.
+  The register file outputs the contents of the registers corresponding to the Read register inputs on the outputs; no other control inputs are needed. \\
+  Note that a register write must be explicitly indicated by asserting the write control signal, $RegWrite$.
+  Writes are edge-triggered, so that all write inputs must be valid at the clock edge. \\
+
+  The inputs carrying the register number to the register file are all 5 bites wide, whereas the lines carrying data values are 32 bits wide. \\
+  The operation to be performed by the ALU is controlled with the ALU operation signal, which will be 4 bits wide.
+
+  \subsection{Memory-Reference Operations}
+  Consider $lw$ and $sw$ instructions.
+  They compute a memory address by adding the base register to the 16-bit signed offset field contained in the instruction. \\
+  If the instruction is a store, the value to be stored must also be read from the register file where it resides in the destination register. \\
+  If the instruction is a load, the value read from memory must be written into the register file in the specified register. \\
+  Thus, both register and the ALU are required in addition to more. \\
+
+  \includePicture{0.75}{pictures/elementsFormemoryReference.png}{Two units needed for loads and stores. In addition to the register file and ALU.}
+
+  We need a unit to \emph{sign-extend} the 16-bit offset field in the instruction to a 32-bit signed value, and a data memory unit to read from or write to.
+  A \emph{sign-extend} is to increase the size of a data item by replicating the high-order sign bit of the original data item in the high-order bits of the larger, destination data item. \\
+  The data memory must be written on store instructions; hence, data memory has read and write control signals, an address input, and an input for the data to be written into memory. \\
+  Refer to figure above for the two units required.
+
+  \subsection{Branch Operations}
+
 \end{document}
