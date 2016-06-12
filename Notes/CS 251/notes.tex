@@ -37,7 +37,7 @@
 }
 
 \newcommand{\includePicture}[3]{
-  \begin{figure}[!h]
+  \begin{figure}[!ht]
   \centering
   \scalebox{#1}{\includegraphics{#2}}
   \caption{#3}
@@ -81,7 +81,7 @@
 
   \subsection{Hexadecimal Number System}
   \begin{tabular} {c | c | c}
-  Hexadecimal Digit & Decimal Digit & Binary Equivalent \\ \hline
+  Hexadecimal Digit & Decimal Digit & Binary Equivalent \\ \hline \hline
   0 & 0 & 0000 \\ \hline
   1 & 1 & 0001 \\ \hline
   2 & 2 & 0010 \\ \hline
@@ -125,13 +125,13 @@
 
   \subsection{Beneath the Digital Abstraction}
   A digital system uses discrete-valued variables. \\
-  Variables are represented by continuous physical quantities such as the voltage on a wire, the position of a gear, or the level of fluid in a cylinder. \\ \\
-  For example: \\
-  Consider representing a binary signal A with a voltage on a wire. \\
-  Let 0 volts (V) indicate A = 0 and 5V indicate A = 1. \\
-  Any real system must tolerate some noise, so 4.97V probably ought to be interpreted as A = 1 as well. \\
-  But what about 4.3V? Or 2.8V? Or 2.5000000V?
-
+  Variables are represented by continuous physical quantities such as the voltage on a wire, the position of a gear, or the level of fluid in a cylinder.
+  \begin{ex}
+    Consider representing a binary signal A with a voltage on a wire. \\
+    Let 0 volts (V) indicate A = 0 and 5V indicate A = 1. \\
+    Any real system must tolerate some noise, so 4.97V probably ought to be interpreted as A = 1 as well. \\
+    But what about 4.3V? Or 2.8V? Or 2.5000000V?
+  \end{ex}
   \subsubsection{Supply Voltage}
   Suppose the lowest voltage in the system is 0V, also called ground or GND \\
   The highest voltage in the system comes from the power supply and is usually called $V_{DD}$
@@ -271,7 +271,7 @@ binary and those who can't.} \\
   \end{itemize}
   Peeing inside the black box, circuits are composed of nodes and elements. \\
   An \emph{element} is itself a circuit with inputs, outputs, and a specification. \\
-  A \emph{node} is a wire, whose voltage coveys a discrete-valued variable.
+  A \emph{node} is a wire, whose voltage conveys a discrete-valued variable.
   Nodes are classified as \emph{input, output, \emph{or} internal}. \\
   Input receive values from the external world. \\
   Output deliver values to the external world. \\
@@ -325,7 +325,7 @@ binary and those who can't.} \\
   $A$ is called the \emph{true form} of the variable and $\overline{A}$ the complementary form; ``true form'' does not mean that $A$ is TRUE, but merely that $A$ does not have a line over it. \\
 
   The AND of one or more literals is called a \emph{product} or an \emph{implicant}. \\
-  $\overline{A}B$, $A\overline{B}\overline{C}$, and $B$ are all implicants for a function of three variables. \\
+  $\overline{A}B$, $A\overline{B} \overline{C}$, and $B$ are all implicants for a function of three variables. \\
   A \emph{minterm} is a product involving all of the inputs to the function.
   $A\overline{B}\overline{C}$ is a minterm for a function of the three variables $A$, $B$, and $C$, but $\overline{A}B$ is not, because it does not involve $C$. \\
 
@@ -869,5 +869,62 @@ binary and those who can't.} \\
   Refer to figure above for the two units required.
 
   \subsection{Branch Operations}
+  \includePicture{0.6}{pictures/branchInstruction.png}{Data-path for branch operations.}
+  $beq$ instruction has three operands, two registers that are compared for equality, and a 16-bit offset used to compute the \emph{branch target address} relative to the branch instruction address. \\
+  For this instruction, we need to compute the branch target address by adding the sign-extended offset field of the instruction to the PC.
+  Note the two following details in the definition of branch instructions:
+  \begin{itemize}
+    \item The instruction set architecture specifies that the base for the branch address calculation is the address of the instruction following the branch.
+    Since we compute $PC + 4$ (the address of the next instruction) in the instruction fetch data-path, it is easy to use this value as the base for computing the branch target address.
+    \item The architecture also states that the offset field is shifted left 2 bits so that it is a word offset; this shift increases the effective range of the offset field by a factor of 4.
+  \end{itemize}
+  The offset field can be shifted by 2 to resolve the second complication. \\
+
+  For computing the branch target address, we need to determine whether the next instruction is the instruction that follows sequentially or the instruction at the branch target address. \\
+  When the operands are equal, the branch target address becomes the new PC, and it can be said that \emph{branch \emph{is} taken}. \\
+  If the operands are not equal, the incremented PC should replace the current PC (just as for any other normal instruction); thus the \emph{branch \emph{is} not taken}.
+
+  \blfootnote{\textbf{branch taken}: a branch where the branch condition is satisfied and the program counter (PC) becomes the branch target. All unconditional jumps are taken branches.}
+  \blfootnote{\textbf{branch not taken}: a branch where the branch condition is false and the program counter (PC) becomes the address of the instruction that sequentially follows the branch.}
+
+  Therefore, the branch data-path must do two operations: compute the branch target address and compare the register contents. \\
+  To compute the branch target address, the branch data-path includes a sign extension unit and an adder. \\
+  To perform the compare, a register file is needed to supply the two register operands.
+
+  \section{Creating a Single Data-path}
+  The simplest data-path will attempt to execute all instructions in one-clock cycle.
+  No data-path resource can be used more than once per instruction, so any element needed more than once must be duplicated.
+  So a memory for instructions separate from one for data is needed.
+  Some of the functional units will need to be duplicated, many of the elements can be shared by different instruction flows. \\
+
+  To share a data-path element between two different instruction classes, we may have to allow multiple connections to the input of an element, using a multiplexer and control signal to select among the multiple inputs.
+  \newpage
+  \section{A Full Data-Path}
+  \begin{figure}[!htp]
+    \centering
+    \includegraphics[angle=90, scale=0.92]{pictures/fullDataPath.png}
+    \caption{Data-path with all necessary multiplexers and all control lines.}
+    \label{fullDataPath}
+  \end{figure}
+  \newpage
+  \section{A Simple Implementation Scheme}
+  \subsection{The ALU Control}
+  The MIPS ALU defined in ``Computer Organization and Design'' Appendix B defines the 6 following combinations of four control inputs:
+  \begin{center}
+  \begin{tabular} {c | c}
+    ALU Control Lines & Function          \\ \hline
+    0000              & AND               \\ \hline
+    0001              & OR                \\ \hline
+    0010              & add               \\ \hline
+    0110              & subtract          \\ \hline
+    0111              & set on less than  \\ \hline
+    1100              & NOR               \\ \hline
+  \end{tabular}
+  \end{center}
+  The ALU will need to perform one of the first five functions depending on the instruction class.
+  NOR will be covered later. \\
+  For load and store word instructions, ALU is used to compute the memory address by addition. \\
+  For R-type instructions, ALU needs to perform AND, OR, subtract, add, or set on less than, depending on the value of the 6-bit function field in the low-order bits of the instruction. \\
+  For branch equal, the ALU must perform a subtraction.
 
 \end{document}
