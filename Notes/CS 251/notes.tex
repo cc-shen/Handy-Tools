@@ -349,7 +349,7 @@ binary and those who can't.} \\
   \includegraphics[scale=0.7]{pictures/booleanAlgOneVari.png}
 
   \subsection{Theorems of Several Variables}
-  \includegraphics[scale=0.6]{pictures/booleanAlgMultVar.png}
+  \includegraphics[scale=0.65]{pictures/booleanAlgMultVar.png}
 
   \section{From Logic to Gates}
   A \emph{schematic} is a diagram of a digital circuit showing the elements and the wires that connect them together. \\
@@ -531,11 +531,7 @@ binary and those who can't.} \\
   The SR latch is awkward because it behaves strangely when both $S$ and $R$ are simultaneously asserted.
   Moreover, the $S$ and $R$ inputs conflate the issues of \emph{what} and \emph{when}.
   Asserting one of the inputs determines not only \emph{what} the state should be but also \emph{when} it should change. \\
-
-  \begin{wrapfigure}{r}{0.8\textwidth}
-    \centering
-    \includegraphics[width=0.8\textwidth]{pictures/dLatch.png}
-  \end{wrapfigure}
+  \includegraphics[width=1.0\textwidth]{pictures/dLatch.png}\\
   The D latch has two inputs.
   The \emph{data} input, $D$, controls what the next state should be.
   The \emph{clock} input, $CLK$, controls when the state should change. \\
@@ -563,8 +559,13 @@ binary and those who can't.} \\
   When $CLK = 1$, the master goes opaque and the slave becomes transparent.
   The value at $N1$ propagates through to $Q$, but $N1$ is cut off from $D$.
   Hence, the value at $D$ immediately before the clock rises from 0 too 1 gets copied to $Q$ immediately after the clock rises. \\
-  At other times, $Q$ retains its old value, because there is always an opaque latch blocking the path between $D$ and $Q$. \\
+  At other times, $Q$ retains its old value, because there is always an opaque latch blocking the path between $D$ and $Q$.
 
+  \begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.55\textwidth]{pictures/dFlipFlopExample.png} \\
+  \caption{A D flip-flop example.}
+  \end{figure}
   A \emph{D flip-flop} copies $D$ to $Q$ on the rising edge of the clock, and remembers its state at all other times. \\
 
   A D flip-flop is also known as a \emph{master-slave flip-flop}, an \emph{edge-triggered flip-flop}, or a \emph{positive edge-triggered flip-flop}.
@@ -732,7 +733,7 @@ binary and those who can't.} \\
   The rotating access scheme is called \emph{address interleaving}.
 
   \section{Multiplication}
-  \includePicture{0.9}{pictures/multiplication.png}{Multiplication Hardware Version 1.0}
+  \includegraphics[width=1.0\textwidth]{pictures/multiplication.png} \\
   The first operand is called the \emph{multiplicand} and the second the \emph{multiplier}.
   The final result is called the \emph{product}. \\\
   Number of bits in the product is considerably larger than the number in either the multiplicand or the multiplier.
@@ -750,7 +751,7 @@ binary and those who can't.} \\
   \end{enumerate}
 
   \subsection{Floating-Point Representation}
-  \includePicture{0.8}{pictures/mipsFloat.png}{Representation of a MIPS \emph{single precision} floating-point number.}
+  \includegraphics[width=1.0\textwidth]{pictures/mipsFloat.png} \\
   $s$ is the sign of the floating-point number (1 meaning negative).
   \emph{exponent} is the value of the 8-bit exponent field (including the sign of the exponent).
   \emph{fraction} is the 23-bit number. \\
@@ -855,13 +856,12 @@ binary and those who can't.} \\
   The operation to be performed by the ALU is controlled with the ALU operation signal, which will be 4 bits wide.
 
   \subsection{Memory-Reference Operations}
+  \includePicture{0.75}{pictures/elementsFormemoryReference.png}{Two units needed for loads and stores. In addition to the register file and ALU.}
   Consider $lw$ and $sw$ instructions.
   They compute a memory address by adding the base register to the 16-bit signed offset field contained in the instruction. \\
   If the instruction is a store, the value to be stored must also be read from the register file where it resides in the destination register. \\
   If the instruction is a load, the value read from memory must be written into the register file in the specified register. \\
   Thus, both register and the ALU are required in addition to more. \\
-
-  \includePicture{0.75}{pictures/elementsFormemoryReference.png}{Two units needed for loads and stores. In addition to the register file and ALU.}
 
   We need a unit to \emph{sign-extend} the 16-bit offset field in the instruction to a 32-bit signed value, and a data memory unit to read from or write to.
   A \emph{sign-extend} is to increase the size of a data item by replicating the high-order sign bit of the original data item in the high-order bits of the larger, destination data item. \\
@@ -890,7 +890,7 @@ binary and those who can't.} \\
   Therefore, the branch data-path must do two operations: compute the branch target address and compare the register contents. \\
   To compute the branch target address, the branch data-path includes a sign extension unit and an adder. \\
   To perform the compare, a register file is needed to supply the two register operands.
-
+  \newpage
   \section{Creating a Single Data-path}
   The simplest data-path will attempt to execute all instructions in one-clock cycle.
   No data-path resource can be used more than once per instruction, so any element needed more than once must be duplicated.
@@ -927,4 +927,9 @@ binary and those who can't.} \\
   For R-type instructions, ALU needs to perform AND, OR, subtract, add, or set on less than, depending on the value of the 6-bit function field in the low-order bits of the instruction. \\
   For branch equal, the ALU must perform a subtraction.
 
+  \newpage
+  \section{To-do}
+  \begin{enumerate}
+    \item Include Two's Complement
+  \end{enumerate}
 \end{document}
