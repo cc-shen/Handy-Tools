@@ -107,23 +107,40 @@
   To be conservative, we usually pick $\hat{\pi} = 0.5$ as it maximizes $\hat{\pi}(1 - \hat{\pi})$.
 
   \subsection{Chi-Squared Distribution $\sim X_{k}^{2}$}
+  The Gamma function is
+  $$\Gamma(\alpha) = \int_{0}^{\infty}y^{\alpha -1}e^{-y}dy ~~\text{for}~\alpha > 0$$
   Properties of the Gamma Function:
   \begin{itemize}
     \item $\Gamma(\alpha) = (\alpha - 1)\Gamma(\alpha - 1)$
     \item $\Gamma(\alpha) = (\alpha - 1)!$
     \item $\Gamma(1/2) = \sqrt{\pi}$
   \end{itemize}
+  The $X_{k}^{2}$ distribution is a continuous family of distributions on $(0, \infty)$ with probability density function
+  $$f(x;k) = \frac{1}{2^{k/2}\Gamma(k/2)}x^{(k/2)-1}e^{-x/2}~~~\text{for}~x > 0$$
+  where $k \in \{1, 2, \dots\}$ is a parameter of the distribution. \\
+  $k$ is referred to as the ``degrees of freedom'' (d.f) parameter. \\
+
   For $X \sim X_{k}^{2}$
   \begin{itemize}
     \item $E(X) = k$ and $Var(X) = 2k$
     \item If $k = 1$, $W = Z^{2}$ and $Z \sim G(0,1)$
-    \item If $k = 1$, $W \sim Exp(2)$ ($\theta = 2$)
+    \item If $k = 2$, $W \sim Exp(2)$ ($\theta = 2$)
     \item If $k$ is large, $W \stackrel{Appr.}{\sim} N(k, 2k)$
     \item Let $X_{k_{1}}, X_{k_{1}}$ be independent random variables with $X_{k_{i}} \sim X_{k_{i}}^{2}$. \\
     Then $X_{k_{1}} + X_{k_{2}} =  X_{k_{1} + k_{2}}^{2}$.
   \end{itemize}
 
   \subsection{Student's \emph{t} Distribution}
+  Student's $t$ distribution has probability density function
+  $$
+  f(t;k) = c_{k}\left(1 + \frac{t^{2}}{k}\right)^{-(k+1)/2}
+  ~~~\text{for}~t \in \Re~\text{and}~ k = 1, 2, \dots
+  $$
+  where the constant $c_{k}$ is given by
+  $$
+  c_{k} = \frac{\Gamma(\frac{k+1}{2})}{\sqrt{k\pi}\Gamma(\frac{k}{2})}
+  ~~~k\text{ is the }degrees~of~freedom
+  $$
   Properties of $T$:
   \begin{itemize}
     \item[i)] Range of $T$: $(-\infty, \infty)$
@@ -176,6 +193,26 @@
   When $\sigma$ is known, we use z-pivot. \\
 
   If $n$ is really large, then the $t^{*}$ value converges to the corresponding $z^{*}$ value (by Central Limit Theorem). \\
+
+  \textbf{Confidence Intervals for $\sigma^{2}$ and $\sigma$}
+  \begin{theorem}
+    \emph{Suppose} $Y_{1}, Y_{2}, \dots, Y_{n}$ \emph{is a random sample from the} $G(\mu, \sigma)$ \emph{distribution with sample variance} $S^{2}$.
+    \emph{Then the random variable}
+    $$\frac{(n-1)S^{2}}{\sigma^{2}} = \frac{1}{\sigma^{2}}\sum_{i=1}^{n}(Y_{i} - \bar{Y})^{2}$$
+    \emph{has a Chi-squared distribution with} $n - 1$ \emph{degrees of freedom}.
+  \end{theorem}
+  Using the theorem, we can construct a $100p\%$ confidence interval for the parameter $\sigma^{2}$ or $\sigma$. \\
+  Recall this is the same as the equation (2) in this sub-section. \\
+  We can find constants $a$ and $b$ such that
+  $$P(a \leq U \leq b) = p$$
+  where $U \sim X_{n-1}^{2}$. \\
+  So a $100p\%$ confidence interval for $\sigma^{2}$ is
+  $$\left[~\frac{(n-1)s^{2}}{b},\frac{(n-1)s^{2}}{a}~\right]$$
+  and a $100p\%$ confidence interval for $\sigma$ is
+  $$\left[~\sqrt{\frac{(n-1)s^{2}}{b}},\sqrt{\frac{(n-1)s^{2}}{a}}~\right]$$ \\
+
+  Unlike confidence interval for $\mu$, the confidence interval for $\sigma^{2}$ is \emph{not symmetric} about $s^{2}$. the estimator of $\sigma^{2}$.
+  The $X_{n-1}^{2}$ distribution is not a symmetric distribution. \\
 
   \textbf{Prediction Interval for a Future Observation} \\
   Suppose that $Y \sim G(\mu,\sigma)$, then
