@@ -1,0 +1,189 @@
+\documentclass[12pt, leqno]{article}
+\usepackage[margin = 1.5in]{geometry}
+\setlength{\parindent}{0in}
+\usepackage{amsfonts, amssymb, amsthm, mathtools, tikz, qtree, float}
+\usepackage[lined]{algorithm2e}
+\usepackage[T1]{fontenc}
+\usepackage{ae, aecompl, color}
+\usepackage[pdftex, pdfauthor={Charles Shen}, pdftitle={STAT 231: Statistics}, pdfsubject={Notes from STAT 231: at the University of Waterloo}, pdfkeywords={course notes, notes, Waterloo, University of Waterloo}, pdfproducer={LaTeX}, pdfcreator={pdflatex}]{hyperref}
+\usepackage{cleveref}
+\usepackage{wrapfig}
+
+\DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
+
+\definecolor{darkish-blue}{RGB}{25,103,185}
+
+\hypersetup{
+    colorlinks,
+    citecolor=darkish-blue,
+    filecolor=darkish-blue,
+    linkcolor=darkish-blue,
+    urlcolor=darkish-blue
+}
+
+\theoremstyle{definition}
+\newtheorem*{defn}{Definition}
+\newtheorem*{theorem}{Theorem}
+\newtheorem*{corollary}{Corollary}
+\newtheorem{ex}{Example}[section]
+
+\crefname{ex}{Example}{Example}
+
+\setlength{\marginparwidth}{1.5in}
+\newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
+
+\makeatletter
+\def\blfootnote{\gdef\@thefnmark{}\@footnotetext}
+\makeatother
+
+\begin{document}
+  \let\ref\Cref
+
+  \title{\bf{STAT 231: Statistics}}
+  \date{Spring 2016, University of Waterloo \\ \center Formulas and Notes.}
+  \author{Charles Shen}
+
+  \blfootnote{Feel free to email feedback to me at \href{mailto:echen902@gmail.com}{echen902@gmail.com}.}
+
+  \maketitle
+  \begin{center}
+    \textbf{Assume all $\log$ are in base $e$ unless specified.} \\
+    I've tried to use $\ln$ for consistency, \\
+    but there may be a few inconsistency.
+  \end{center}
+  \newpage
+  \tableofcontents
+  \newpage
+
+  \section{Statistical Models and Maximum Likelihood Estimation}
+  \begin{defn}
+    \emph{The \textbf{relative likelihood function} is defined as}
+    $$R(\theta) = \frac{L(\theta)}{L(\hat{\theta})} ~~~for~\theta \in \Omega$$
+    $Note~that~0 \leq R(\theta) \leq 1~for~all~\theta \in \Omega$.
+  \end{defn}
+  \begin{defn}
+    \emph{The \textbf{log likelihood function} is defined as}
+    $$l(\theta) = \ln L(\theta) ~~~for~\theta \in \Omega$$
+  \end{defn}
+  \subsection{Likelihood Function for Binomial Distribution}
+  The maximum likelihood estimate of $\theta$ is $\bar{\theta} = y / n$.
+
+  \subsection{Likelihood Function for Poisson Distribution}
+  The value $\theta = \bar{y}$ maximizes $l(\theta)$ and so $\hat{\theta} = \bar{y}$ is the maximum likelihood estimate of $\theta$.
+
+  \subsection{Likelihood Function for Exponential Distribution}
+  The value $\theta = \bar{y}$ maximizes $l(\theta)$ and so $\hat{\theta} = \bar{y}$ is the maximum likelihood estimate of $\theta$ for an Exponential Distribution $\sim Exp(\theta)$.
+
+  \subsection{Likelihood Function for Gaussian Distribution}
+  The maximum likelihood estimate of $\theta$ is $\hat{\theta} = (\hat{\mu}, \hat{\sigma})$, where
+  $$
+  \hat{\mu} = \frac{1}{n}\sum_{i=1}^{n}y_{i} = \bar{y}
+  ~~\text{and}~~
+  \hat{\sigma} = \left[\frac{1}{n}\sum_{i=1}^{n}(y_{i} - \bar{y})^{2}\right]^{1/2}
+  $$
+  Note that $\hat{\sigma} \not = \sigma$ (sample variance).
+
+  \subsection{Invariance Property of Maximum Likelihood Estimates}
+  \begin{theorem}
+    \emph{If $\hat{\theta}$ is the maximum likelihood estimate of $\theta$, then $g(\hat{\theta})$ is the maximum likelihood estimate of $g(\theta)$.}
+  \end{theorem}
+
+  \newpage
+  \section{Estimation}
+  \subsection{Confidence Intervals and Pivotal Quantities}
+  In general, construct a pivot using the estimator, use that to construct coverage interval, estimate it and find the confidence interval.
+
+  \begin{theorem}
+  \textbf{Central Limit Theorem} \\
+    If $n$ is large, and if $Y_{1}, \dots, Y_{n}$ are drawn from a distribution with mean $\mu$ and variance $\sigma^{2}$, then $\bar{Y} \sim N\left(\mu, \frac{\sigma^{2}}{n}\right)$.
+  \end{theorem}
+
+  For a Binomial Distribution, the confidence interval is
+  $$\left[~\hat{\pi} \pm z^{*}\sqrt{\frac{\hat{\pi}(1 - \hat{\pi})}{n}}~\right]$$
+  where $\hat{\pi} = \frac{y}{n}$, $y$ is the observed data. \\
+  To determine the sample size
+  $$n \geq \left(\frac{z^{*}}{MoE}\right)^{2}\hat{\pi}(1 - \hat{\pi})$$
+  where $MoE$ is the margin of error. \\
+  To be conservative, we usually pick $\hat{\pi} = 0.5$ as it maximizes $\hat{\pi}(1 - \hat{\pi})$.
+
+  \subsection{Chi-Squared Distribution $\sim X_{k}^{2}$}
+  Properties of the Gamma Function:
+  \begin{itemize}
+    \item $\Gamma(\alpha) = (\alpha - 1)\Gamma(\alpha - 1)$
+    \item $\Gamma(\alpha) = (\alpha - 1)!$
+    \item $\Gamma(1/2) = \sqrt{\pi}$
+  \end{itemize}
+  For $X \sim X_{k}^{2}$
+  \begin{itemize}
+    \item $E(X) = k$ and $Var(X) = 2k$
+    \item If $k = 1$, $W = Z^{2}$ and $Z \sim G(0,1)$
+    \item If $k = 1$, $W \sim Exp(2)$ ($\theta = 2$)
+    \item If $k$ is large, $W \stackrel{Appr.}{\sim} N(k, 2k)$
+    \item Let $X_{k_{1}}, X_{k_{1}}$ be independent random variables with $X_{k_{i}} \sim X_{k_{i}}^{2}$. \\
+    Then $X_{k_{1}} + X_{k_{2}} =  X_{k_{1} + k_{2}}^{2}$.
+  \end{itemize}
+
+  \subsection{Student's \emph{t} Distribution}
+  Properties of $T$:
+  \begin{itemize}
+    \item[i)] Range of $T$: $(-\infty, \infty)$
+    \item[ii)] T is symmetric around 0
+    \item[iii)] As $k \uparrow$, $T \rightarrow Z$
+  \end{itemize}
+
+  \begin{theorem}
+    \emph{Suppose $Z \sim G(0,1)$ and $U \sim X_{k}^{2}$ independently. Let}
+    $$T = \frac{Z}{\sqrt{U / k}}$$
+    $$\rightarrow \frac{\bar{Y} - M}{s / \sqrt{n}} \sim t_{n-1}$$
+    \emph{Then T has \textbf{Student's} t \textbf{distribution with} k \bf{degrees of freedom}}.
+  \end{theorem}
+
+  \subsection{Likelihood-Based Confidence Intervals}
+  \begin{theorem}
+    $A~100p\%~likelihood~interval~is~an~approximate~100q\%~where~q = 2P(Z \leq \sqrt{-2\ln p}) - 1~and~Z \sim N(0,1).$
+  \end{theorem}
+
+  \begin{ex}
+    Show that a 1\% likelihood interval is an approximate 99.8\% confidence interval. \\
+    Note that $p = 0.01$
+    \begin{align*}
+      q &= 2P(Z \leq \sqrt{-2\ln(0.01)}) - 1 \\
+        &\approx 2P(Z \leq 3.03) - 1 \\
+        &= 2(0.99878) - 1 \\
+        &= 0.998 = 99.8\%
+    \end{align*}
+  \end{ex}
+
+  \begin{theorem}
+    \emph{If a is a value such that}
+    $$P = 2P(Z \leq a) - 1 ~~ where ~ Z \sim N(0,1)$$
+    \emph{then the likelihood interval }$\{\theta : R(\theta) \geq e^{-a^{2}/2}\}$ \emph{is an approximate $100p\%$ confidence interval.}
+  \end{theorem}
+
+  \subsection{Confidence Intervals for Parameters in the $G(\mu, \sigma)$ Model}
+  If $Y_{1}, \dots, Y_{n}$ are independent $N(\mu, \sigma^{2})$, then
+  \begin{align}
+     \frac{\bar{Y} - \mu}{s / \sqrt{n}}~ &\sim t_{n-1} \\
+     \frac{(n-1)S^{2}}{\sigma^{2}} ~&\sim X_{n-1}^{2}
+  \end{align}
+
+  General Rule: \\
+  The Confidence Interval for $\mu$ if $\sigma$ is unknown is
+  $$\left[~\bar{y} \pm t^{*}\frac{s}{\sqrt{n}}~\right]$$
+  When $\sigma$ is unknown, we replace $\sigma$ by its estimate $s$, and we use t-pivot. \\
+  Confidence interval when $\sigma$ is known is
+  $$\left[~\bar{y} \pm z^{*}\frac{\sigma}{\sqrt{n}}~\right]$$
+  When $\sigma$ is known, we use z-pivot. \\
+
+  If $n$ is really large, then the $t^{*}$ value converges to the corresponding $z^{*}$ value (by Central Limit Theorem). \\
+
+  \textbf{Prediction Interval for a Future Observation} \\
+  Suppose that $Y \sim G(\mu,\sigma)$, then
+  $$Y - \widetilde{\mu} = Y - \bar{Y} \sim N\left(0, \sigma^{2}\left(1 + \frac{1}{n}\right)\right)$$
+  Also
+  $$\frac{Y - \bar{Y}}{S\sqrt{1 + \frac{1}{n}}} \sim t_{n-1}$$
+  is a pivotal quantity which can be used to obtain an interval of values for $Y$. \\
+  Let $a$ be a value such that $P(-a \leq T \leq a) = p$ or $P(T \leq a) = (1+p)/2$ which is obtained from tables. Thus
+  $$\left[ ~\bar{y} \pm as\sqrt{1 + \frac{1}{n}} ~\right]$$
+
+\end{document}
