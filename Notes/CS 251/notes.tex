@@ -925,7 +925,61 @@ binary and those who can't.} \\
   NOR will be covered later. \\
   For load and store word instructions, ALU is used to compute the memory address by addition. \\
   For R-type instructions, ALU needs to perform AND, OR, subtract, add, or set on less than, depending on the value of the 6-bit function field in the low-order bits of the instruction. \\
-  For branch equal, the ALU must perform a subtraction.
+  For branch equal, the ALU must perform a subtraction. \\
+
+  In many instances, we do not care about the values of some of the \emph{inputs}, and because we wish to keep the tables compact, we also include \emph{don't-care terms}.
+  A don't-care term in this truth table (represented by an X in an input column) indicates that the output does not depend on the value of the input corresponding to that column.
+
+  \subsection{Designing the Main Control Unit}
+  The three instruction classes (R-Type, load and store, and branch) use two different instruction formats; jump instructions use another format
+  \begin{itemize}
+    \item R-format instructions have an opcode of 0.
+    They have three register operands: rs, rt, and rd.
+    Fields rs and rt are sources, and rd is the destination.
+    The ALU function is in the funct field and is decoded by the ALU control design.
+    The shamt field is used only for shifts.
+    \item Instruction format for load (opcode=35) and store (opcode=43) instructions.
+    The register rs is the base register that is added to the 16-bit address field to form the memory address.
+    For load, rt is the destination register for the loaded value.
+    For stores, rt is the source register whose value should be stored in memory.
+    \item Instruction format for branch equal (opcode=4).
+    The registers rs and rt are the source registers that are compared for equality.
+    The 16-bit address field is sign-extended, shifted, and added to the PC+4 to compute the branch target address
+  \end{itemize}
+
+  The general format of instructions are
+  \begin{itemize}
+    \item The op field, opcode, is always contained in bits 31:26.
+    \item The two registers to be read are always specified by the rs and rt fields, at positions 25:21 and 20:16.
+    This is true for the R-type instructions, branch equal, and store.
+    \item The base register for load and store instruction is always in bit position 25:21 (rs).
+    \item The 16-bit offset for branch equal, load, and store is always in positions 15:0.
+    \item The destination register is in one of two places.
+    For a load, it is in bit positions 20:16 (rt), while for an R-type instruction it is in bit positions 15:11 (rd).
+    Thus, a multiplexer is added to select which field of the instruction is used to indicate the register number to be written.
+  \end{itemize}
+
+  The control unit can set all but one of the control signals based solely on the opcode field of the instruction.
+  The PCSrc control line is the exception; that control line should be asserted if the instruction is branch on equal (a decision that the control unit can make) \emph{and} the Zero output of the ALU, which is used for equality comparison, is asserted. \\
+
+  \textbf{Outputs for Control Unit} \\
+  The output from the control unit are the control lines that:
+  \begin{enumerate}
+    \item Signal when memory should be write enabled (1-3)
+    \item Signal when data lines a multiplexer show forward on (4-7)
+    \item Signal which function the ALU should perform (8)
+  \end{enumerate}
+  \begin{tabular}{c || l | l | l}
+  & Signal/Outputs & If Signal == 1 & If Signal == 0 \\ \hline \hline
+  1. & \emph{MemWrite} & Write to Data Memory & No effect \\ \hline
+  2. & \emph{MemRead} & Memory read memory & No effect \\ \hline
+  3. & \emph{RegWrite} & Write data to Register File & NO effect \\ \hline
+  4. & \emph{MemtoReg} & Use data from Data Memory & Use ALUResult \\ \hline
+  5. & \emph{Branch} & Use PCBranch result for PC & No branch; use PC + 4 \\ \hline
+  6. & \emph{RegDst} & Use 15:11 field for write address (rd used) & Use 20:16 field (rt used) \\ \hline
+  7. & \emph{ALUSrc} & Use immediate field from Instr & Use Register File \\ \hline
+  8. & \emph{ALUControl\textsubscript{2:0}} & Specify the ALU operation: add, sub, and, or
+  \end{tabular}
 
   \newpage
   \section{To-do}
