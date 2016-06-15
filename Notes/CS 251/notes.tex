@@ -1037,6 +1037,26 @@ binary and those who can't.} \\
   \end{enumerate}
   \end{multicols}
 
+  \textbf{ALU Decoder}
+  How the main decoder signals the ALU decoder: \\
+  \begin{tabular} {l | l}
+  ALUOp\textsubscript{1:0} & Meaning \\ \hline \hline
+  00 & Add \\ \hline
+  01 & Subtract \\ \hline
+  10 & Look at Funct \\ \hline
+  11 & Not Used \\ \hline
+  \end{tabular} \\
+
+  The inputs (ALUOp\textsubscript{1:0} and Funct) and the output (ALUControl\textsubscript{2:0}): \\
+  \begin{tabular}{l | l | l}
+  ALUOp\textsubscript{1:0} & Funct Field & ALUControl\textsubscript{2:0} \\ \hline \hline
+  00 & X & 010 (Add) \\ \hline
+  X1 & X & 110 (Subtract) \\ \hline
+  1X & 100000 (add) & 010 (Add) \\ \hline
+  1X & 100010 (sub) & 110 (Subtract) \\ \hline
+  1X & 100100 (and) & 000 (And) \\ \hline
+  1X & 100101 (or) & 001 (Or)
+  \end{tabular}
 
   \subsection{Procedure of Executing the Load Instruction}
   \begin{enumerate}
