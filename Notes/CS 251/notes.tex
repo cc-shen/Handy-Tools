@@ -101,8 +101,8 @@
   \end{tabular}
 
   \subsection{Bytes, Nibbles, and All That Jazz}
-  A group of eight bits is called a byte. Represents $256 = 2^{8}$ possibilities. \\
-  A group of four bits is called a nibble. Represents $16 = 2^{4}$ possibilities. \\
+  A group of eight bits is called a \emph{byte}. Represents $256 = 2^{8}$ possibilities. \\
+  A group of four bits is called a \emph{nibble}. Represents $16 = 2^{4}$ possibilities. \\
   A microprocessor is a processor built on a single chip. \\
   Microprocessors handle data in chunks called words. The size of a word depends on the architecture of the microprocessor. \\
   Within a group of bits, the bit in the 1's column is called the least significant bit (lsb), and the bit at the other end is called the most significant bit (msb). \\
@@ -980,6 +980,42 @@ binary and those who can't.} \\
   7. & \emph{ALUSrc} & Use immediate field from Instr & Use Register File \\ \hline
   8. & \emph{ALUControl\textsubscript{2:0}} & Specify the ALU operation: add, sub, and, or
   \end{tabular}
+
+  \subsection{Procedure of Executing the Load Instruction}
+  \begin{enumerate}
+    \item[1] \emph{Fetch} the instruction, say \emph{lw \$2, 4(\$1)}
+    \begin{enumerate}
+      \item Start at the program counter (PC) to get the address of the next instruction
+      \item Go the the \emph{Instruction Memory} to get next instruction
+    \end{enumerate}
+    \item[2a] Get the value stored in the \emph{Register File} at location \emph{\$1}
+    \begin{enumerate}
+      \item Specify the address (00001) at input A1 of the \emph{Register File}
+      \item The data will appear at output RD1 of the \emph{Register File}
+    \end{enumerate}
+    \item[2b] \emph{Sign extend} the \emph{offset}
+    \begin{enumerate}
+      \item The offset, 4, is specified in the instruction
+      \item Convert the offset from a 16-bit signed integer to a 32-bit signed integer by sign extending it
+    \end{enumerate}
+    \item[2c] Calculate the memory address of the data
+    \begin{enumerate}
+      \item Send the base address and the offset to inputs \emph{SrcA} and \emph{SrcB} of the \emph{Arithmetic Logic Unit} (ALU)
+      \item Signal the \emph{ALU} to add the inputs with control signal \emph{ALUControl}
+      \item The sum will appear at \emph{ALUResult}
+    \end{enumerate}
+    \item[2d] Read the data stored at this address
+    \begin{enumerate}
+      \item Send the memory address to the \emph{Data Memory}
+      \item The data stored at that address will appear at output \emph{RD}
+    \end{enumerate}
+    \item[2e] Write the data into the \emph{Register File} at location \emph{\$2}
+    \begin{enumerate}
+      \item Send the \emph{ReadData} back to the \emph{Register File}
+      \item Send the address (00010) to the \emph{Register File}
+      \item Signal the \emph{Register File} to store the data (\emph{RegWrite}) at input \emph{WD3}
+    \end{enumerate}
+  \end{enumerate}
 
   \newpage
   \section{To-do}
