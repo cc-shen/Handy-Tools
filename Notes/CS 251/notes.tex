@@ -8,6 +8,7 @@
 \usepackage[pdftex, pdfauthor={Charles Shen}, pdftitle={CS 251: Computer Organization and Design}, pdfsubject={Lecture notes from CS 251: Computer Organization and Design at the University of Waterloo}, pdfkeywords={CS 251, course notes, notes, Waterloo, University of Waterloo}, pdfproducer={LaTeX}, pdfcreator={pdflatex}]{hyperref}
 \usepackage{cleveref}
 \usepackage{wrapfig}
+\usepackage{multicol}
 
 \DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
 
@@ -602,13 +603,12 @@ binary and those who can't.} \\
 
   Two general classes of finite state machines, characterized by their functional specifications. \\
   In \emph{Moore machines}, the outputs depend only on the current state of the machine. \\
-  In \emph{Mealy machines}, the outputs depend on both the current state and the current inputs. \\
+  In \emph{Mealy machines}, the outputs depend on both the current state and the current inputs.
 
-  \subsection{State Transition Diagram}
   \begin{wrapfigure}{r}{0.4\textwidth}
-    \centering
     \includegraphics[width=0.4\textwidth]{pictures/stateTransistionDiagram.png}
   \end{wrapfigure}
+  \subsection{State Transition Diagram}
   A \emph{state transition diagram} indicates all the possible states of the system and the transitions between these states. \\
   In a state transition diagram, circles represent states and arcs represent transitions betweens states. \\
   The transitions take place on the rising edge of the clock; the clock can hidden on the diagram because it is always present in a synchronous sequential circuit.
@@ -904,7 +904,7 @@ binary and those who can't.} \\
   \section{A Full Data-Path}
   \begin{figure}[!htp]
     \centering
-    \includegraphics[angle=90, scale=0.92]{pictures/fullDataPath.png}
+    \includegraphics[angle=90, width=1.0\textwidth]{pictures/fullDataPath.png}
     \caption{Data-path with all necessary multiplexers and all control lines.}
     \label{fullDataPath}
   \end{figure}
@@ -981,7 +981,62 @@ binary and those who can't.} \\
   6. & \emph{RegDst} & Use 15:11 field for write address (rd used) & Use 20:16 field (rt used) \\ \hline
   7. & \emph{ALUSrc} & Use immediate field from Instr & Use Register File \\ \hline
   8. & \emph{ALUControl\textsubscript{2:0}} & Specify the ALU operation: add, sub, and, or
-  \end{tabular}
+  \end{tabular} \\
+
+  The settings of the control lines is completely determined by the opcode fields of the instruction.
+  \begin{multicols}{4}
+  \begin{enumerate}
+    \item R-Format
+    \begin{enumerate}
+      \item[RegDst] 1
+      \item[ALUSrc] 0
+      \item[MemtoReg] 0
+      \item[RegWrite] 1
+      \item[MemRead] 0
+      \item[MemWrite] 0
+      \item[Branch] 0
+      \item[ALUOp1] 1
+      \item[ALUOp0] 0
+    \end{enumerate}
+    \item lw
+    \begin{enumerate}
+      \item[RegDst] 0
+      \item[ALUSrc] 1
+      \item[MemtoReg] 1
+      \item[RegWrite] 1
+      \item[MemRead] 1
+      \item[MemWrite] 0
+      \item[Branch] 0
+      \item[ALUOp1] 0
+      \item[ALUOp0] 0
+    \end{enumerate}
+    \item sw
+    \begin{enumerate}
+      \item[RegDst] X
+      \item[ALUSrc] 1
+      \item[MemtoReg] X
+      \item[RegWrite] 0
+      \item[MemRead] 0
+      \item[MemWrite] 1
+      \item[Branch] 0
+      \item[ALUOp1] 0
+      \item[ALUOp0] 0
+    \end{enumerate}
+    \item beq
+    \begin{enumerate}
+      \item[RegDst] X
+      \item[ALUSrc] 0
+      \item[MemtoReg] X
+      \item[RegWrite] 0
+      \item[MemRead] 0
+      \item[MemWrite] 0
+      \item[Branch] 1
+      \item[ALUOp1] 0
+      \item[ALUOp0] 1
+    \end{enumerate}
+  \end{enumerate}
+  \end{multicols}
+
 
   \subsection{Procedure of Executing the Load Instruction}
   \begin{enumerate}
