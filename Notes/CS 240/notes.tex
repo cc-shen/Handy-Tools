@@ -1,0 +1,204 @@
+\documentclass[12pt]{article}
+\usepackage[margin = 1.5in]{geometry}
+\setlength{\parindent}{0in}
+\usepackage{amsfonts, amssymb, amsthm, mathtools, tikz, qtree, float}
+\usepackage[lined]{algorithm2e}
+\usepackage[T1]{fontenc}
+\usepackage{ae, aecompl, color}
+\usepackage[pdftex, pdfauthor={Charles Shen}, pdftitle={CS 240: Data Structures and Data Management}, pdfsubject={Lecture notes from CS 240: at the University of Waterloo}, pdfkeywords={course notes, notes, Waterloo, University of Waterloo}, pdfproducer={LaTeX}, pdfcreator={pdflatex}]{hyperref}
+\usepackage{cleveref}
+\usepackage{wrapfig}
+\usepackage{multicol}
+
+\DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
+
+\definecolor{darkish-blue}{RGB}{25,103,185}
+
+\hypersetup{
+  colorlinks,
+  citecolor=darkish-blue,
+  filecolor=darkish-blue,
+  linkcolor=darkish-blue,
+  urlcolor=darkish-blue
+}
+
+\theoremstyle{definition}
+\newtheorem*{defn}{Definition}
+\newtheorem*{theorem}{Theorem}
+\newtheorem*{corollary}{Corollary}
+\newtheorem{ex}{Example}[section]
+
+\crefname{ex}{Example}{Example}
+
+\setlength{\marginparwidth}{1.5in}
+\newcommand{\lecture}[1]{
+  \marginpar{{
+    \footnotesize $\leftarrow$ \underline{#1}}
+  }
+}
+
+\newcommand{\includePicture}[3]{
+  \begin{figure}[!ht]
+  \centering
+  \scalebox{#1}{\includegraphics{#2}}
+  \caption{#3}
+  \end{figure}
+}
+
+\allowdisplaybreaks
+
+\makeatletter
+\def\blfootnote{\gdef\@thefnmark{}\@footnotetext}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%
+%% D O C U M E N T %%
+%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\let\ref\Cref
+
+\title{\bf{CS 240: Data Structure and Data Management}}
+\date{Spring 2016, University of Waterloo \\ \center Formulas, run time, and more.}
+\author{Charles Shen}
+
+\blfootnote{Feel free to email feedback to me at
+\href{mailto:echen902@gmail.com}{echen902@gmail.com}.}
+
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+
+\section{Order Notation}
+\subsection{Big O}
+O-Notation (bound from above; worst case):
+$$f(n) \in O(g(n))$$
+if there exists constants $c, n_{0} > 0$ such that
+$$0 \leq f(n) \leq cg(n) ~~~\forall n \geq n_{0}$$
+
+\subsection{Big Omega}
+$\Omega$-Notation (bound from below; best case):
+$$f(n) \in \Omega(g(n))$$
+if there exists constants $c, n_{0} > 0$ such that
+$$0 \leq cg(n) \leq f(n) ~~~\forall n \geq n_{0}$$
+
+\subsection{Theta Bound}
+$\theta$-Notation (tight bound):
+$$f(n) \in \theta(g(n))$$
+if there exists constants $c_{1}, c_{2}, n_{0} > 0$ such that
+$$c_{1}g(n) \leq f(n) \leq c_{2}g(n) ~~~\forall n \geq n_{0}$$
+
+\subsection{Little o}
+o-Notation (bound from above for all):
+$$f(n) \in o(g(n))$$
+if for all constants $c > 0$, there exists a constant $n_{0} > 0$ such that
+$$0 \leq f(n) \leq cg(n) ~~~\forall n \geq n_{0}$$
+
+\subsection{Little omega}
+$\omega$-Notation (bound from below for all):
+$$f(n) \in o(g(n))$$
+if for all constants $c > 0$, there exists a constant $n_{0} > 0$ such that
+$$0 \leq cg(n) \leq cf(n) ~~~\forall n \geq n_{0}$$
+
+\subsection{Techniques for Order Notation}
+Suppose that $f(n) > 0$ and $g(n) > 0$ for all $n \geq n_{0}$. \\
+Suppose that
+$$L = \lim_{n\to\infty}\frac{f(n)}{g(n)}$$
+Then
+\begin{align*}
+f(n) \in
+\begin{cases}
+o(g(n)) ~~&\text{if } L = 0 \\
+\theta(g(n)) ~~& \text{if } 0 < L < \infty \\
+\omega(g(n)) ~~&\text{if } L = \infty
+\end{cases}
+\end{align*}
+
+\subsection{Relationships Between Order Notations}
+\begin{align*}
+f(n) \in \theta(g(n)) &\Longleftrightarrow g(n) \in \theta(f(n))& \\
+f(n) \in O(g(n)) &\Longleftrightarrow g(n) \in \Omega(f(n))& \\
+f(n) \in o(g(n)) &\Longleftrightarrow g(n) \in \omega(f(n))& \\ \\
+f(n) \in \theta(g(n)) &\Longleftrightarrow
+  f(n) \in O(g(n)) \text{ and } f(n) \Omega(g(n))& \\
+f(n) \in o(g(n)) &\Longleftrightarrow f(n) \in O(g(n)) \\
+f(n) \in o(g(n)) &\Longleftrightarrow f(n) \not\in \Omega(g(n)) \\
+f(n) \in \omega(g(n)) &\Longleftrightarrow f(n) \in \Omega(g(n)) \\
+f(n) \in \omega(g(n)) &\Longleftrightarrow f(n) \not\in O(g(n))
+\end{align*}
+
+\subsection{Algebra of Order Notation}
+``Maximum'' Rules: Suppose that $f(n) > 0$ and $g(n) > 0$ for all $n \geq n_{0}$, then:
+\begin{align*}
+O(f(n) + g(n)) &\ O(max\{f(n), g(n)\}) \\
+\theta(f(n) + g(n)) &\ \theta(max\{f(n), g(n)\}) \\
+\Omega(f(n) + g(n)) &\ \Omega(max\{f(n), g(n)\})
+\end{align*}
+
+Transitivity: If $f(n) \in O(g(n))$ and $g(n) \in O(h(n))$ then $f(n) \in O(h(n))$.
+
+\section{Summation Formulas}
+Arithmetic:
+$$\sum_{i=0}^{n-1}(a + di) = na + \frac{dn(n-1)}{2} \in \theta(n^{2}) ~\text{for } d \not = 0$$
+Geometric:
+\begin{align*}
+\sum_{i=0}^{n-1}ar^{i} =
+\begin{cases}
+a\frac{r^{n} - 1}{r - 1} &\in \theta(r^{n}) \text{ if } r > 1 \\
+na &\in \theta(n) ~\text{ if } r = 1 \\
+a\frac{1 - r^{n}}{1 - r} &\in \theta(1) ~\text{ if } 0 < r < 1
+\end{cases}
+\end{align*}
+Harmonic:
+$$H_{n} = \sum_{i=1}^{n}\frac{1}{i} \in \theta(\log n)$$ \\
+
+\begin{flalign}
+&\sum_{i=1}^{n}ir^{i} = \frac{nr^{n+1}}{r - 1} - \frac{r^{n+1} - r}{(r-1)^{2}} &
+&\sum_{i=1}^{\infty}\frac{1}{i^{2}} = \frac{\pi}{6} & \nonumber \\
+&\text{for } k \geq 0, \sum_{i=1}^{n}i^{k} \in \theta(n^{k+1}) & \nonumber \\
+&n! \in \theta(\frac{n^{\frac{n+1}{2}}}{e^{n}}) &
+&\log n! \in \theta(n \log n) & \nonumber
+\end{flalign}
+
+%%%%%%%%%%%%
+%% REVIEW %%
+%%%%%%%%%%%%
+
+\section{Review}
+\textbf{[A] Prove} $\frac{1}{n} \in o(1)$
+\begin{flalign}
+&\frac{1}{n} < c & \notag \\
+&1 < cn & \notag \\
+&n > \frac{1}{c} & \notag \\
+&\text{Choose } n_{0} = \frac{2}{c} &\notag \\
+&\text{Given $c > 0$, set } n_{0} = \frac{2}{c} &\notag \\
+&\frac{1}{n} \leq \frac{1}{n_0} \leq \frac{1}{2/c} & \notag \\
+&= \frac{c}{2} & \notag \\
+&< c & \blacksquare \notag
+\end{flalign}
+\newline
+
+\textbf{[B] Prove} $\frac{1}{n\sqrt{n}} \not\in O(\frac{1}{n^2}$
+\begin{flalign}
+&\exists c, n_{0} > 0 \text{ such that} & \notag \\
+&\frac{1}{n\sqrt{n}} \leq \frac{c}{n^2} & \notag \\
+&\frac{n^{2}}{n\sqrt{n}} \leq \frac{n^{2}c}{n^{2}} & \notag \\
+&\frac{n}{\sqrt{n}} \leq c & \notag \\
+&\sqrt{n} \leq c & \notag \\
+& n \leq c^{2} & \notag \\
+&\textbf{Contradiction. Thus } n > c^{2} &\blacksquare \notag
+\end{flalign}
+\newline
+
+\textbf{[C]} Suppose you own \emph{n} electronic devices.
+You have \emph{n} charger cables associated with each phone.
+Each plug is slightly different, but you can't compare plugs with each other.
+You can only find which charger fits with each phone by plugging it in. \\
+Give a randomized $O(n\log n)$ algorithm:
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%
+%% D O C U M E N T %%
+%%%%%%%%%%%%%%%%%%%%%

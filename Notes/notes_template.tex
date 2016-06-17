@@ -32,15 +32,21 @@
 \crefname{ex}{Example}{Example}
 
 \setlength{\marginparwidth}{1.5in}
-\newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
+\newcommand{\lecture}[1]{
+  \marginpar{{
+    \footnotesize $\leftarrow$ \underline{#1}}
+  }
+}
 
-\newcommand{\includePicture}[2]{
-  \begin{figure}[H]
+\newcommand{\includePicture}[3]{
+  \begin{figure}[!ht]
   \centering
   \scalebox{#1}{\includegraphics{#2}}
   \caption{#3}
   \end{figure}
 }
+
+\allowdisplaybreaks
 
 \makeatletter
 \def\blfootnote{\gdef\@thefnmark{}\@footnotetext}
