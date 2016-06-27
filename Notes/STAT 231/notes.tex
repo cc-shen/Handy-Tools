@@ -58,7 +58,95 @@
   \section{Numerical Summaries}
   \subsection{Measure of Location}
   \subsubsection{Mean}
-  The \emph{sample mean}
+  The \emph{sample mean}, also called the sample average is
+  $$\bar{y} = \frac{1}{n}\sum_{i=1}^{n}y_{i}$$
+  \subsubsection{Median}
+  The \emph{sample median} $\hat{m}$ is the middle value(s) of an ordered sample. \\
+  Median is less affected by a few extreme observations so it is a more robust measure of location. \\
+  It is also the second quartile (\ref{iqr}).
+  \subsubsection{Mode}
+  The \emph{sample mode} is the most common value of $y$ in a sample; it may not be unique when there are multiple values of same frequency.
+
+  \subsection{Measure of Dispersion or Variability}
+  \subsubsection{Variance and Standard Deviation}
+  The \emph{sample variance} is roughly the average of the squared deviation from the mean:
+  \begin{align*}
+  s^{2} &= \frac{1}{n-1}\sum_{i=1}^{n}(y_{i} - \bar{y})^{2} \\
+  &= \frac{1}{n-1}
+  \left[
+  \sum_{i=1}^{n}y_{i}^{2} - n(\bar{y})^{2}
+  \right]
+  \end{align*}
+  In addition, \emph{standard deviation} is then
+  $$s = \sqrt{s^{2}}$$
+  \subsubsection{Range}
+  Range is the difference between highest and lowest value in the sample
+  $$range = y_{(n)} - y_{(1)}$$
+  where
+  $$y_{(1)} = min(y_{1}, \dots, y_{n})$$
+  and
+  $$y_{(n)} = max(y_{1}, \dots, y_{n})$$
+  \subsubsection{Quantiles and Interquartile Range} \label{iqr}
+  \begin{defn}
+    Let $\{y_{(1)}, y_{(2)}, \dots, y_{(n)}\}$ where $y_{(1)} \leq y_{(2)} \leq \dots \leq y_{(n)}$ be the ordered statistic for the data set $\{y_1, y_2, \dots, y_n\}$.
+    The $pth$ quantile (also called the $100pth$ percentile) is a value, call it $q(p)$, determined as follows:
+    \begin{itemize}
+    \item Let $m = (n+1)p$ where $n$ is the sample size
+    \item If $m$ is an integer between $1$ and $n$, then $q(p) = y_{(m)}$ which is the $mth$ largest value in the data set
+    \item If $m$ is not an integer but $1 < m < n$ then determine the closest integer $j$ such that $j < m < j+1$ and take $q(p) = \frac{1}{2}[y_{(j)} + y_{(j+1)}]$
+    \end{itemize}
+  \end{defn}
+  The first (lower) quartile is $q(0.25)$, also the 25\textsuperscript{th} percentile. \\
+  The second quartile is $q(0.50)$, also the 50\textsuperscript{th} percentile and the median. \\
+  The third(upper) quartile is $q(0.75)$, also the 75\textsuperscript{th} percentile. \\
+
+  The \emph{interquartile range} is $IQR = q(0.75) - q(0.25)$
+
+  \subsection{Measure of Shape}
+  \subsubsection{Skewness}
+  The skewness $g_{1}$ can be measured precisely by
+  \begin{align*}
+  g_{1} =
+  \frac{\frac{1}{n}\sum_{i=1}^{n}(y_{i} - \bar{y})^{3}}{\left[\frac{1}{n}\sum_{i=1}^{n}(y_{i} - \bar{y})^{2}\right]^{3/2}}
+  \end{align*}
+  It's a measure on the (lack of) symmetry in the data. \\
+  If $g_{1} = 0$, then data is symmetric. \\
+  If $g_{1} < 0$, then data is left skewed (long left tail). \\
+  If $g_{1} > 0$, then data is right skewed (long right tail). \\
+  A quick estimate on skewness is $mean - median$
+  \subsubsection{Kurtosis}
+  $$g_{2} = \frac{\frac{1}{n}\sum_{i=1}^{n}(y_{i} - \bar{y})^{4}}{\left[\frac{1}{n}\sum_{i=1}^{n}(y_{i} - \bar{y})^{2}\right]^{2}}$$
+  measures the heaviness of the tails and the peakedness of the data relative to data that are Normally distributed. \\
+  Kurtosis is always positive. \\
+  For the Normal distribution, kurtosis is equal to 3. \\
+  If $g_{2} < 3$, then more stacked peaks and smaller tails. \\
+  If $g_{2} > 3$, then more peaked center and heavier tails.
+
+  \subsection{More Definitions}
+  \subsubsection{Five Numbers Summary}
+  \begin{defn}
+    The five number summary of a data set consists of the three quartiles and the minimum and maximum values of the data set. \\
+    That is, $q(0.25)$, $q(0.5)$, $q(0.75)$, $y_{(1)}$, and $y_{(n)}$.
+  \end{defn}
+  \subsubsection{Correlation}
+  \begin{defn}
+  The sample \emph{correlation}, denoted by $r$, for data $\{(x_{1},y_{1}), (x_{2},y_{2}), \dots, (x_{n},y_{n})\}$ is
+  $$
+    r = \frac{S_{xy}}{\sqrt{S_{xx}S_{yy}}}
+  $$
+  where
+  \begin{align*}
+    S_{xx} &= \sum_{i=1}^{n}(x_{i} - \bar{x})^{2}
+    = \sum_{i=1}^{n}x_{i}^{2} - n(\bar{x})^2 \\
+    S_{xy} &= \sum_{i=1}^{n}(x_{i} - \bar{x})(y_{i} - \bar{y})
+    = \sum_{i=1}^{n}x_{i}y_{i} - n\bar{x}\bar{y} \\
+    S_{yy} &= \sum_{i=1}^{n}(y_{i} - \bar{y})^{2}
+    = \sum_{i=1}^{n}y_{i}^{2} - n(\bar{y})^2 \\
+  \end{align*}
+  \end{defn}
+  If the value of $r$ is close to $1$, then there is a strong positive linear relationship. \\
+  If the value of $r$ is close to $-1$, then there is a strong negative linear relationship. \\
+  If the value of $r$ is close to $0$, then there is no linear relationship between the two variates.
 
   \section{Distribution Theory}
   If $Y_{1}, Y_{2}, \dots, Y_{n} ~ N(\mu, \sigma^{2})$ and they're independent, then
@@ -309,6 +397,17 @@
   \textbf{Confidence Interval vs. Hypothesis Testing} \\
   \emph{Confidence interval} is the range of ``reasonable'' values for $\theta$, given the level of confidence and sample data. \\
   \emph{Hypothesis testing} tests whether a particular value of $\theta$ is ``reasonable'' given the \emph{p-value} and sample data.
+
+  \subsection{Tests of Hypotheses for Parameter in the Poi($\mu$) Model}
+  Suppose $Y_{1}, Y_{2}, \dots, Y_{n} \sim Poi(\mu)$ \\
+  $H_{0}: \mu = \mu_{0}$ and $H_{1}: \mu \not = \mu_{0}$ \\
+  Mean and Variance both are $\mu$ \\
+  By Central Limit Theorem, $\bar{Y} \sim Poi(\mu, \frac{\mu}{n})$ \\
+  Thus the test statistic $D$ is
+  \begin{align*}
+  &\frac{\bar{Y} - \mu}{\sqrt{\mu / n}} = Z \sim N(0,1) \\
+  \rightarrow~~~ &\frac{\bar{y} - \mu_{0}}{\sqrt{\mu_{0} / n}} = Z \sim N(0,1)
+  \end{align*}
 
   \subsection{Tests of Hypotheses for Parameters in the $G(\mu, \sigma)$ Model}
   \textbf{Hypothesis Tests for} $\mu$ \\
