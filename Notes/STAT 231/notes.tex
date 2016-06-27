@@ -43,7 +43,7 @@
   \date{Spring 2016, University of Waterloo \\ \center Formulas and Notes.}
   \author{Charles Shen}
 
-  \blfootnote{Feel free to email feedback to me at \href{mailto:echen902@gmail.com}{echen902@gmail.com}.}
+  \blfootnote{Feel free to email feedback to me at \href{mailto:ccshen902@gmail.com}{ccshen902@gmail.com}.}
 
   \maketitle
   \begin{center}
@@ -54,6 +54,19 @@
   \newpage
   \tableofcontents
   \newpage
+
+  \section{Numerical Summaries}
+  \subsection{Measure of Location}
+  \subsubsection{Mean}
+  The \emph{sample mean}
+
+  \section{Distribution Theory}
+  If $Y_{1}, Y_{2}, \dots, Y_{n} ~ N(\mu, \sigma^{2})$ and they're independent, then
+  $$\bar{Y} \sim N(\mu, \frac{\sigma^{2}}{n})$$
+  and
+  $$\frac{\bar{Y} - \mu}{\sigma/\sqrt{n}} = Z \sim N(0, 1) $$
+  For large $n$, then
+  $$\frac{\bar{Y} - \mu}{s/\sqrt{n}} \approx Z \sim N(0, 1) $$
 
   \section{Statistical Models and Maximum Likelihood Estimation}
   \begin{defn}
@@ -88,7 +101,6 @@
     \emph{If $\hat{\theta}$ is the maximum likelihood estimate of $\theta$, then $g(\hat{\theta})$ is the maximum likelihood estimate of $g(\theta)$.}
   \end{theorem}
 
-  \newpage
   \section{Estimation}
   \subsection{Confidence Intervals and Pivotal Quantities}
   In general, construct a pivot using the estimator, use that to construct coverage interval, estimate it and find the confidence interval.
@@ -96,6 +108,9 @@
   \begin{defn}
     A $100p\%$, where $0 \leq p \leq 1$, confidence interval tells $100p\%$ of the intervals constructed from samples will contain the true unknown value of $\mu$ (or $\sigma$).
   \end{defn}
+
+  To determine the correct value to look for in the distribution tables, calculate $(1+p)/2$ where $100p\%$ is the level of confidence. \\
+  For example, the $95\%$ confidence interval needs to look at $\frac{1+0.95}{2} = 0.975$.
 
   \begin{theorem}
   \textbf{Central Limit Theorem} \\
@@ -237,13 +252,13 @@
   The $X_{n-1}^{2}$ distribution is not a symmetric distribution. \\
 
   \textbf{Prediction Interval for a Future Observation} \\
-  Suppose that $Y \sim G(\mu,\sigma)$, then
+  Suppose that $Y \sim G(\mu,\sigma)$ with \textbf{independent} observations, then
   $$Y - \widetilde{\mu} = Y - \bar{Y} \sim N\left(0, \sigma^{2}\left(1 + \frac{1}{n}\right)\right)$$
   Also
   $$\frac{Y - \bar{Y}}{S\sqrt{1 + \frac{1}{n}}} \sim t_{n-1}$$
   is a pivotal quantity which can be used to obtain an interval of values for $Y$. \\
-  Let $a$ be a value such that $P(-a \leq T \leq a) = p$ or $P(T \leq a) = (1+p)/2$ which is obtained from tables. Thus
-  $$\left[ ~\bar{y} \pm as\sqrt{1 + \frac{1}{n}} ~\right]$$
+  Let $t^{*}$ be a value such that $P(-t^{*} \leq T \leq t^{*}) = p$ or $P(T \leq t^{*}) = (1+p)/2$ which is obtained from tables. Thus
+  $$\left[ ~\bar{y} \pm t^{*}s\sqrt{1 + \frac{1}{n}} ~\right]$$
 
   \section{Tests of Hypothesis}
   \begin{defn}
@@ -305,7 +320,7 @@
   \begin{align*}
     \emph{p-value} &= P(D \geq d) \\
     &= P(|T| \geq d) \\
-    &= 1 - P(-d \geq T \geq d) \\
+    &= 1 - P(-d \leq T \leq d) \\
     &= 2[1 - P(T \leq d)] ~~~\text{where } T \sim t_{n-1}
   \end{align*}
 
