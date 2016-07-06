@@ -11,7 +11,7 @@
 \usepackage[pdftex, pdfauthor={Charles Shen}, pdftitle={Placeholder Course: Course-Name}, pdfsubject={Lecture notes from Placeholder Course: at the University of Waterloo}, pdfkeywords={course notes, notes, Waterloo, University of Waterloo}, pdfproducer={LaTeX}, pdfcreator={pdflatex}]{hyperref}
 \usepackage{cleveref}
 \usepackage{wrapfig}
-\usepackage{multicol}
+\usepackage{multicol, multicol}
 
 \DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
 
@@ -60,6 +60,7 @@
 
 \begin{document}
 \let\ref\Cref
+\pagenumbering{roman}
 
 \title{\bf{-- ---: Placeholder}}
 \date{Term Year, University of Waterloo \\ \center Notes written from Prof's lectures.}
@@ -72,6 +73,7 @@
 \newpage
 \tableofcontents
 \newpage
+\pagenumbering{arabic}
 
 \end{document}
 
