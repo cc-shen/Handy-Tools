@@ -38,7 +38,7 @@
 
 \begin{document}
   \let\ref\Cref
-
+  \pagenumbering{roman}
   \title{\bf{STAT 231: Statistics}}
   \date{Spring 2016, University of Waterloo \\ \center Formulas and Notes.}
   \author{Charles Shen}
@@ -54,6 +54,7 @@
   \newpage
   \tableofcontents
   \newpage
+  \pagenumbering{arabic}
 
   \section{Numerical Summaries}
   \subsection{Measure of Location}
@@ -213,10 +214,19 @@
   where $MoE$ is the margin of error. \\
   To be conservative, we usually pick $\hat{\pi} = 0.5$ as it maximizes $\hat{\pi}(1 - \hat{\pi})$. \\
 
-  For a Poisson Distribution, the pivotal quantity is
+  For a Poisson Distribution, $Y_1, Y_2, \dots, Y_n \sim Poi(\mu)$, the pivotal quantity is
   $$\frac{\bar{Y} - \mu}{\sqrt{\frac{\bar{Y}}{n}}} = Z \sim N(0,1)$$
   and the confidence interval is
   $$\left[~\bar{y} \pm z^{*}\sqrt{\frac{\bar{y}}{n}}~\right]$$
+
+  For an Exponential Distribution $Y_1, Y_2, \dots, Y_n \sim Exp(\mu)$, for large $n$, the pivotal quantity is
+  $$\frac{\bar{Y} - \mu}{\mu / \sqrt{n}} = Z \sim N(0, 1)$$
+  and the confidence interval is then
+  $$\left[~ \frac{\bar{Y}}{1 + z^{*}\frac{1}{\sqrt{n}}}, \frac{\bar{Y}}{1 - z^{*}\frac{1}{\sqrt{n}}} ~\right]$$
+  Otherwise, consider
+  $$\sum_{i=1}^{n}\frac{2Y_{i}}{\mu} \sim \chi_{2n}^{2}$$
+  and
+  $$P\left(a \leq \sum_{i=1}^{n}\frac{2Y_{i}}{\mu} \leq b\right) = p$$
 
   \subsection{Chi-Squared Distribution $\sim X_{k}^{2}$}
   The Gamma function is
@@ -387,7 +397,7 @@
     $0.05 < \emph{p-value} \leq 0.10$ & Weak evidence against $H_0$ based on the observed data. \\ \hline
     $0.01 < \emph{p-value} \leq 0.05$ & Evidence against $H_0$ based on the observed data. \\ \hline
     $0.001 < \emph{p-value} \leq 0.01$ & Strong evidence against $H_0$ based on the observed data. \\ \hline
-    \emph{p-value} $\leq 0.001$ & Very strong evidence against $H_0$ based on the observed data. \\ \hline
+    \emph{p-value} $\leq 0.001$ & Very strong evidence against $H_0$ based on the observed data.
   \end{tabular}
   \end{center}
   \end{table}
@@ -459,7 +469,7 @@
 
   \textbf{Hypothesis tests for} $\sigma$ \\
   For testing $H_0 : \sigma = \sigma_0$, use the test statistic
-  $$U = \frac{(n-1)S^{2}}{\sigma_{0}^{2}}$$
+  $$\frac{(n-1)S^{2}}{\sigma_{0}^{2}} = U \sim \chi_{n-1}^{2}$$
   Note that for large values of $U$ and small values of $U$ provide evidence against $H_0$ due to the asymmetric shape of Chi-squared distributions. \\
   To approximate the \emph{p-value}:
   \begin{itemize}
@@ -524,7 +534,7 @@
     }
   \end{align*}
 
-  \subsubsection{Likelihood Ratio Test Statistic and $G(\mu, \sigma)$}
+  \subsubsection{Likelihood Ratio Test Statistic for $G(\mu, \sigma)$}
   Suppose $Y \sim G(\mu, \sigma)$ with p.d.f.
   $$
   f(y; \mu, \sigma) =
