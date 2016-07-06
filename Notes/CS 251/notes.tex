@@ -9,6 +9,7 @@
 \usepackage{cleveref}
 \usepackage{wrapfig}
 \usepackage{multicol}
+\usepackage{multirow}
 
 \DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
 
@@ -608,6 +609,7 @@ binary and those who can't.} \\
   \begin{wrapfigure}{r}{0.4\textwidth}
     \includegraphics[width=0.4\textwidth]{pictures/stateTransistionDiagram.png}
   \end{wrapfigure}
+
   \subsection{State Transition Diagram}
   A \emph{state transition diagram} indicates all the possible states of the system and the transitions between these states. \\
   In a state transition diagram, circles represent states and arcs represent transitions betweens states. \\
@@ -971,7 +973,7 @@ binary and those who can't.} \\
     \item Signal when data lines a multiplexer show forward on (4-7)
     \item Signal which function the ALU should perform (8)
   \end{enumerate}
-  \begin{tabular}{c || l | l | l}
+  \begin{tabular}{c || l | p{5cm} | l}
   & Signal/Outputs & If Signal == 1 & If Signal == 0 \\ \hline \hline
   1. & \emph{MemWrite} & Write to Data Memory & No effect \\ \hline
   2. & \emph{MemRead} & Memory read memory & No effect \\ \hline
@@ -980,7 +982,8 @@ binary and those who can't.} \\
   5. & \emph{Branch} & Use PCBranch result for PC & No branch; use PC + 4 \\ \hline
   6. & \emph{RegDst} & Use 15:11 field for write address (rd used) & Use 20:16 field (rt used) \\ \hline
   7. & \emph{ALUSrc} & Use immediate field from Instr & Use Register File \\ \hline
-  8. & \emph{ALUControl\textsubscript{2:0}} & Specify the ALU operation: add, sub, and, or
+  8. & \emph{ALUControl\textsubscript{2:0}} &
+  \multicolumn{2}{l}{Specify the ALU operation: add, sub, and, or}
   \end{tabular} \\
 
   The settings of the control lines is completely determined by the opcode fields of the instruction.
@@ -1093,6 +1096,165 @@ binary and those who can't.} \\
       \item Signal the \emph{Register File} to store the data (\emph{RegWrite}) at input \emph{WD3}
     \end{enumerate}
   \end{enumerate}
+
+  \subsection{Why a Single-Cycle Implementation Is Not Used Today}
+  It is inefficient because the clock cycle must have the same length for every instruction in single-cycle design. \\
+  The longest possible path in the processor determines the clock cycle, which is the load instruction.
+  It uses instruction memory, the register file, the ALU, the data memory, and the register file in series. \\
+
+  There's significant drawback for using single-cycle design with a fixed clock cycle; but it may be considered acceptable for a small instruction set. \\
+  It does not scale well when adding more complex instructions. \\
+  It is not possible to improve the worst-case cycle time in a single-cycle design even if there are techniques to improve the common-case cycle time. \\
+
+  Thus, we use pipelining to improve the efficiency and throughput.
+  Pipelining improves efficiency by executing multiple instructions simultaneously.
+
+  \section{An Overview of Pipelining}
+  \emph{Pipelining} is an implementation technique in which multiple instructions are overlapped in execution. \\
+  The idea to that all steps---called \emph{stages} in pipelining---are operating concurrently.
+  As long as each stage has separate resources, the tasks can be pipelined. \\
+
+  For pipelining MIPS instructions, each instruction classically takes five steps (stages):
+  \begin{itemize}
+    \item[1.] Fetch instruction from memory
+    \item[2.] Read registers while decoding the instruction. The regular format of MIPS instructions allow reading and decoding to occur simultaneously.
+    \item[3.] Execute the operation or calculate an address.
+    \item[4.] Access an operand in data memory
+    \item[5.] Write the result into a register
+  \end{itemize}
+  If the stages are perfectly balanced, then the time between instructions on the pipelined processor---assuming ideal condition---is equal to
+  $$\text{Time between instructions}_\text{pipelined} = \frac{\text{Time between instruction}_\text{non-pipelined}}{\text{Number of pipe stages}}$$
+  Under ideal condition and a large number of instruction, the performance is increased is approximately equal to the number of pipe stages. \\
+
+  Pipelining improves performance \emph{increasing instruction throughput, as opposed to decreasing the execution time of an individual instruction}, but instruction throughput is the important metric because real programs execute billions of instruction.
+
+  \subsection{Designing Instruction Sets for Pipelining}
+  All MIPS instructions are the same length, which makes it easier to fetch instructions in the first pipeline stage and to decode them in the second stage. \\
+  MIPS has only a few instruction formats, with the source register fields being located in the same place in each instruction. \\
+  Thus, the second stage can begin reading the register file at the same time that the hardware is determining what type of instruction was fetched.
+  If not for the symmetry in instruction formats, stage 2 would need to be split resulting in 6 pipeline stages (longer pipelines are not desired). \\
+  In addition, memory operands only appear in loads or stores in MIPS.
+  Which means we can use the execute stage to calculate the memory address and then access memory in the following stage.
+
+  \subsection{Pipeline Hazards}
+  Situations when the next instruction cannot execute in the following clock cycle are called \emph{hazards}.
+
+  \subsubsection{Structural Hazard}
+  A \emph{structural hazard} means the hardware cannot support the combination of instructions that we want to execute in the same clock cycle.
+
+  \subsubsection{Data Hazard}
+  A \emph{pipeline data hazard}, a form of \emph{data hazard}, occurs when the pipeline must be stalled because one step must wait for another to complete. \\
+  In other words, a planned instruction cannot execute in the proper clock cycle because data that is needed to execute the instruction is not yet available. \\
+
+  \emph{Forwarding}, also called \emph{bypassing}, is a method of solving a data hazard by retrieving the missing data element from internal buffers rather than waiting for it to arrive from programmer-visible register or memory. \\
+  Forwarding paths are valid only if the destination stage is later in the time than the source stage. \\
+  In other words, there cannot be a valid forwarding path from the output of the memory access stage in the first instruction to the input of the execution stage of the following, since that would mean going backward in time. \\
+
+  A \emph{load-use data hazard} is a specific form of data hazard in which the data being loaded by a load instruction has not yet become available when it is needed by another instruction. \\
+  A \emph{pipeline stall}, also called a \emph{bubble}, is a stall initiated in order to resolve a hazard.
+
+  \subsubsection{Control Hazard}
+  A \emph{control hazard}, also called \emph{branch hazard}, arises from the need to make a decision based on the results of one instruction while others are executing. \\
+  This hazard comes from branch instructions as the pipeline cannot know the next possible instructions after fetching a branch instruction. \\
+  Two ways to resolve control hazards:
+  \begin{enumerate}
+    \item \textbf{Stall} \\
+      Stall immediately after a branch instruction is fetched, waiting until the pipeline determines the outcome of the branch and knows that instruction address to fetch from. \\
+      If the branch cannot be resolved in the second stage, the cost of stalling is too high for most computes to use as it causes a even larger slowdown.
+    \item \textbf{Predict} \\
+      Computers use \emph{prediction} to handle branches.
+      One approach is to predict always that branch will not be taken; when right,  the pipeline proceeds at full speed. \\
+      If branch is taken, the pipeline stalls.
+  \end{enumerate}
+
+  A more sophisticated version of \emph{branch instruction} would have some branches predicted as taken and some as not taken. \\
+  In programming, at the bottom of loops are branches that jump back to the top of the loop.
+  Those branches are likely to be taken and they branch backwards, so it can be predicted as taken for branches that jump to an earlier address. \\
+  \emph{Dynamic hardware predictors} make their guesses depending on the behavior of each branch and may change predictions for a branch over the life of a program.
+  One approach is keeping a history for each branch as taken or not taken, and then using recent past history to predict the future. \\
+  If prediction goes wrong, the pipeline control must ensure instructions following a wrongly guessed branch have no effect and must restart the pipeline from the proper branch address. \\
+
+  A third approach to resolve control hazard is called \emph{delayed decision}, that's actually used in MIPS architecture.
+  The delayed branch always execute the next sequential instruction, with the branch taking place after that one instruction delay.
+  The assembler can automatically arrange the instructions to get the branch behavior desired by the programmer; it is hidden from the MIPS programmer.
+  MIPS software places an instruction immediately after the delayed branch instruction that is not affected by the branch, and a taken branch changes the address of the instruction that follows this safe instruction. \\
+  Delayed branches are useful when branches are short.
+  Processors do not use a delayed branch of more than one cycle.
+  For longer branch delays, hardware-based branch prediction is usually used.
+
+  \subsection{Pipeline Overview Summary}
+  Pipelining is a technique that exploits \emph{parallelism} among the instruction in a sequential instruction stream.
+  Its substantial advantage is that it is fundamentally invisible to the programmer. \\
+  Pipelining increases the number of simultaneously executing instructions and the rate at which instructions are started and completed.
+  However, it does not reduce the time it takes to complete an individual instruction also called the \emph{latency}.
+  \emph{Latency} in pipelining is the number of stages in a pipeline or the number of stages between two instruction during execution. \\
+  Pipelining improves instruction \emph{throughput} rather than individual instruction \emph{execution time} or \emph{latency}.
+
+  \section{Pipelined Datapath and Control}
+  In a five-stage pipeline, up to five instructions will be in execution during any single clock cycle. \\
+  The datapath can be separated into five pieces:
+  \begin{enumerate}
+    \item \textbf{IF}: Instruction fetch
+    \item \textbf{ID}: Instruction decode and register file read
+    \item \textbf{EX}: Execution or address calculation
+    \item \textbf{MEM}: Data memory access
+    \item \textbf{WB}: Write back
+  \end{enumerate}
+  For the register file and data memory units are split in two phases: write in the first half and read in the second half.
+
+  \subsection{Pipelined Control}
+  Only need to set the control values during each pipeline stage to specify control for the pipeline.
+  Each control line is associated with a component active in only a single pipeline stage, thus the lines can be divided into five stages according to the pipeline stage.
+  \begin{enumerate}
+    \item \emph{Instruction fetch}:
+    The control signals to read instruction memory and to write the PC are always asserted, so there is nothing special to control in this stage
+    \item \emph{Instruction decode/register file read}:
+    The same thing happens at every clock cycle, so there are not optional control lines to set.
+    \item \emph{Execution/address calculation}:
+    The signals to be set are \emph{RegDst}, \emph{ALUOp}, and \emph{ALUSrc}.
+    The signals select the Result register, the ALU operation, and either Read data 2 or a sign-extended immediate for the ALU.
+    \item \emph{Memory access}:
+    The control lines set in this stage are \emph{Branch}, \emph{MemRead}, and \emph{MemWrite}.
+    The branch equal, load, and store instructions set these signals respectively.
+    Note that \emph{PCSrc} selects the next sequential address unless control asserts Branch and the ALU result was 0.
+    \item \emph{Write back}:
+    The two control lines are \emph{MemtoReg}, which decides between sending the ALU result or the memory value to the register file, and \emph{RegWrite}, which writes the chosen value.
+  \end{enumerate}
+  Implementing control means setting the nine control lines to these values in each stage for each instruction.
+  The simple approach is to extend the pipeline registers to include control information. \\
+  The control lines start with the \emph{EX} stage, so the control information can be created during instruction decode.
+
+  \section{Data Hazards: Forwarding versus Stalling}
+  The write is in the first half of the clock and the read is in the second half when a register is read and written in the same clock cycle.
+  Thus, the read delivers what is written; this is a common implementation for register files. \\
+
+  If the data is needed at the beginning of the EX stage, the data can be \emph{forwarded} as soon as it is available to any units that need it before the data is available in register file. \\
+  For now, the only challenge of forwarding is to make the data available in an operation in the EX stage, which may either be an ALU operation or an effective address calculation.
+  The two pairs of hazard conditions are:
+  \begin{enumerate}
+    \item[1a] EX/MEM.RegisterRd = ID/EX.RegisterRs
+    \item[1b] EX/MEM.RegisterRd = ID/EX.RegisterRt
+    \item[2a] MEM/WB.RegisterRd = ID/EX.RegisterRs
+    \item[2b] MEM/WB.RegisterRd = ID/EX.RegisterRs
+  \end{enumerate}
+
+  \begin{ex}
+    Suppose we have the following instructions sequence
+    \begin{verbatim}
+      sub $2,  $1, $3
+      and $12, $2, $5
+      or  $13, $6, $2
+    \end{verbatim}
+    Then sub-and is a type 1a hazard (EX/MEM.RegisterRd = ID/EX.RegisterRs)
+    Whereas sub-or is a type 2b hazard (MEM/WB.RegisterRd = ID/EX.RegisterRs)
+  \end{ex}
+  This forwarding may not always work because some instructions do not write registers;
+  sometimes it would forward when it shouldn't. \\
+  A simple solution is to check if \emph{RegWrite} signal will be active: examining the WB control field of the pipelining register during the EX and MEM stages determines whether \emph{RegWrite} is asserted. \\
+  Note that MIPS require every use of \$0 as an operand must yield an operand value of 0.
+  Thus, need to avoid forwarding a possible non-zero value of \$0 in the event that \$0 is used as the destination.
+  Thus, the conditions above work if EX/MEM.RegisterRd $\not =$ 0 and MEM/WB.RegisterRd $\not =$ 0.
+
 
   \newpage
   \section{To-do}
