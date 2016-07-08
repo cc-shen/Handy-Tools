@@ -551,4 +551,206 @@
   $$\frac{\bar{Y} - \mu_0}{\sigma/\sqrt{n}}$$
   Therefore, it has exactly a $\chi_{1}^{2}$ distribution.
 
+  \section{Simple Linear Regression Model}
+  $Y_{i}$ is the \emph{Response Variate}; attribute whose variability we want to explain. \\
+  $X_{i}$ is the \emph{Explanatory Variable} and is given.
+  We want explain $Y$ by using $X$. \\
+
+  The relevant degree of freedom for an additive model is
+  $$= n - \text{number of unknown parameters in the systematic part of the model}$$
+
+  Assumptions made:
+  \begin{enumerate}
+    \item Linearity: Mean of $Y$ is a linear function of $x$.\\
+    $E(Y_{i}) = \alpha + \beta x_{i}$
+    \item Variance is the same for any $x$; homoscedasticity. \\
+    $\sigma^{2} = \sigma^{2}(x)$; heteroscedasticity.
+    \item Normality: $Y_{i}$ are normally distributed. \\
+    $Y_{i} = \text{Constant} + \text{Normal}$ \\
+    $Y_{i} = \alpha + \beta x_{i} + R_{i}$ \\
+    where $i = 1, \dots, n$, $R_{i} \sim N(\mu, \sigma^{2})$, $R_{i}$ independent
+  \end{enumerate}
+
+  Our model is independent $Y_{i}$ such that
+  $$Y_{i} \sim N(\mu(x_{i}), \sigma^{2}) \text{ where } \mu(x_{i}) = \alpha + \beta x_{i}$$
+
+  \subsection{Maximum Likelihood Estimators}
+  Let
+  $$a_{i} = \frac{x_{i} - \bar{x}}{S_{xx}}$$
+  which has properties
+  \begin{align*}
+  \sum a_{i} &= 0 \\
+  \sum a_{i}x_{i} &= 1 \\
+  \sum a_{i}^{2} &= \frac{1}{S_{xx}}
+  \end{align*}
+
+  Also, we have
+  \begin{align*}
+  S_{xx} &= \sum_{i=1}^{n}(x_{i} - \bar{x})^{2}
+  = \sum_{i=1}^{n}(x_{i} - \bar{x})x_{i}
+  = \sum_{i=1}^{n}x_{i}^{2} - n\bar{x}^{2} \\
+  S_{xy} &= \sum_{i=1}^{n}(x_{i} - \bar{x})(Y_{i} - \bar{Y})
+  = \sum_{i=1}^{n}(x_{i} - \bar{x})Y_{i}
+  = \sum_{i=1}^{n}x_{i}Y_{i} - n\bar{x}\bar{Y} \\
+  S_{yy} &= \sum_{i=1}^{n}(Y_{i} - \bar{Y})^{2}
+  = \sum_{i=1}^{n}Y_{i}^{2} - n\bar{Y}^{2}
+  \end{align*}
+
+  \subsubsection{$\beta$}
+  \begin{align*}
+  \widetilde{\beta} &= \frac{S_{xy}}{S_{xx}} \\
+  &= \sum a_{i}y_{i}  ~~\text{where } a_{i} = \frac{x_{i} - \bar{x}}{S_{xx}}
+  \end{align*}
+  \textbf{Distribution for } $\widetilde{\beta}$ \\
+  The mean is
+  \begin{align*}
+  E(\widetilde{\beta}) &= \sum_{i=1}^{n} a_{i}E(Y_{i}) = \sum_{i=1}^{n} a_{i}(\alpha + \beta x_{i}) \\
+  &= \beta \sum_{i=1}^{n}a_{i}x_{i} ~~\text{since } \sum_{i=1}^{n} a_{i} = 0 \\
+  &= \beta ~~\text{since } \sum_{i=1}^{n} a_{i}x_{i} = 1
+  \end{align*}
+  Similarly for variance is
+  \begin{align*}
+  Var(\widetilde{\beta}) &= \sum_{i=1}^{n} a_{i}^{2}Var(Y_{i}) \\
+  &= \sigma^{2} \sum_{i=1}^{n} a_{i}^{2} \\
+  &= \frac{\sigma^{2}}{S_{xx}} ~~\text{since } \sum_{i=1}^{n}a_{i}^{2} = \frac{1}{S_{xx}}
+  \end{align*}
+  Thus
+  $$\widetilde{\beta} \sim N\left(\beta, \frac{\sigma^{2}}{S_{xx}}\right)$$
+
+  \textbf{Confidence Interval for} $\beta$ \\
+  If $\sigma$ is known
+  $$\frac{\widetilde{\beta} - \beta}{\sigma / \sqrt{S_{xx}}} \sim N(0, 1)$$
+  then a $100p\%$ confidence interval for $\beta$ is given by
+  $$\left[~ \hat{\beta} \pm z^{*}\frac{\sigma}{\sqrt{S_{xx}}} ~\right]$$
+  where
+  $$P(|Z| \leq z^{*}) = p ~~~ Z \sim N(0, 1)$$
+  \newline
+  Otherwise,
+  $$\frac{\widetilde{\beta} - \beta}{S_{e} / \sqrt{S_{xx}}} \sim t_{n-2}$$
+  then a $100p\%$ confidence interval for $\beta$ is given by
+  $$\left[~ \hat{\beta} \pm t^{*}\frac{\sigma}{\sqrt{S_{xx}}} ~\right]$$
+  where
+  $$P(|T| \leq t^{*}) = p ~~~ T \sim t_{n-2}$$
+  \newline
+  \textbf{Test of Hypothesis of No Relationship} \\
+  To test the hypothesis of no relationship or $H_{0}: \beta = 0$, we use the test statistic
+  $$D = \frac{|\widetilde{\beta} - 0|}{S_{e} / \sqrt{S_{xx}}}$$
+  with observed value of
+  $$d = \frac{|\hat{\beta} - 0|}{s_{e} / \sqrt{S_{xx}}}$$
+  and p-value given by
+  $$\text{p-value} = P\left(~|T| \geq \frac{|\hat{\beta} - 0|}{s_{e} / \sqrt{S_{xx}}}~\right)$$
+  where $T \sim t_{n-2}$
+
+  \subsubsection{$\alpha$}
+  \begin{align*}
+  \widetilde{\alpha} &= \bar{Y} - \widetilde{\beta}\bar{x} \\
+  &= \bar{Y} - \left(\frac{S_{xy}}{S_{xx}}\right)\bar{x}
+  \end{align*}
+  \textbf{Distribution for } $\widetilde{\alpha}$ \\
+  $$\widetilde{\alpha} \sim N\left(\alpha, \sigma^{2}\left(\frac{1}{n} + \frac{\bar{x}^{2}}{S_{xx}}\right)\right)$$
+
+  \textbf{Confidence Interval for} $\alpha$ \\
+  If $\sigma$ is known
+  $$\frac{\widetilde{\alpha} - \alpha}{\sigma \sqrt{\frac{1}{n} + \frac{\bar{x}^{2}}{S_{xx}}}} \sim N(0, 1)$$
+  then a $100p\%$ confidence interval for $\alpha$ is given by
+  $$\left[~ \hat{\alpha} \pm z^{*}\sigma \sqrt{\frac{1}{n} + \frac{\bar{x}^{2}}{S_{xx}}} ~\right]$$
+  where
+  $$P(|Z| \leq z^{*}) = p ~~~\text{and } Z \sim N(0, 1)$$
+  \newline
+  Otherwise,
+  $$\frac{\widetilde{\alpha} - \alpha}{S_{e}\sqrt{\frac{1}{n} + \frac{\bar{x}^{2}}{S_{xx}}}} \sim t_{n-2}$$
+  then a $100p\%$ confidence interval for $\alpha$ is given by
+  $$\left[~ \hat{\alpha} \pm t^{*}s_{e}\sqrt{\frac{1}{n} + \frac{\bar{x}^{2}}{S_{xx}}} ~\right]$$
+  where
+  $$P(|T| \leq t^{*}) = p ~~~ T \sim t_{n-2}$$
+  \newline
+  \textbf{Test of Hypothesis} \\
+  To test the hypothesis or $H_{0}: \alpha = \alpha_{0}$, we use the test statistic
+  $$D = \frac{|\widetilde{\alpha} - \alpha_{0}|}{S_{e}\sqrt{\frac{1}{n} + \frac{\bar{x}^{2}}{S_{xx}}}}$$
+  with observed value of
+  $$d = \frac{|\hat{\alpha} - \alpha_{0}|}{s_{e}\sqrt{\frac{1}{n} + \frac{\bar{x}^{2}}{S_{xx}}}}$$
+  and p-value given by
+  $$\text{p-value} = P\left(~|T| \geq \frac{|\hat{\alpha} - \alpha_{0}|}{s_{e}\sqrt{\frac{1}{n} + \frac{\bar{x}^{2}}{S_{xx}}}}~\right)$$
+  where $T \sim t_{n-2}$
+
+  \subsubsection{$\sigma^{2}$ and $S_{e}^{2}$}
+  \begin{align*}
+  \sigma^{2} &= \frac{1}{n} \sum_{i=1}^{n} (Y_{i} - \widetilde{\alpha} - \widetilde{\beta}x_{i})^{2} \\
+  &= \frac{1}{n}\left[~S_{yy} - \widetilde{\beta}S_{xy}~\right]
+  \end{align*}
+  The \emph{Standard Error} is defined as
+  $$
+  S_{e}^{2}
+  = \frac{1}{n - 2} \sum_{i=1}^{n} (Y_{i} - \widetilde{\alpha} - \widetilde{\beta}x_{i})^{2}
+  = \frac{1}{n - 2}\left[~S_{yy} - \widetilde{\beta}S_{xy}~\right]
+  $$
+  \textbf{Confidence Interval for} $\sigma$ \\
+  Notice that
+  $$\frac{(n-2)S_{e}^{2}}{\sigma^{2}} \sim \chi_{n-2}^{2}$$
+  And the $100p\%$ confidence interval for $\sigma^{2}$ is
+  $$\left[~\frac{(n-2)s_{e}^{2}}{b}, \frac{(n-2)s_{e}^{2}}{a}~\right]$$
+  where
+  $$P(a \leq X \leq b) = p ~~~\text{and } X \sim \chi_{n-2}^{2}$$
+
+  \subsection{Least Squares Estimation}
+  Given data $(x_{i}, y_{i}), i = 1, 2, \dots, n$ \\
+  The goal is to obtain a line of ``best fit'', find a line which minimizes the sum of the squares of the distances between the observed points and the fitted line $y = \alpha + \beta x$ \\
+  In other words, find $\alpha$ and $\beta$ to minimize the function
+  $$g(\alpha, \beta) = \sum_{i=1}^{n}[y_{i} - (\alpha + \beta x_{i})]^{2}$$
+  those are the \emph{least squares estimates}. \\
+  By maximizing the maximum likelihood estimates, we're minimizing least squared.
+
+  \subsection{Confidence Intervals for the Mean Response}
+  The Mean Response is defined as $\mu(x) = \alpha + \beta x$ \\
+  The maximum likelihood estimator of $\mu(x)$ is
+  \begin{align*}
+  \widetilde{\mu}(x) &= \widetilde{\alpha} + \widetilde{\beta}x \\
+  &= \bar{Y} + \widetilde{\beta}(x - \bar{x}) \\
+  &= \sum_{i=1}^{n}a_{i}Y_{i} ~~~\text{where } a_{i} = \frac{1}{n} + (x - \bar{x})\frac{(x_{i} - \bar{x})}{S_{xx}}
+  \end{align*}
+  Notice that $a_{i}$ has the following properties
+  $$\sum_{i=1}^{n}a_{i} = 1, ~\sum_{i=1}^{n}a_{i}x_{i} = x ~\text{and } \sum_{i=1}^{n}a_{i}^{2} = \frac{1}{n} + \frac{(x - \bar{x})^{2}}{S_{xx}}$$
+
+  Thus, $\mu(x)$ has the distribution
+  $$\widetilde{\mu}(x) \sim N\left(\mu(x), \sigma^{2}\left(\frac{1}{n} + \frac{(x - \bar{x})^{2}}{S_{xx}}\right)\right)$$
+  So
+  $$\frac{\widetilde{\mu}(x) - \mu(x)}{\sigma\sqrt{\frac{1}{n} + \frac{(x - \bar{x})^{2}}{S_{xx}}}} \sim N(0, 1)$$
+  And
+  $$\left[~\hat{\mu}(x) \pm z^{*}\sigma\sqrt{\frac{1}{n} + \frac{(x - \bar{x})^{2}}{S_{xx}}}~\right], ~P(|Z| \leq z^{*}) = p$$
+  \newline
+  Otherwise
+  $$\frac{\widetilde{\mu}(x) - \mu(x)}{S_{e}\sqrt{\frac{1}{n} + \frac{(x - \bar{x})^{2}}{S_{xx}}}} \sim t_{n-2}$$
+  Thus,
+  $$\left[~\hat{\mu}(x) \pm t^{*}s_{e}\sqrt{\frac{1}{n} + \frac{(x - \bar{x})^{2}}{S_{xx}}}~\right], ~P(|T| \leq t^{*}) = p$$
+  \newline
+  Note that, $\hat{x}(x) = \hat{\alpha} + \hat{\beta}x$ \\
+  \newline
+  \textbf{Prediction Interval for Future Response} \\
+  $$Y - \widetilde{\mu}(x) \sim N\left(0, \sigma^{2}\left(1 + \frac{1}{n} + \frac{(x - \bar{x})^{2}}{S_{xx}}\right)\right)$$
+  Thus,
+  $$\frac{Y - \widetilde{\mu}(x)}{S_{e}\sqrt{1 + \frac{1}{n} + \frac{(x - \bar{x})^{2}}{S_{xx}}}} \sim N(0, 1)$$
+  Or
+  $$\frac{Y - \widetilde{\mu}(x)}{S_{e}\sqrt{1 + \frac{1}{n} + \frac{(x - \bar{x})^{2}}{S_{xx}}}} \sim t_{n-2}$$
+  \newline
+  Prediction Interval is then
+  $$\left[~\hat{\mu}(x) \pm t^{*}s_{e}\sqrt{1 + \frac{1}{n} + \frac{(x - \bar{x})^{2}}{S_{xx}}} ~\right]$$
+
+  \subsection{Terminologies}
+  Total Sum of Squares, denoted TSS, is
+  $$\sum (y_{i} - \bar{y})^{2} = S_{yy}$$
+
+  Regression Sum of Squares, denoted RSS, is
+  $$\hat{\beta}S_{xy}$$
+  It is part of the variability of $Y$ that can be explained by change in $X$.
+
+  Error Sum of Squares, denoted ESS, is
+  $$[S_{yy} - \hat{\beta}S_{xy}] = \sum [y_{i} - (\hat{\alpha} + \hat{\beta}x_{i})]^{2}$$
+  It is part of the variability explained by $X$.
+
+  Thus, the Total Sum of Squares is the sum of Regression Sum of Squares and Error Sum of Squares
+  $$TSS = RSS + ESS$$
+  $$\sum (y_{i} - \bar{y})^{2} = \hat{\beta}S_{xy} + [S_{yy} - \hat{\beta}S_{xy}]$$
+  Note that $\frac{RSS}{TSS}$ should be high if the model is a good fit. \\
+  As ESS $\uparrow$, the model is not a good fit.
+
 \end{document}
