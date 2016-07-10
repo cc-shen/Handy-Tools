@@ -8,8 +8,7 @@
 \usepackage[pdftex, pdfauthor={Charles Shen}, pdftitle={CS 251: Computer Organization and Design}, pdfsubject={Lecture notes from CS 251: Computer Organization and Design at the University of Waterloo}, pdfkeywords={CS 251, course notes, notes, Waterloo, University of Waterloo}, pdfproducer={LaTeX}, pdfcreator={pdflatex}]{hyperref}
 \usepackage{cleveref}
 \usepackage{wrapfig}
-\usepackage{multicol}
-\usepackage{multirow}
+\usepackage{multicol, multirow}
 
 \DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
 
@@ -1254,6 +1253,80 @@ binary and those who can't.} \\
   Note that MIPS require every use of \$0 as an operand must yield an operand value of 0.
   Thus, need to avoid forwarding a possible non-zero value of \$0 in the event that \$0 is used as the destination.
   Thus, the conditions above work if EX/MEM.RegisterRd $\not =$ 0 and MEM/WB.RegisterRd $\not =$ 0.
+
+  A new hardware, called \emph{Forwarding Unit} is added in the EX stage to expand the multiplexers into the ALU unit such that it can take in the forwarded data.
+  \begin{center}
+  \begin{tabular}{l | l | p{9cm}}
+    Mux Control & Source & Explanation \\ \hline \hline
+    ForwardA = 00 & ID/EX   & The first ALU operand comes from the register file \\ \hline
+    ForwardA = 10 & EX/MEM  & The first ALU operand is forwarded from the prior ALU result. \\ \hline
+    ForwardA = 01 & MEM/WB  & The first ALU is forwarded from data memory or an earlier ALU result \\ \hline
+    ForwardB = 00 & ID/EX   & The second ALU operand comes from the register file \\ \hline
+    ForwardB = 10 & EX/MEM  & The second ALU operand is forwarded from the prior ALU result. \\ \hline
+    ForwardB = 01 & MEM/WB  & The second ALU is forwarded from data memory or an earlier ALU result \\ \hline
+  \end{tabular}
+  \end{center}
+  Note that the EX/MEM.RegisterRd field is the register destination for either an ALU instruction (which comes from the Rd field of the instruction) or a load (which comes from the Rt field).
+  \begin{enumerate}
+    \item \emph{EX Hazard}
+\begin{verbatim}
+if (EX/MEM.RegWrite
+and (EX/MEM.RegisterRd != 0)
+and (EX/MEM.RegisterRd = ID/EX.RegisterRs))   ForwardA = 10
+
+if (EX/MEM.RegWrite
+and (EX/MEM.RegisterRd != 0)
+and (EX/MEM.RegisterRd = ID/EX.RegisterRt))   ForwardB = 10
+\end{verbatim}
+    \item \emph{MEM Hazard}
+\begin{verbatim}
+if (MEM/WB.RegWrite
+and (MEM/WB.RegisterRd != 0)
+and not(EX/MEM.RegWrite and (EX/MEM.RegisterRd != 0)
+      and (EX/MEM.RegisterRd != ID/EX.RegisterRs))
+and (MEM/WB.RegisterRd = ID/EX.RegisterRs))   ForwardA = 01
+
+if (MEM/WB.RegWrite
+and (MEM/WB.RegisterRd != 0)
+and not(EX/MEM.RegWrite and (EX/MEM.RegisterRd != 0)
+      and (EX/MEM.RegisterRd != ID/EX.RegisterRt))
+and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
+\end{verbatim}
+  \end{enumerate}
+
+  \subsection{Data Hazards and Stalls}
+  A particular case when forwarding does not work is when an instruction tries to read a register following a load instruction that writes the same register. \\
+  In addition to a forwarding unit, we need a \emph{hazard detection unit} such that it can stall the pipeline.
+  It is to operate during the ID stage so that it can insert the stall between the load and its use.
+  \begin{verbatim}
+  if (ID/EX.MemRead and
+      ((ID/EX.RegisterRt = IF/ID.RegisterRs) or
+        (ID/EX.RegisterRt = IF/ID.RegisterRt)))
+        stall the pipeline
+  \end{verbatim}
+  The first line tests to see if the instruction is a load: the only instruction that reads data memory is a load.
+  The next two lines check to see if the destination register field of the load in the EX stage matches either source register of the instruction in the ID stage. \\
+
+  If the instruction in the ID stage is stalled, then the instruction in the IF stage must also be stalled;
+  otherwise, we would lose the fetch instruction.
+  So we execute instructions that have no effects: \emph{nops}.
+  ``nop'' is an instruction that does no operation to change state.
+  This way, the appropriate instructions can be stalled while depended instructions execute. \\
+
+  By setting all nine control signals to 0 in the EX, MEM, and WB stages will create a ``do nothing'' or nop instruction. \\
+  When the hazard is identified in the ID stage, a bubble can be inserted into the pipeline by changing the EX, MEM, and WB control fields of the ID/EX pipeline register to 0.
+  No registers or memories are written if the control values are all 0. \\
+
+  \begin{figure}[!ht]
+  \includegraphics[width=1.0\textwidth]{pictures/hazardAndForwardingUnits.png}
+  \caption{Implementation of Stalling and Forwarding}
+  \end{figure}
+
+  The \emph{hazard detection unit} controls the the writing of the PC and IF/ID registers plus the multiplexer that chooses between the real control values and all 0s. \\
+  The unit stalls and deasserts the control fields if the load-use hazard test is true.
+
+  \section{Control Hazards}
+
 
 
   \newpage
