@@ -618,17 +618,17 @@
   $$\widetilde{\beta} \sim N\left(\beta, \frac{\sigma^{2}}{S_{xx}}\right)$$
 
   \textbf{Confidence Interval for} $\beta$ \\
-  If $\sigma$ is known
+  If $\sigma$ is known, then
   $$\frac{\widetilde{\beta} - \beta}{\sigma / \sqrt{S_{xx}}} \sim N(0, 1)$$
-  then a $100p\%$ confidence interval for $\beta$ is given by
+  and the $100p\%$ confidence interval for $\beta$ is given by
   $$\left[~ \hat{\beta} \pm z^{*}\frac{\sigma}{\sqrt{S_{xx}}} ~\right]$$
   where
   $$P(|Z| \leq z^{*}) = p ~~~ Z \sim N(0, 1)$$
   \newline
   Otherwise,
   $$\frac{\widetilde{\beta} - \beta}{S_{e} / \sqrt{S_{xx}}} \sim t_{n-2}$$
-  then a $100p\%$ confidence interval for $\beta$ is given by
-  $$\left[~ \hat{\beta} \pm t^{*}\frac{\sigma}{\sqrt{S_{xx}}} ~\right]$$
+  then the $100p\%$ confidence interval for $\beta$ is given by
+  $$\left[~ \hat{\beta} \pm t^{*}\frac{S_{e}}{\sqrt{S_{xx}}} ~\right]$$
   where
   $$P(|T| \leq t^{*}) = p ~~~ T \sim t_{n-2}$$
   \newline
@@ -744,7 +744,7 @@
   It is part of the variability of $Y$ that can be explained by change in $X$.
 
   Error Sum of Squares, denoted ESS, is
-  $$[S_{yy} - \hat{\beta}S_{xy}] = \sum [y_{i} - (\hat{\alpha} + \hat{\beta}x_{i})]^{2}$$
+  $$S_{yy} - \hat{\beta}S_{xy} = \sum [y_{i} - (\hat{\alpha} + \hat{\beta}x_{i})]^{2}$$
   It is part of the variability explained by $X$.
 
   Thus, the Total Sum of Squares is the sum of Regression Sum of Squares and Error Sum of Squares
@@ -753,4 +753,10 @@
   Note that $\frac{RSS}{TSS}$ should be high if the model is a good fit. \\
   As ESS $\uparrow$, the model is not a good fit.
 
+
+  \newpage
+  \section{To-do}
+  \begin{enumerate}
+    \item Likelihood functions for various distributions
+  \end{enumerate}
 \end{document}
