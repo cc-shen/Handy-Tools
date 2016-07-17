@@ -1325,8 +1325,83 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   The \emph{hazard detection unit} controls the the writing of the PC and IF/ID registers plus the multiplexer that chooses between the real control values and all 0s. \\
   The unit stalls and deasserts the control fields if the load-use hazard test is true.
 
-  \section{Control Hazards}
+  \section{Control Hazards} % 4.8 in P+H
+  An instruction must be fetched at every clock cycle to sustain the pipeline, the decision to branch does not occur until the MEM pipeline stage.
+  This delay in determining the proper instruction to fetch is a \emph{control hazard} or \emph{branch hazard}. \\
+  There are two schemes for resolving control hazards and one optimization to improve these schemes.
+  \subsection{Assume Branch Not Taken}
+  Stalling until the branch is complete is slow.
+  An improvement is to \textbf{predict} that the branch will not be taken and thus continue execution down the sequential instruction stream. \\
+  If branch is taken, the instructions that are being fetched and decoded must be discarded;
+  execution continues at the branch target. \\
+  If branches are not taken half the time, and if it costs little to discard the instructions, this method of optimization halves the cost of control hazards. \\
 
+  To discard instructions, the original control values are changed to 0s, akin to stall a load-use data hazard. \\
+  Note that all three instructions in the IF, ID, and EX stages need to be changed when the branch reaches the MEM stage;
+  whereas only the controls in TD stage are changed to 0 and let them percolate through the pipeline. \\
+  To discard instructions, the instructions in the IF, ID, and EX stages must be \textbf{flushed}.
+
+  \subsection{Reducing the Delay of Branches}
+  Another improvement is to reduce the cost of the taken branch.
+  If branch execution is moved to an earlier stage in the pipeline, instead of MEM stage, then fewer instructions need to be flushed. \\
+  Many branches rely only on simple tests that do not require a full ALU operation, it can be done with at most a few gates.
+  If a more complex branch decision is needed, a separate instruction that uses an ALU is required. \\
+
+  Moving the branch decision up requires two actions to occur earlier, and their respective complications:
+  \begin{enumerate}
+    \item Computing the branch target address
+    \begin{itemize}
+      \item The PC value and the immediate field are available in the IF/ID register.
+      \item The branch adder can be moved from the EX stage to the ID stage.
+      \item Note that the branch target address calculation will be performed for all instructions, but it will only be used when needed.
+    \end{itemize}
+    \item Evaluating the branch decision
+    \begin{itemize}
+      \item Moving the branch test to the ID stage implies additional forwarding and hazard detection hardware, since a branch dependent on a result still in the pipeline must work properly with this optimization.
+      \item During ID: must decode the instruction, decide whether a bypass to the equality unit is required, and complete the comparison to set the PC if it is a branch instruction.
+      \item A new forwarding logic is required for the equality test unit in ID. \\
+      Bypassed source operands of a branch can come from either the ALU/MEM or MEM/WB pipeline latches.
+      \item A data hazard can occur and a stall is needed if the values in a branch comparison are produced later in time.
+    \end{itemize}
+  \end{enumerate}
+  The improvement of moving the branch execution to the ID stage is that the penalty of a branch is reduced to only one instruction if the branch is taken (the one being fetched in IF stage). \\
+  To flush instructions in the IF stage, a control line named \emph{IF.Flush} zeros the instruction field of the IF/ID pipeline register. \\
+  Clearing the register transforms the fetched instruction into a \textbf{nop}, an instruction that has no action and changes no state.
+
+  \subsection{Dynamic Branch Prediction}
+  Assuming a branch is not taken is a form of \emph{branch prediction}.
+  It is probably adequate for a simple five-stage pipeline, and possibly coupled with compiler-based prediction.
+  With more complex pipelines, the branch penalty increases when measured in clock cycles and it increases in terms of instructions lost.
+  A simple static prediction scheme will waste too much performance in complex pipelines. \\
+
+  \emph{Dynamic branch prediction} is to look up the address of the instruction to see if a branch was taken the last time this instruction was executed, and if so, to begin fetching new instructions from the same place as the last time. \\
+  One implementation is a \emph{branch prediction buffer} and \emph{branch history table}.
+  The buffer is a small memory indexed by the lower portion of the address of the branch instruction.
+  This memory contains a bit that says whether the branch was recently taken or not. \\
+
+  It is possible that the prediction is correct; another branch instruction could have used the same lower-order address bits. \\
+  However, predicting is a hint that we hope is correct, so fetching begins in the predicted direction.
+  Thus, it does not affect the correctness of the predictions. \\
+  In the event that the hint is wrong, the incorrectly predicted instructions are deleted, the prediction bit is inverted and stored back. and the proper sequence is fetched and executed. \\
+
+  A shortcoming of a 1-bit prediction scheme is that: even if a branch is almost always taken (ex. loop), the prediction can wrong twice, rather than once, when it's not taken. \\
+
+  To remedy the weakness of poor accuracy of 1-bit prediction schemes, 2-bit prediction schemes are often used.
+  A prediction must be wrong twice before it is changed in a 2-bit scheme. \\
+
+  A branch prediction buffer can be implemented as a small special buffer accessed with the instruction address during the IF pipe stage. \\
+  If the instruction is predicted as taken, fetching begins from the target as soon as the PC is known. \\
+  Otherwise, sequential fetching and executing continue. \\
+  If the prediction is wrong, the prediction bits are changed. \\
+
+  \textbf{Elaboration}: \\
+  A delayed branch always executes the following instruction, but the second instruction following the branch will be affected by the branch.
+  Compilers and assemblers try to place an instruction that always executes after the branch in the \emph{branch delay slot}. \\
+
+  \textbf{Elaboration}: \\
+  A branch predictor tells whether or not a branch is taken, but still requires the calculation of the branch target.
+  The calculation takes one cycle, which means that taken branches have a 1-cycle penalty. \\
+  The penalty can be resolved by delayed branches or through a \emph{branch target buffer}.
 
 
   \newpage
