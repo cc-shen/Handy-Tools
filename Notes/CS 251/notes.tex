@@ -70,6 +70,45 @@
   \tableofcontents
   \newpage
 
+  \section{Performance}
+  \subsection{Defining Performance}
+  Performance can be defined in terms of more than just speed.
+  Different performance metrics are required for different scenarios.
+  To an individual, the performance in interest is \emph{response time}---the time between the start and completion of a task---also referred to as \emph{execution time}. \\
+  To a data-center manager, the interest is in \emph{throughput} or \emph{bandwidth}---the total amount of work done in a given time.
+
+  \subsection{Measuring Performance}
+  Time is the measure of computer performance; the computer that performs the same amount of work in the least time is the fastest. \\
+  Program execution time is measured in seconds per program, this is usually known as \emph{elapsed time, wall clock time, \emph{or} response time}. \\
+
+  Computers are often shared, so a processor may work on several programs simultaneously.
+  In which, the system attempts to optimize throughput rather than attempting to minimize the elapsed time for a program. \\
+
+  The \emph{CPU execution time}, also knowns as \emph{CPU time}, makes the distinction between the elapsed time and the actual time the CPU spends computing for a specific task. \\
+  Further distinction can be made, \emph{user CPU time}, the CPU time spent in the program, and \emph{system CPU time}, the CPU time spent in the operating system performing tasks on behalf of the program. \\
+
+  Another measure of performance is using a measure that relates to how fast the hardware can perform basic functions. \\
+  Almost all computers are constructed using a clock that determines when events take place in the hardware.
+  These discrete time intervals are called \emph{clock cycles} (or ticks, clock ticks, clock periods, clocks, cycles). \\
+  The length of a clock period can be either the time for a complete clock cycle (e.g. 250 picoseconds, or 250 ps) or the clock rate (e.g. 4 gigahertz, or 4GHz), which is the inverse of the clock period.
+  $$1ps = 1 \times 10^{-12} = \frac{1}{1,000,000,000,000}$$
+
+  \subsection{CPU Performance and Its Factors}
+  \begin{align*}
+  \parbox{4cm}{CPU execution time\\for a program}
+  &= ~\parbox{3.5cm}{CPU clock cycles\\for a program} \times \text{ Clock cycle time} \\
+  &= \frac{\text{CPU clock cycles for a program}}{\text{Clock rate}}
+  \end{align*}
+
+  \subsection{Instruction Performance}
+  $$\text{CPU clock cycles} = ~\parbox{3cm}{Instructions for\\a program} \times ~\parbox{4cm}{Average clock cycles\\per instruction}$$
+  \emph{Clock cycles per instruction}, which is the average number of clock cycles each instruction takes to execute, is often abbreviated as \emph{CPI}. \\
+  CPI is an average of all the instructions executed in the program because different instructions may take different amounts of time depending on what they do.
+
+  \subsection{The Classic CPU Performance Equation}
+  $$\text{CPU time} = \text{Instruction count} \times \text{CPI} \times \text{Clock cycles time}$$
+  Note that CPU varies by \emph{instruction mix}, which is a measure of the dynamic frequency of instructions across one or many programs.
+
   \section{From Zero To One, Abstractions}
   \includePicture{0.6}{pictures/abstractionLevel.png}{Levels of abstraction for electronic computing system}
 
@@ -1402,7 +1441,49 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   A branch predictor tells whether or not a branch is taken, but still requires the calculation of the branch target.
   The calculation takes one cycle, which means that taken branches have a 1-cycle penalty. \\
   The penalty can be resolved by delayed branches or through a \emph{branch target buffer}.
+  A branch target buffer is a structure that caches the destination PC or destination instruction for a branch.
+  It is usually organized as a cache with tags, thus more costly than a simple prediction buffer.\\
 
+  The 2-bit dynamic prediction scheme uses only information about a particular branch.
+  However, using information about both a local branch, and the global behavior of recently executed branches together yields greater prediction accuracy for the same number of prediction bits.
+  This is a \emph{correlating predictor}. \\
+  A typical correlating predictor have two 2-bit predictors for each branch, with the choice between predictors made based on whether the last executed branch was taken or not.
+  Thus, the global branch behavior can be thought as an adding additional index bits for the prediction lookup. \\
+
+  A recent innovation in branch predicting is the use of tournament predictors. \\
+  A \emph{tournament predictor} uses multiple predictors, tracking, for each branch, which predictor yields the best results.
+  A typical one might contain two predictions for each branch index: one based on local information and the other based on global branch behavior. \\
+  A selector would choose which predictor to use for any given prediction.
+  The selector can operate similarly to a 1- or 2-bit predictor, favoring whichever of the two has been more accurate.
+
+  \begin{figure}
+  \centering
+  \caption{The final datapath and control}
+  \includegraphics[width=1.0\textwidth]{pictures/finalPipelineDataPath.png}
+  \end{figure}
+
+  \section{Exceptions}
+  Control is the most challenging aspect of processor design: it is both the hardest part to get right and the hardest part to make fast.
+  One of the hardest parts of control is implementing \emph{exceptions} and \emph{interrupts}. \\
+  An \emph{exception}, also called \emph{interrupt}, is an unscheduled event that disrupts program execution; used to detect overflows.
+  An \emph{interrupt} is an exception that comes from outside of the processor.
+  Initially created to handle unexpected events from within the processor, like arithmetic overflow. \\
+
+  Detecting exceptional conditions and taking the appropriate action is often on the critical timing path of a processor, which determines the clock cycle time and thus performance. \\
+  Without proper attention to exceptions during design of the control unit, attempts to add exceptions to a complicated implementation can significantly reduce performance, as well as complicate the task of getting the correct design.
+
+  \subsection{How Exceptions Are Handled in the MIPS Architecture}
+  The basic action that the processor must perform when an exception occurs is to save the address of the offending instruction in the \emph{exception program counter} (EPC) and then transfer control to the operating system at some specified address. \\
+
+  The operating system (OS) can then take the appropriate action, which may involve providing some service to the user program, taking some predefined action in response to an overflow, or stopping the execution of the program and reporting an error. \\
+  After performing the correct action is required due to the exception, the OS can terminate the program or may continue its execution, using the EPC to determine where to restart the execution of the program.
+
+
+  \newpage
+  \section{Notes and Things to Watch Out For}
+  \begin{itemize}
+    \item When counting the number of clock cycles for a sequence of MIPS instructions, there is a ``ramp up'' time of 4 cycles to take into consideration.
+  \end{itemize}
 
   \newpage
   \section{To-do}
