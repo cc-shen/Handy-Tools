@@ -1476,7 +1476,79 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   The basic action that the processor must perform when an exception occurs is to save the address of the offending instruction in the \emph{exception program counter} (EPC) and then transfer control to the operating system at some specified address. \\
 
   The operating system (OS) can then take the appropriate action, which may involve providing some service to the user program, taking some predefined action in response to an overflow, or stopping the execution of the program and reporting an error. \\
-  After performing the correct action is required due to the exception, the OS can terminate the program or may continue its execution, using the EPC to determine where to restart the execution of the program.
+  After performing the correct action is required due to the exception, the OS can terminate the program or may continue its execution, using the EPC to determine where to restart the execution of the program. \\
+
+  For the OS to handle an exception, it must know the reason and the instruction that cause it. \\
+  Two main methods to communicate the reason for an exception:
+  \begin{enumerate}
+    \item Include a status register (called the \emph{Cause Register}), which holds a field that indicates the reason for the exception.
+    \item Use \emph{vectored interrupts}. In a vectored interrupt, the address to which control is transferred is determined by the cause of the exception. \\
+    Ex. Type: undefined instruction; Vector address: 8000 0000\textsubscript{hex}
+  \end{enumerate}
+
+  The OS knows the reason for the exception by the address at which it is initiated.
+  The addresses are separated by 32 bytes or eight instructions, and the OS must record the reason for the exception and may perform some limited processing in this sequence. \\
+  When the exception is not vectored, a single entry point for all exceptions can be used, and the OS decodes the status register to find the cause. \\
+
+  Two additional registers must be added to the MIPS implementation we have so far:
+  \begin{itemize}
+    \item[\emph{EPC}] A 32-bit register used to hold the address of the affected instruction. \\
+    Such a register is needed even when exceptions are vectored.
+    \item[\emph{Cause}] A register used to record the cause of the exception.
+    In the MIPS architecture, this register is 32 bits, although some bits are unused.
+  \end{itemize}
+
+  \subsection{Exceptions in a Pipelined Implementation}
+  A pipelined implementation treats exceptions as another form of control hazard.
+  We will use the same mechanism used for taken branches, but this time the exception causes the deasserting of control lines. \\
+
+  When dealing with branch mis-predict, the instruction in the IF stage is flushed by turning it into a \emph{nop}. \\
+  To flush instructions in the ID stage, we use the multiplexer already in the ID stage that zeros control signals for stalls.
+  A new control signal, called \emph{ID.Flush}, is ORed with the stall signal from the hazard detection unit to flush during ID. \\
+  To flush instruction in the EX stage, a new signal called \emph{EX.Flush} is used to cause new multiplexers zero the control lines. \\
+  Then we start fetching instructions from location 8000 0180\textsubscript{hex}, which is the MIPS exception address, we simply add an additional input to the PC multiplexer to send the address to the PC.
+
+  \begin{figure}[!ht]
+    \center{
+      \includegraphics[width=1.0\textwidth]{pictures/datapathWithExceptions.png}
+      \caption{The datapath with controls to handle exceptions}
+    }
+  \end{figure}
+
+  Many exceptions require that we eventually complete the instruction that caused the exception as if it executed normally.
+  The easiest way to do this is to flush the instruction and restart it from the beginning after the exception is handled. \\
+
+  The final step is to save the address of the offending instruction in the \emph{exception program counter} (EPC).
+  In reality, we save the address + 4, so the exception handling the software routine must subtract 4 from the saved value. \\
+
+  Multiple exceptions can occur simultaneously in a single clock cycle.
+  The solution is to prioritize the exceptions so that it is easy to determine which is serviced first.
+  In most MIPS implementations, the hardware sorts exception so that the earliest instruction is interrupted. \\
+  I/O device requests and hardware malfunctions are not associated with a specific instruction, so that implementation has some flexibility as to when to interrupt the pipeline. \\
+
+  The EPC (exception program counter) captures the address of the interrupted instructions, and the MIPS Cause Register records all possible exceptions in a clock cycle, so the exception software must match the exception to the instruction.
+  An important clue is knowing in which pipeline stage a type of exception can occur. \\
+  Exceptions are collected in the Cause Register in a pending exception field so that the hardware can interrupt based on later exceptions, once the earliest one has been serviced.
+
+  \subsection{Hardware/Software Interface}
+  The hardware and the OS must work together so that exceptions behave as expected. \\
+
+  The hardware contract is normally to stop the offending instruction in midstream, let all prior instructions complete, flush all following instructions, set a register to show the cause of the exception, save the address of the offending instruction, and then jump to a prearranged address. \\
+
+  The OS contract is to look at the cause of the exception and act appropriately. \\
+  For an undefined instruction, hardware failure, or arithmetic overflow exception, the operating system typically terminates the program and returns an indicator of the reason. \\
+  For an I/O device request or an OS service call, the system saves the state of the program, performs the desired task, and, at some point in the future, restores the program to continue execution.
+  We often choose to run another task before resuming the task that requested the I/O, since that task may often not be able to proceed until the I/O is complete. \\
+
+  Exceptions are why the ability to save and restore the state of any task is critical. \\
+
+  The difficulty of always associating the correct exception with the correct instruction in pipelined computers has led some computer designers to relax this requirement in noncritical cases.
+  Such processors are said to have \emph{imprecise interrupts} or \emph{imprecise exceptions},
+  which are interrupts/exceptions that are not associated with the exact instruction that was the cause. \\
+  MIPS and the vast majority of computers today support \emph{precise interrupts} or \emph{precise exceptions}, which are interrupts/exceptions that are associated with the correct instruction.
+
+  \section{Introduction to Large and Fast: Exploiting Memory Hierarchy}
+
 
 
   \newpage
