@@ -730,50 +730,6 @@ binary and those who can't.} \\
   The throughput is the number of tokens that the system can process per unit time.
   Parallelism improves the system throughput.
 
-  \section{Memory Technologies}
-  There are four primary technologies used in memory hierarchies. \\
-  Main memory is implemented from DRAM (dynamic random access memory), while levels closer the processor (caches) uses SRAM (static random access memory). \\
-  DRAM is less costly per bit than SRAM, although it is substantially slower.
-  The price difference arises because DRAM uses significantly less area per bit of memory, and DRAMs thus have larger capacity for the same amount of silicon. \\
-
-  \subsection{SRAM Technology}
-  SRAMs are simply integrated circuits that are memory arrays with (usually) a single access port that can provide either a read or a write. \\
-  SRAMs have a fixed access time to any datum, though read and write access times may differ. \\
-  SRAMs don't need to refresh and so the access time is very close to the cycle time. \\
-  SRAMs typically use six to eight transistors per bit to prevent the information from being disturbed when read. \\
-  SRAM needs only minimal power to retain the charge in standby mode.
-
-  \subsection{DRAM Technology}
-  In a SRAM, as long as power is applied, the value can be kept indefinitely. \\
-  In a dynamic RAM, the value kept in a cell is stored as a charge in a capacitor.
-  A single transistor is then used to access this stored charge, either to read the value or to overwrite the charge stored there. \\
-  Because DRAMs use only a single transistors per bit of storage, they are much denser and cheaper per bit than SRAM. \\
-  As DRAMs store the charge on a capacitor, it cannot be kept indefinitely and must periodically be refreshed.
-  Hence this memory structure is dynamic, as opposed to the static storage in an SRAM cell. \\
-
-  To refresh the cell, we merely read its contents and write it back.
-  The charge can be kept for several ms.
-  If every bit had to be read out of the DRAM and then written back individually, the DRAM would be constantly refreshed, leaving no time to access it. \\
-  DRAMs use a two-level decoding structure, which allows the ability to refresh an entire \emph{row} (which shares a word line) with a read cycle followed immediately by a write cycle. \\
-
-  The row organization that helps with refresh also helps with performance.
-  To improve performance, DRAMs buffer rows for repeated access.
-  The buffer acts like a SRAM; by changing the address, random bits can be accessed in the buffer until the next row access.
-  This capability improves the access time significantly, since the access time to bits in the row is much lower.
-  When the row is in the buffer, it can be transferred by successive addresses at whatever the width of the DRAM is, or by specifying a block transfer and the starting address within the buffer. \\
-
-  To further improve the interface to processors, DRAMs added clocks which is called Synchronous DRAMs or SDRAMs.
-  The advantage is that the use of a clock eliminates the time for the memory and processor to synchronize.
-  The speed advantage of synchronous DRAMs come from the ability to transfer the bits in the burst without having to specify additional address bits.
-  Instead, the clock transfer the successive bits in a burst. \\
-  \emph{Double Data Rate} (DDR) SDRAM is the fastest currently available.
-  Data transfer on both the rising and falling edge of the clock, thereby getting twice as much bandwidth based on the clock rate and the data width. \\
-
-  Sustaining the bandwidth requires clever organization \emph{inside} the DRAM.
-  The DRAM can be internally organized, instead of just a faster row buffer, to read or write from multiple \emph{banks}, which each having its own row buffer.
-  Sending an address to several banks permits them all to read or write simultaneously.
-  The rotating access scheme is called \emph{address interleaving}.
-
   \section{Multiplication}
   \includegraphics[width=1.0\textwidth]{pictures/multiplication.png} \\
   The first operand is called the \emph{multiplicand} and the second the \emph{multiplier}.
@@ -1564,7 +1520,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   As distance from the processor increases, the size of the memories and the access time both increases. \\
 
   The data is similarly hierarchical: a level closer to the processor is generally a subset of any level further away, and all the data is stored at the lowest level (hard disk).
-  A memory hierarchy can consist of multiple levels, but data is copied between only two adjacent levels at a time, so we can focus out attention on just two levels.
+  A memory hierarchy can consist of multiple levels, but data is copied between only two adjacent levels at a time, so we ca n focus out attention on just two levels.
   The upper level---the closer to the processor---is smaller and faster than the lower level, since the upper level uses technology that is more expensive.
   The minimum unit of information that can be either present or not present in the two-level hierarchy is called a \emph{block} or a \emph{line}. \\
 
@@ -1573,6 +1529,92 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   Th lower level in the hierarchy is then accessed to retrieve the block containing the requested data. \\
   The \emph{hit rate}, or \emph{hit ratio}, is the fraction of memory accesses found in the upper level; it is often used as a measure of the performance of the memory hierarchy. \\
   The \emph{miss rate} (1-hit rate) is the fraction of memory access not found in the upper level. \\
+
+  Performance is the major reason for having a memory hierarchy, the time to service hits and misses is important. \\
+  \emph{Hit time} is the time to access the upper level of the memory hierarchy, which includes the time needed to determine whether the access is a hit or a miss. \\
+  The \emph{miss penalty} is the time to replace a block in the upper level with the corresponding block from the lower level, plus the time to deliver this block to the processor. \\
+  Since the upper level is smaller and built using faster memory parts, the hit time will be much smaller than the time to access the next level in the hierarchy, which is the major component of the miss penalty.
+
+  \section{Memory Technologies}
+  There are four primary technologies used in memory hierarchies. \\
+  Main memory is implemented from DRAM (dynamic random access memory), while levels closer the processor (caches) uses SRAM (static random access memory). \\
+  DRAM is less costly per bit than SRAM, although it is substantially slower.
+  The price difference arises because DRAM uses significantly less area per bit of memory, and DRAMs thus have larger capacity for the same amount of silicon. \\
+
+  \subsection{SRAM Technology}
+  SRAMs are simply integrated circuits that are memory arrays with (usually) a single access port that can provide either a read or a write. \\
+  SRAMs have a fixed access time to any datum, though read and write access times may differ. \\
+  SRAMs don't need to refresh and so the access time is very close to the cycle time. \\
+  SRAMs typically use six to eight transistors per bit to prevent the information from being disturbed when read. \\
+  SRAM needs only minimal power to retain the charge in standby mode.
+
+  \subsection{DRAM Technology}
+  In a SRAM, as long as power is applied, the value can be kept indefinitely. \\
+  In a dynamic RAM, the value kept in a cell is stored as a charge in a capacitor.
+  A single transistor is then used to access this stored charge, either to read the value or to overwrite the charge stored there. \\
+  Because DRAMs use only a single transistors per bit of storage, they are much denser and cheaper per bit than SRAM. \\
+  As DRAMs store the charge on a capacitor, it cannot be kept indefinitely and must periodically be refreshed.
+  Hence this memory structure is dynamic, as opposed to the static storage in an SRAM cell. \\
+
+  To refresh the cell, we merely read its contents and write it back.
+  The charge can be kept for several ms.
+  If every bit had to be read out of the DRAM and then written back individually, the DRAM would be constantly refreshed, leaving no time to access it. \\
+  DRAMs use a two-level decoding structure, which allows the ability to refresh an entire \emph{row} (which shares a word line) with a read cycle followed immediately by a write cycle. \\
+
+  The row organization that helps with refresh also helps with performance.
+  To improve performance, DRAMs buffer rows for repeated access.
+  The buffer acts like a SRAM; by changing the address, random bits can be accessed in the buffer until the next row access.
+  This capability improves the access time significantly, since the access time to bits in the row is much lower.
+  When the row is in the buffer, it can be transferred by successive addresses at whatever the width of the DRAM is, or by specifying a block transfer and the starting address within the buffer. \\
+
+  To further improve the interface to processors, DRAMs added clocks which is called Synchronous DRAMs or SDRAMs.
+  The advantage is that the use of a clock eliminates the time for the memory and processor to synchronize.
+  The speed advantage of synchronous DRAMs come from the ability to transfer the bits in the burst without having to specify additional address bits.
+  Instead, the clock transfer the successive bits in a burst. \\
+  \emph{Double Data Rate} (DDR) SDRAM is the fastest currently available.
+  Data transfer on both the rising and falling edge of the clock, thereby getting twice as much bandwidth based on the clock rate and the data width. \\
+
+  Sustaining the bandwidth requires clever organization \emph{inside} the DRAM.
+  The DRAM can be internally organized, instead of just a faster row buffer, to read or write from multiple \emph{banks}, which each having its own row buffer.
+  Sending an address to several banks permits them all to read or write simultaneously.
+  The rotating access scheme is called \emph{address interleaving}. \\
+
+  Memory for servers are commonly sold on small boards called \emph{dual inline memory modules} (DIMMs).
+  SIMMs typically contain 4 to 16 DRAMs, and they are normally organized to be 8 bytes wide for server systems.
+
+  \subsection{Flash Memory}
+  Flash memory is a type of \emph{electrically erasable programmable read-only memory} (EEPROM). \\
+  Unlike disks and DRAM, writes can wear out flash memory bits.
+  To cope with such limits, most flash products include a controller to spread the writes by remapping blocks that have been written many times to less trodden blocks;
+  this is called \emph{wear leveling}.
+  Wear leveling lowers the potential performance of flash, but is is needed unless higher-level software monitors block wear.
+  Flash controllers that perform wear leveling can also improve yield by mapping out memory cells that were manufactured incorrectly.
+
+  \subsection{Disk Memory}
+  A magnetic hard disk consists of a collection of platters, which rotate on a spindle at 5,400 to 15,000 revolutions per minute. \\
+  To read and write information on a hard disk, a movable arm containing a small electromagnetic coil called a \emph{read-write head} is located just above each surface.
+  The entire drive is permanently sealed to control the environment inside the drive, which, in turn, allows the disk heads to be much closer to the drive surface. \\
+
+  Each disk surface is divided into concentric circles, called \emph{tracks}.
+  These are typically tens of thousands of tracks per surface.
+  Each track is in turn divided into \emph{sectors} that contain the information; each track may have thousands of sectors. \\
+  Sectors are usually 512 to 4096 bytes in size.
+  The sequence recorded on the magnetic media is a sector number, a gap, the information for that sector including error correction code, a gap, the sector number of the next sector, and so on. \\
+
+  \subsubection{Accessing Data in a Hard Disk}
+  To access data, the OS must direct the disk through a three-stage process. \\
+
+  The first step is to position the head over the proper track.
+  This operation is called a \emph{seek}, and the time to move the head to the desired track is called the \emph{seek time}. \\
+
+  Once the head has reached the correct rack, we must wait for the desired sector to rotate under the read/write head. This time is called the \emph{rotational latency} or \emph{rotational delay}.
+  The average latency to the desired information is halfway around the disk. \\
+
+  The last component of a disk access, \emph{transfer time}, is the time to transfer a block of bits.
+  The transfer time is a function of the sector size, the rotation speed, and the recording density of a track.
+
+  \section{The Basics of Caches}
+
 
 
   \newpage
