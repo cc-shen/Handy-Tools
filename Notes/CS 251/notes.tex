@@ -8,7 +8,7 @@
 \usepackage[pdftex, pdfauthor={Charles Shen}, pdftitle={CS 251: Computer Organization and Design}, pdfsubject={Lecture notes from CS 251: Computer Organization and Design at the University of Waterloo}, pdfkeywords={CS 251, course notes, notes, Waterloo, University of Waterloo}, pdfproducer={LaTeX}, pdfcreator={pdflatex}]{hyperref}
 \usepackage{cleveref}
 \usepackage{wrapfig}
-\usepackage{multicol, multirow}
+\usepackage{multicol, multirow, array}
 
 \DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
 
@@ -44,6 +44,10 @@
   \caption{#3}
   \end{figure}
 }
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 
 \allowdisplaybreaks
 
@@ -1603,7 +1607,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   Sectors are usually 512 to 4096 bytes in size.
   The sequence recorded on the magnetic media is a sector number, a gap, the information for that sector including error correction code, a gap, the sector number of the next sector, and so on. \\
 
-  \subsubection{Accessing Data in a Hard Disk}
+  \subsubsection{Accessing Data in a Hard Disk}
   To access data, the OS must direct the disk through a three-stage process. \\
 
   The first step is to position the head over the proper track.
@@ -1808,7 +1812,126 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   &+ \text{Write buffer stalls}
   \end{align*}
 
-  Write buffer stalls depend on the proximity of writes, and not just the frequency, it is not possible to give a simple equation to compute such stalls.
+  In most write-through cache organizations, the read and write miss penalties are the same (the time to fetch the block from memory).
+  Then we can define memory-stall clock cycles as:
+  $$\text{Memory-stall clock cycles} = \frac{\text{Memory accesses}}{\text{Program}} \times
+  \text{Miss rate} \times \text{Miss penalty}$$
+  Alternatively:
+  $$\text{Memory-stall clock cycles} = \frac{\text{Instructions}}{\text{Program}} \times
+  \frac{\text{Misses}}{\text{Instruction}} \times \text{Miss penalty}$$
+
+  Note that if hit time increases, the total time to access a word from the memory system will increase, possibly leading to an increase in the processor cycle time. \\
+  An example is increasing the cache size;
+  a larger cache clearly has a longer access time.
+  An increase in hit time likely adds another stage to the pipeline, since it may take multiple cycles for a cache hit.
+  At some point the increase in hit time for a larger cache could dominate the improvement in hit rate, leading to a decrease in processor performance. \\
+
+  \emph{Average memory access time} (AMAT) is the average time to access memory considering both hits and misses and the frequency of different accesses.
+  It is used to examine alternative cache designs.
+  It is defined as the following:
+  $$\text{AMAT} = \text{Time for a hit} + \text{Miss rate} \times \text{Miss penalty}$$
+
+  \subsection{Reducing Cache Misses by More Flexible Placement of Blocks}
+  Direct-mapped cache, where a block can be placed in exactly one location, is at one extreme in the range of schemes for placing blocks. \\
+  The other end of the extreme is a scheme where a block can be placed in any location in the cache;
+  this is called \emph{fully associative}, because a block in memory may be associated with any entry in the cache. \\
+  To find a given block, all the entries in the cache must be searched because a block can be placed in any one.
+  To make the search practical, it is done in parallel with a comparator associated with each cache entry.
+  These comparators drastically increase the hardware cost, effectively making fully associated placement practical only for caches with small number of blocks. \\
+
+  In between the two extremes is a scheme called \emph{set associative}.
+  In a set-associated cache, there are a fixed number of locations where each block can be placed. \\
+  A set-associated cache with $n$ locations for a block is called a $n$-way set-associative cache.
+  An $n$-way set-associative cache consists of a number of sets, each of which consists of $n$ blocks.
+  Each block in the memory maps to a unique \emph{set} in the cache given by the index field, and a block can be placed in \emph{any} element of that set.
+  Thus, a set-associative placement combines direct-mapped placement and fully associative placement: a block is directly mapped into a set, and then all the blocks in the set are searched for a match. \\
+
+  In a set-associative cache, the set containing a memory block is given by:
+  $$\text{(Block number) modulo (Number of \emph{sets} in the cache)}$$
+  Since the block may be placed in any element of the set, \emph{all the tags of all the elements of the set} must be searched.
+  Note that not all of the block in the cache must be searched for (like it has to be in a fully associated cache). \\
+
+  A direct-mapped cache can be interpreted as a one-way set-associated cache: each cache entry holds one block and each set has one element. \\
+  A fully associated cache with $m$ entries is simply an $m$-way set-associative cache; it has one set with $m$ blocks, and an entry can reside in any block within that set.
+
+  The advantage of increasing the degree of associativity is that it usually decreases the miss rate. \\
+  The main disadvantage, however, is a potential increase in the hit time.
+
+  \subsection{Locating a Block in the Cache}
+  Each block in a set-associative cache includes an address tag that gives the block address.
+  The tag of every cache block within the appropriate set is checked to see if it matches the block address from the processor.
+  \begin{center}
+  \begin{tabular}{| C{3cm} | C{3cm} | C{3cm} |}
+  \hline
+  Tag & Index & Block Offset \\
+  \hline
+  \end{tabular}
+  \newline
+  The three portions of an address in a \\ set-associative or direct-mapped cache.
+  \end{center}
+  The index value is used to select the set containing the address of interest, and the tags of all the blocks in the set must be searched.
+  Since speed is important, all the tags in the selected set are searched in parallel.
+  As in a fully associative cache, a sequential search would make the hit time of a set-associative cache too slow. \\
+
+  If the total cache size is kept the same, increasing the associativity increases the number of blocks per set, which is the number of simultaneous compares needed to perform the search in parallel: each increase by factor of 2 in associativity doubles the number of blocks per set and halves the number of sets. \\
+  In addition, each factor-of-2 increase in associativity decreases the size of the index by 1 bit and increases the size of the tag by 1 bit.
+  In a fully associative cache, there is effectively only one set, and all the blocks must be checked in parallel.
+  Thus, there is no index, and the entire address, excluding the block offset, is compared against the tag of every block;
+  the entire cache is searched without any indexing. \\
+
+  In a direct-mapped cache, only one comparator is needed, because the entry can be in only one block, and we access the cache simply by indexing. \\
+  In a 4-way set-associative cache, four comparators are needed, together with a 4-to-1 multiplexer to choose among the four potential members of the selected set. (See \ref{4WaySetAssociativeCache})\\
+  The cache access consists of indexing the appropriate set and then searching the tags of the set.
+  The costs of an associative cache are the extra comparators and any delay imposed by having to do the compare and select from among the elements of the set.
+
+  \begin{figure}[!htp]
+    \label{4WaySetAssociativeCache}
+    \centering{
+      \includegraphics[width=1.0\textwidth]{pictures/4setassociativecache.png}
+    }
+    \caption{Implementation of a four-way set-associative cache}
+  \end{figure}
+
+  The choice among direct-mapped, set-associative, or fully associative mapping in any memory hierarchy will depend on the cost of a miss vs. the cost of implementing associativity, both in time and in extra hardware.
+
+  \subsection{Choosing Which Block to Replace}
+  When a miss occurs in a direct-mapped cache, the requested block can go in exactly on position, and the block occupying that position must be replaced. \\
+  In a set associative cache, there's the choice of where to place the requested block, and hence a choice of which block to replace. \\
+  In a set-associative cache, we must choose among the blocks in the selected set. \\
+
+  The most commonly used scheme is \emph{least recently used} (LRU).
+  In an LRU scheme, the block replaced is the once that has been unused for the longest time. \\
+
+  LRU replacement is implemented by keeping track of when each element in a set was used relative to the other elements in the set.
+  For a two-way set-associative cache, tracking when the two elements were used can be implemented by keeping a single bit in each set and setting the bit to indicate an element whenever that element is referenced.
+  As associativity increases, implementing LRU becomes harder.
+
+  \subsection{Reducing the Miss Penalty Using Multilevel Caches}
+  Most microprocessors support an additional level of caching to close the gap between fast clock rates of modern processors and the increasingly long time to access DRAMs.
+  This second-level cache is normally on the same chip and is accessed whenever a miss occurs in the primary cache.
+  If the second-level cache contains the desired data, the miss penalty for the first-level cache is much less than than the access time of main memory.
+  If neither cache contains the data, a main memory access is required, and a larger miss penalty is incurred. \\
+
+  A two-level cache structure allows the primary cache to focus on minimizing hit time to yield a shorter clock cycle or fewer pipeline stages, while allowing the secondary cache to focus on miss rate to reduce the penalty of long memory access times. \\
+
+  The primary cache of a \emph{multilevel cache} is often smaller, it may also use a smaller block size, to go with the smaller cache size and also to reduce the miss penalty. \\
+  In comparison, the secondary cache will be much larger than in a single-level cache, since the access time of the secondary cache is less critical.
+  With a larger total size, the secondary cache may use a larger block size than appropriate with a single-level cache.
+  It often uses higher associativity than the primary cache given the focus of reducing miss rates.
+
+  \subsection{Software Optimization via Blocking}
+  When dealing with arrays, we can get good performance from the memory system if we store the array in memory so that accesses to the array are sequential in memory. \\
+  However if we're dealing with multiple arrays, with some arrays accessed by rows and some by columns.
+  Storing the arrays row-by-row (\emph{row major order}) or column-by-column (\emph{column major order}) does not solve the problem because both rows and columns are used in every loop iteration. \\
+
+  Instead of operating on entire rows or columns of an array, \emph{blocked} algorithm operate on sub-matrices or \emph{blocks}.
+  The goal is maximize accesses to the data loaded into the cache before the data are replaced;
+  that is, improve temporal locality to reduce cache misses.
+
+  \section{Dependable Memory Hierarchy}
+
+
+
 
 
 
@@ -1818,6 +1941,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   \section{Notes and Things to Watch Out For}
   \begin{itemize}
     \item When counting the number of clock cycles for a sequence of MIPS instructions, there is a ``ramp up'' time of 4 cycles to take into consideration.
+    \item The access time to memory is typically $> 100$ processor cycles
   \end{itemize}
 
   \newpage
