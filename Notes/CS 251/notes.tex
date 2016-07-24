@@ -1614,6 +1614,119 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   The transfer time is a function of the sector size, the rotation speed, and the recording density of a track.
 
   \section{The Basics of Caches}
+  \emph{Cache} represents the level of memory hierarchy between the processor and main memory.
+  Cache is also used to refer to any storage managed to take advantage of locality of access. \\
+
+  The simplest way to assign a location in the cache for each word in memory is to assign the cache location based on the \emph{address} of the word in memory.
+  This cache structure is called \emph{direct-mapped}, since each memory location is mapped directly to exactly one location in the cache. \\
+  The typical mapping between addresses and cache locations for a direct-mapped cache is usually simple.
+  Almost all direct-cache mapped caches uses the following mapping to find a block:
+  $$\text{(Block address) modulo (Number of blocks in the cache)}$$
+
+  Each cache location can contain the contents of a number of different locations, but how do we know whether a requested word is in the cache or not?
+  Thus, a set of \emph{tags} is added to the cache.
+  The tags contain the address information required to identity whether a word in the cache corresponds to the requested word.
+  The tag needs only to contain the upper portion of the address, corresponding to the bits that are not sued as an index into the cache. \\
+  Architects omit the index bits due to redundancy, since by definition the index field of any address of a cache block must be that block number. \\
+
+  We also need a way to recognize that a cache block does not have valid information.
+  The most common method is to add a \emph{valid bit} to indicate whether an entry contains a valid address.
+  If the bit is not set, there cannot be a match for this block. \\
+
+  Caching is possibly the most important example of the big idea of \emph{prediction}.
+  It relies on the principle of locality to try to find the desired data in the higher levels of the memory hierarchy, and provides mechanisms to ensure that when the prediction is wrong it finds and uses the proper data from the lower levels of memory hierarchy.
+  The hit rates of the cache prediction on modern computers are often higher than 95\%.
+
+  \subsection{Accessing a Cache}
+  Suppose we have the following example of nine memory references to an empty eight-block cache.
+  Since there are eight blocks in the cache, the lower-order three bits of an address give the block number:
+  \begin{center}
+  \begin{tabular}{| c | c | c | c |}
+  \hline
+  Decimal Address & Binary Address & Hit or Miss & Assigned Cache \\ \hline
+  22 & 10110\textsubscript{two} & miss & (10\textcolor{blue}{110}\textsubscript{two} mod 8) = \textcolor{blue}{110}\textsubscript{two} \\ \hline
+  26 & 11010\textsubscript{two} & miss & (11\textcolor{blue}{010}\textsubscript{two} mod 8) = \textcolor{blue}{010}\textsubscript{two} \\ \hline
+  22 & 10110\textsubscript{two} & hit & (10\textcolor{blue}{110}\textsubscript{two} mod 8) = \textcolor{blue}{110}\textsubscript{two} \\ \hline
+  26 & 11010\textsubscript{two} & hit & (11\textcolor{blue}{010}\textsubscript{two} mod 8) = \textcolor{blue}{010}\textsubscript{two} \\ \hline
+  16 & 10000\textsubscript{two} & miss & (10\textcolor{blue}{000}\textsubscript{two} mod 8) = \textcolor{blue}{000}\textsubscript{two} \\ \hline
+  3 & 00011\textsubscript{two} & miss & (00\textcolor{blue}{011}\textsubscript{two} mod 8) = \textcolor{blue}{011}\textsubscript{two} \\ \hline
+  16 & 10000\textsubscript{two} & hit & (10\textcolor{blue}{000}\textsubscript{two} mod 8) = \textcolor{blue}{000}\textsubscript{two} \\ \hline
+  18 & 10010\textsubscript{two} & miss & (10\textcolor{blue}{010}\textsubscript{two} mod 8) = \textcolor{blue}{010}\textsubscript{two} \\ \hline
+  16 & 10000\textsubscript{two} & hit & (10\textcolor{blue}{000}\textsubscript{two} mod 8) = \textcolor{blue}{000}\textsubscript{two} \\ \hline
+  \end{tabular}
+  \end{center}
+  Since the cache starts empty, several of th first references are missed. \\
+  Also, the 8th reference results in a conflicting demand for a block.
+  Hence, the word 10010\textsubscript{two} must replace the word at block 010\textsubscript{two}.
+  This behavior allows a cache to take advantage of temporal locality: recently referenced words replace less recently referenced words.
+  In a direct-mapped cache, there is only place to put the newly requested item and hence only one choice of what to replace. \\
+
+  We know where to look in the cache for each possible address: the low-order bits of an address can be used to find the unique cache entry to which the address could map.
+  A referenced address is divided into
+  \begin{itemize}
+    \item A \emph{tag field}, which is used to compare with the value of the tag field of the cache
+    \item A \emph{cache index}, which is used to select the block
+  \end{itemize}
+  The index of a cache block, together with the tag contents of that block, uniquely specifies the memory address of the word contained in the cache block.
+  Since the index field is used as an address to reference the cache, and because an $n$-bit field has $2^{n}$ values, the total number of entries in a direct-mapped cache must be a power of 2. \\
+  In MIPS, words are aligned to multiples of four bytes, the least significant two bits of every address specify a byte within a word.
+  Thus, the least significant two bits are ignored when selecting a word in the block (two rightmost 2 bits in 32 bits). \\
+
+  The total number of bits needed for a cache is a function of the cache size and the address size, because the cache includes both the storage for the data and the tags.
+  The size of the block is normally several words. \\
+
+  Suppose we have the following situation:
+  \begin{itemize}
+    \item 32-bit addresses
+    \item A direct-mapped cache
+    \item The cache size is $2^{n}$ blocks, so $n$ bits are used for the index
+    \item The block size is $2^{m}$ words ($2^{m+2}$ bytes), so $m$ bits are used for the word within the block, and two bits are used for the byte part of the address
+  \end{itemize}
+  the size of the tag field is
+  $$32 - (n + m + 2)$$
+  The total number of bits in a direct-mapped cache is
+  $$2^{n} \times (\text{block size} + \text{tag size} + \text{valid field size})$$
+  The block size is $2^{m}$ words ($2^{m+5}$ bits), and we need 1 bit for the valid field, the number of bits in such a cache is
+  $$2^{n} \times (2^{m} \times 32 + (32 - n - m - 2) + 1) = 2^{n} \times (2^{m} \times 32 + 31 - n -m)$$
+  Although that is the actual size in bits, the naming convention is to exclude the size of the tag and valid field and to count only the size of the data.
+  For instance, a cache that holds 1024 words is called a 4 KiB cache. \\
+
+  Large blocks exploit spatial locality to lower miss rates.
+  The miss rate may go up eventually if the block size becomes a significant fraction of the cache size, because the number of blocks that can be held in the ache will become small, and there will be a great deal of competition for those blocks.
+  Thus resulting in a block being bumped out of the cache before many of its words are accessed.
+  Spatial locality among the words in a block decreases with a very large block; consequently, the benefits in the miss rate become smaller. \\
+
+  Another issue with increasing the block size is that the cost of a miss increases.
+  The penalty for missing is determined by the time required to fetch the block from the next lower level of the hierarchy and load it into the cache.
+  The time to fetch the block has two parts: the latency to the first word and the transfer time for the rest of the block.
+  Unless the memory system is changed, the transfer time---and hence the miss penalty--- will likely increase as the blocks become larger.
+  Resulting in the increase in the miss penalty overwhelming the decrease in the miss rate for blocks that are too large, which leads to decreases in cache performance.
+
+  \subsection{Handling Cache Misses}
+  A \emph{cache miss} is a request for data from the cache that cannot be filled because the data is not present in the cache.
+  The control unit must detect a miss and process the miss by fetching the requested data from memory.
+  If the cache reports a hit, the computer continues using the data as if nothing happened. \\
+
+  The cache miss handling is done in collaboration with the processor control unit and with a separate controller that initiates the memory access and refills the cache.
+  The processing of a cache miss creates a pipeline stall as opposed to an interrupt, which would require saving the state of all registers.
+  For a miss, we can stall the entire processor while we wait for memory.
+  Note that more sophisticated out-of-order processors can allow execution of instructions while waiting for a cache miss. \\
+
+  Steps to be taken on an instruction cache miss:
+  \begin{enumerate}
+    \item Send the original PC value (current PC - 4) to the memory
+    \item Instruct main memory to perform a read and wait for the memory to complete its access
+    \item Write the cache entry, putting the data from memory in the data portion of the entry, writing the upper bits of the address (from the ALU) into the tag field, and turning the valid bit on
+    \item Restart the instruction execution at the first step, which will refetch the instruction, this time finding it in the cache
+  \end{enumerate}
+
+  On a cache data miss, stall the processor until the memory responds with the data.
+
+  \subsection{Handling Writes}
+
+
+
+
 
 
 
