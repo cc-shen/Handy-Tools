@@ -798,6 +798,7 @@ binary and those who can't.} \\
     \item[5.] Set the sign of the product to positive if the signs of the original operands are the same; if they differ, make the sign negative.
   \end{itemize}
 
+  \newpage
   \section{Introduction to the Processor}
   A subset of the core MIPS instruction set will be examined:
   \begin{enumerate} \label{instruction_classes}
@@ -1503,6 +1504,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   which are interrupts/exceptions that are not associated with the exact instruction that was the cause. \\
   MIPS and the vast majority of computers today support \emph{precise interrupts} or \emph{precise exceptions}, which are interrupts/exceptions that are associated with the correct instruction.
 
+  \newpage
   \section{Introduction to Large and Fast: Exploiting Memory Hierarchy}
   The \emph{principle of locality} states that programs access a relatively small portion of their address space at any instant of time. \\
   There are two different types of locality:
@@ -1723,8 +1725,90 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   On a cache data miss, stall the processor until the memory responds with the data.
 
   \subsection{Handling Writes}
+  The simplest way to keep the main memory and the cache consistent is always to write the data into both the memory and the cache;
+  This is the \emph{write-through} scheme. \\
 
+  The other key aspect of writes is what occurs on a write miss.
+  We first fetch the words of the block from memory.
+  After the block is fetched and placed into the cache, we can overwrite the word that caused the miss into the cache block.
+  We can also write the word to main memory using the full address. \\
 
+  With a write-through scheme, every write causes the data to be written to main memory.
+  These writes take a long time and could slow down the processor considerably.
+  Hence, this method does not provide very good performance. \\
+
+  A solution to this inefficiency to use a \emph{write buffer}.
+  The buffer stores the data while it is waiting to be written to memory.
+  After writing the data into the cache and into the write buffer, the processor can continue execution.
+  When a write to main memory completes, the entry in the write buffer is freed.
+  If the buffer is full upon a new write, the processor must stall until there is an empty position in the buffer. \\
+  If the rate of memory completing writes is less than the rate the processor is generating new writes, no amount of buffer will suffice since writes are being generated much faster than the memory can accept them. \\
+
+  When writes occur in bursts, stalls can still occur regardless of the rate of writes being generated vs. rate of memory accepting writes.
+  To compensate for this, processors usually increase the depth of the write buffer beyond a single entry. \\
+
+  The alternative to a write-through scheme is a scheme named \emph{write-back}.
+  It handles writes by updating values only to the block in the cache, then writing the modified block to the lower level of the hierarchy when the block is replaced. \\
+  This scheme can improve performance, especially when processors can generate writes as fast or faster than the writes can be handled by the main memory;
+  is it however more complex to implement than write-through. \\
+
+  \textbf{Extra Elaboration}: \\
+  Writes introduce several complications into caches that are not present for reads.
+  Some of them are: the policy on write misses and efficient implementation of writes in write-back caches. \\
+
+  Consider a miss in a write-through cache.
+  The most common strategy is to allocate a block in the cache, called \emph{write allocate}.
+  The block is fetched from memory and then the appropriate portion of the block is overwritten.
+  An alternative strategy is to update the portion of the block in memory but not put it in the cache, called \emph{no write allocate}.
+  The motivation is that sometimes programs write entire blocks of data, such as when the operating system zeros a page of memory.
+  In such cases, the fetch associated with the initial write miss may be unnecessary.
+  Some computers allow the write allocation policy to be changed on a per page basis. \\
+
+  Actually implementing stores efficiently in a cache that uses a write-back strategy is more complex than in a write-through cache.
+  A write-through cache can write the data into the cache and read the tag;
+  if the tag mismatches, then a miss occurs.
+  Because the cache is write-through, the overwriting of the block in the cache is not catastrophic, since memory has the correct value.
+  In a write-back cache, we must first write the block back to memory if the data in the cache is modified and we have a cache miss.
+  If we simply overwrote the block on a store instruction before we knew whether the store had hit in the cache (as we could for a write-through cache), we would destroy the contents of the block, which is not backed up in the next lower level of the memory hierarchy. \\
+
+  In a write-back cache, because we cannot overwrite the block, stores either require two cycles (a cycle to check for a hit followed by a cycle to actually perform the write) or require a write buffer to hold that data---effectively allowing the store to take only one cycle by pipelining it.
+  When a store buffer is used, the processor does the cache lookup and places the data in the store buffer during the normal cache access cycle.
+  Assuming a cache hit, the new data is written from the store buffer into the cache on the next unused cache access cycle. \\
+
+  By comparison, in a write-through cache, writes can always be done in one cycle.
+  We read the tag and write the data portion of the selected block.
+  If the tag matches the address of the block being written, the processor can continue normally, since the correct block has been updated.
+  If the tag does not match, the processor generates a write miss to fetch the rest of the block corresponding to that address. \\
+
+  Many write-back caches also include write buffers that are used to reduce the miss penalty when a miss replaces a modified block.
+  In such a case, the modified block is moved to a write-back buffer associated with the cache while the requested block is read from memory.
+  The write-back buffer is later written back to memory.
+  Assuming another miss does not occur immediately, this technique halves the miss penalty when a dirty block must be replaced.
+
+  \section{Measuring and Improving Cache Performance}
+  CPU time can be divided into the clock cycles that the CPU spends executing the program and the clock cycles that the CPU spends waiting for the memory system.
+  \begin{align*}
+  \text{CPU time} = &(\text{CPU execution clock cycles} + \text{Memory-stall clock cycles}) \\
+  &\times \text{Clock cycle time}
+  \end{align*}
+  In real processors, the stalls generated by reads and writes can be complex, and accurate performance prediction usually requires very detailed simulations of the processor and memory system.
+  For the sake of simplicity, we assume a simplified model of the memory system. \\
+
+  Memory-stall clock cycles can be defined as the following:
+  $$\text{Memory-stall clock cycles} = (\text{Read-stall cycles} + \text{Write-stall cycles})$$
+
+  The read-stall cycles can be defined as the following:
+  $$\text{Read-stall cycles} = \frac{\text{Reads}}{\text{Program}} \times \text{Read miss rate} \times \text{Read miss penalty}$$
+
+  For a write-through scheme, there are two sources of write stalls: write misses, which usually require that we fetch the block before continuing the write, and write buffer stalls, which occur when the buffer is full when a write occurs. \\
+  Thus, the cycles stalled for write can be defined as:
+  \begin{align*}
+  \text{Write-stall cycles} = &\left( \frac{\text{Writes}}{\text{Program}} \times
+  \text{Write miss rate} \times \text{Write miss penalty} \right) \\
+  &+ \text{Write buffer stalls}
+  \end{align*}
+
+  Write buffer stalls depend on the proximity of writes, and not just the frequency, it is not possible to give a simple equation to compute such stalls.
 
 
 
