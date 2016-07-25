@@ -1929,6 +1929,125 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   that is, improve temporal locality to reduce cache misses.
 
   \section{Dependable Memory Hierarchy}
+  \subsection{Defining Failure}
+  Suppose we have a specification of proper service.
+  Which we can then see a system alternating between two states of delivered service with respect to the service specification:
+  \begin{enumerate}
+    \item \emph{Service accomplishment}, where the service is delivered as specified
+    \item \emph{Service interruption}, where the delivered services is different from the specified services
+  \end{enumerate}
+  Transitions from state 1 to state 2 are caused by \emph{failures}, and transitions from state 2 to state 1 are called \emph{restorations}.
+  Failures can be permanent or intermittent;
+  it is more difficult to diagnose the problem when a system oscillates between the two states (intermittent failures).
+  Permanent failures are much easier to diagnose. \\
+
+  This definitions leads to two related terms: \emph{reliability} and \emph{availability}. \\
+
+  \emph{Reliability} is a measure of the continuous service accomplishment---or, equivalently, of the time of failure---from a reference point.\\
+  \emph{Mean time to failure} (MTTF) is a reliability measure. \\
+  A related term is \emph{annual failure rate} (AFR), which is just the percentage of devices that would be expected to fail in a year for a given MTTF.
+  When MTTF gets large it can be misleading, while AFR leads to better intuition. \\
+  Service interruption is measure as \emph{mean time to repair} (MTTR). \\
+  \emph{Mean time between failures} (MTBF) is simply the sum of MTTF + MTTR.
+  Although MTBF is widely used, MTTF is often the more appropriate term. \\
+
+  \emph{Availability} is then a measure of service accomplishment with respect to the alternation between the two states of accomplishment and interruption.
+  It is statistically defined as:
+  $$\text{Availability} = \frac{\text{MTTF}}{\text{MTTF} + \text{MTTR}} = \frac{\text{MTTF}}{\text{MTBF}}$$
+
+  Both reliability and availability are quantifiable measures, rather than just synonyms for dependability. \\
+  Shrinking MTTR can help availability as much as increasing MTTF. \\
+
+  To increase MMTF, you can improve the quality of the components or design systems to continue operation in the presence of components that have failed.
+  Hence, failure needs to be defined with respect to a context, as failure of a component may not lead to a failure of the system. \\
+  The term \emph{fault} is used to mean failure of a component. \\
+  Three ways to improve MTTF (mean time to failure):
+  \begin{enumerate}
+    \item \emph{Fault avoidance}: Preventing fault occurrence by construction
+    \item \emph{Fault tolerance}: Using redundancy to allow the service to comply with the service specification despite faults occurring
+    \item \emph{Fault forecasting}: \textbf{Predicting} the presence and creating of faults, allowing the component to be replaced before it fails
+  \end{enumerate}
+
+  \subsection{The Hamming Single Error Correcting, Double Error Detecting Code (SEC/DED)}
+  Richard Hamming invented a popular redundancy scheme for memory. \\
+  To invent redundant codes, we need to find how ``close'' correct bit patterns can be.
+  The \emph{Hamming distance} is the minimum number of bits that are different between any two correct bit patterns.
+  For example, the distance between 011011 and 001111 is two. \\
+  Suppose the minimum distance between members of a code is two, and there's a one-bit error.
+  It will turn a valid pattern in a code to an invalid one. \\
+  If we can detect whether members of a code are valid or not,  we can detect single bit errors, and say we have single bit \emph{error detection code}. \\
+
+  Hamming used a \emph{parity code} for error detection.
+  In a parity code, the number of 1s in a word is counted;
+  the word has odd parity if the number of 1s is odd and even otherwise.
+  When a word is written into memory, the parity bit is also written (1 for odd, 0 for even).
+  The parity of the $(n + 1)$ bit word should always be even;
+  if a word of odd parity, then appending 1 after the rightmost bit result in even number of 1s, whereas a word of even parity would have 0 appended and retain its even parity.
+  Then, when the word is read out, the parity bit is read and checked.
+  If the parity of the memory word and the stored parity bit do not match, an error has occurred.
+  \newline
+  If there are 2 bits of error, then a 1-bit parity scheme will not detect any errors, since the parity will match the data with two errors. \\
+
+  A parity code cannot correct errors but Hamming wanted to detect and correct errors.
+  If a code with a minimum distance of 3 is used, then any single bit error would be closer to the correct pattern than to any other valid pattern.
+  Hamming came up with a mapping of data into a distance 3 code called \emph{Hamming Error Correction Code} (ECC).
+  We use extra parity bits to allow the position identification of a single error.
+  Steps to calculate Hamming ECC:
+  \begin{enumerate}
+    \item Start numbering bits from 1 on the left, as opposed to numbering the rightmost bit as 0
+    \item Mark all bit positions that are powers of 2 as parity bits (positions 1, 2, 4, 8, \dots)
+    \item All other bit positions are used for data bits (positions 3, 5, 6, 7, 9, \dots)
+    \item The position of parity bit determines sequence of data bits that it checks is:
+    \begin{itemize}
+      \item Bit 1 (0001\textsubscript{two}) check bits (1, 3, 5, 7, 9, 11, \dots), which are bits where rightmost bit of address is 1
+      (0001\textsubscript{two}, 0011\textsubscript{two}, 0101\textsubscript{two},
+      0111\textsubscript{two}, 1001\textsubscript{two}, 1011\textsubscript{two}, \dots)
+      \item Bit 2 (0010\textsubscript{two}) checks bits (2, 3, 6, 7, 10, 11, 14, 15, \dots), which are bits where the second bit to the right in the address is 1
+      \item Bit 4 (0100\textsubscript{two}) check bits (4-7, 12-15, 20-23, \dots), which are the bits where the third bit to the right in the address is 1
+      \item Bit 8 (1000\textsubscript{two}) check bits (8-15, 24-31, 40-47, \dots), which are the bits where the fourth bit to the right in the address is 1
+    \end{itemize}
+    Note that each data bit is covered by two or more parity bits
+    \item Set parity bits to create even parity for each group
+  \end{enumerate}
+
+  \begin{ex} Hamming ECC \\
+  Using Hamming ECC for a one byte data value of 1001 1010\textsubscript{two}. \\
+  Leaving spaces for the parity bits, the 12 bits pattern is \_ \_ 1 \_ 0 0 1 \_ 1 0 1 0 \\
+  Position 1 checks for: \textcolor{red}{\_} \_ \textcolor{red}{1} \_ \textcolor{red}{0} 0 \textcolor{red}{1} \_ \textcolor{red}{1} 0 \textcolor{red}{1} 0; so parity bit 1 is set to 0 \\
+  Position 2 checks for: 0 \textcolor{red}{\_} \textcolor{red}{1} \_ 0 \textcolor{red}{0} \textcolor{red}{1} \_ 1 \textcolor{red}{0} \textcolor{red}{1} 0;  so parity bit 2 is set to 1 \\
+  Position 4 checks for: 0 1 1 \textcolor{red}{\_} \textcolor{red}{0} \textcolor{red}{0} \textcolor{red}{1} \_ 1 0 1 \textcolor{red}{0}; so parity bit 4 is set to 1 \\
+  Position 8 checks for: 0 1 1 1 0 0 1 \textcolor{red}{\_} \textcolor{red}{1} \textcolor{red}{0} \textcolor{red}{1} \textcolor{red}{0}; so parity bit 8 is set to 0 \\
+
+  The final word is 0111 0010 1010\textsubscript{two} \\
+  Suppose we invert bit 10, then the word is 0111 0010 1\textcolor{red}{1}10\textsubscript{two} \\
+  Parity bit 1 is 0 (four 1s, so even parity; this group is okay) \\
+  Parity bit 2 is 1 (five 1s, so odd parity; there is an error somewhere) \\
+  Parity bit 4 is 1 (two 1s, so even parity; this group is okay) \\
+  Parity bit 8 is 1 (three 1s, so odd parity; there is an error somewhere) \\
+  Since parity bits 2 and 8 are both wrong, $2 + 8 = 10$ so bit 10 is wrong. \\
+  By inverting bit 10, we get 0111 0010 1\textcolor{red}{0}10\textsubscript{two}, done!
+  \end{ex}
+
+  At the cost of one more bit, the minimum Hamming distance in a code can be 4.
+  Which means we can correct single bit \emph{errors} and \emph{detect double bit errors}. \\
+  The idea is to add a parity bit that is calculated over the whole word.
+  For example of a four-bit data word, which would only require 7 bits for single bit error detection.
+  Hamming parity bits H (p\textsubscript{1}, p\textsubscript{2}, p\textsubscript{3}) are computed (even parity as usual) plus the even parity over the entire word, p\textsubscript{4}. \\
+  Then the algorithm to correct one error and detect two is just to calculate parity over the ECC groups (H) as before plus one more over the whole group (p\textsubscript{4}).
+  There are four cases:
+  \begin{enumerate}
+    \item H is even and p\textsubscript{4} is even, so no error occurred
+    \item H is odd and p\textsubscript{4} is odd, so a correctable single single error occurred. (p\textsubscript{4} should calculate odd parity if one error occurred)
+    \item H is even and p\textsubscript{4} is odd, a single error occurred in p\textsubscript{4} bit, not in the rest of the word, so correct the p\textsubscript{4} bit
+    \item H is odd and p\textsubscript{4} is even, a double error occurred. (p\textsubscript{4} should calculate even parity if two errors occurred)
+  \end{enumerate}
+  Single Error Correcting / Double Error Detecting (SEC/DED) is common in memory for servers. \\
+  Conveniently, eight byte data blocks can get SEC/DED with just one more byte, which is why many DIMMs are 72 bits wide.
+
+  \section{Virtual Machines}
+  A \emph{Virtual Machine} (VM)
+
+
 
 
 
