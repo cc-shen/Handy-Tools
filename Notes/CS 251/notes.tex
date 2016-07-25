@@ -2044,8 +2044,456 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   Single Error Correcting / Double Error Detecting (SEC/DED) is common in memory for servers. \\
   Conveniently, eight byte data blocks can get SEC/DED with just one more byte, which is why many DIMMs are 72 bits wide.
 
+  \newpage
   \section{Virtual Machines}
-  A \emph{Virtual Machine} (VM)
+  \emph{Virtual Machines} (VMs) have gained popularity due to:
+  \begin{itemize}
+    \item The increasing importance of isolation and security in modern systems
+    \item The failures in security and reliability of standard operating systems
+    \item The sharing of a single computer among many unrelated users, in particular for cloud computing
+    \item The dramatic increases in raw speed of processors over the decades, which makes the overhead of VMs more acceptable
+  \end{itemize}
+  The broadest definition of VMs includes all emulation methods that provide a standard software interface. \\
+  We are interested in VMs that provide a complete system-level environment at the binary \emph{instruction set architecture} (ISA) level.
+  Although some VMs run different ISAs in the VM from the native hardware, we assume they always match the hardware;
+  such VMs are called (Operating) \emph{System Virtual Machines}. \\
+
+  System virtual machines present the illusion that the users have an entire computer to themselves, including a copy of the OS.
+  A single computer runs multiple VMs and can support a number of different OSes.
+  On a conventional platform, a single OS ``owns'' all the hardware resources, but with a VM, multiple OSes all share the hardware resources. \\
+
+  The software that supports VMs is called a \emph{virtual machine monitor} (VMM) or \emph{hypervisor};
+  the VMM is the heart of VM technology. \\
+  The underlying platform is called the \emph{host}, and its resources are shared among the \emph{guest} VMs/
+  The VMM determines how to map virtual resources to physical resources: a physical resource may be time-shared, partitioned, or even emulated in software. \\
+
+  In additional for using VMs for improving protection, VMs also provide two other significant benefits:
+  \begin{enumerate}
+    \item \emph{Managing software}. VMs provide an abstraction that can run the complete software stack, even including old operating systems like DOS.
+    A typical deployment might be some VMs running legacy OSes, many running the current stable OS release, and a few testing the next OS release.
+    \item \emph{Managing hardware}. One reason for multiple servers is to have each application running with the compatible version of the operating system on separate computers, as this separation can improve dependability.
+    VMs allow these separate software stacks to run independently yet share hardware, thereby consolidating the number of servers.
+  \end{enumerate}
+
+  The cost of processor virtualization depends on the workload.
+  User-level processor-bound programs have zero virtualization overhead, because the OS is rarely invoked, so everything runs at native speeds. \\
+  Input/Output-intensive workloads are also OS-intensive, executing many system calls and privileged instructions that can result in high virtualization overhead.
+  On the other hand, if the I/O-intensive workload is also \emph{I/O-bound}, the cost of processor virtualization can be completely hidden, since the processor is often idle waiting for I/O. \\
+
+  The overhead is determined by both the number of instructions that must be emulated by the VMM and by how much time each takes to emulate them.
+
+  \subsection{Requirements of a Virtual Machine Monitor}
+  A VM Monitor presents a software interface to guest software, it must isolate the state of guests from each other, and it must protect itself from guest software (including guest OSes). \\
+  The qualitative requirements for VMM are:
+  \begin{itemize}
+    \item Guest software should behave on a VM exactly as if it were running on the native hardware, except for performance-related behavior or limitations of fixed resources shared by multiple VMs.
+    \item Guest software should not be able to change allocation of real system resources directly.
+  \end{itemize}
+  The VMM must control many tasks---access to privileged state, I/O, exceptions, and interrupts---even though the guest VM and OS currently running are temporarily using them. \\
+
+  To be in charge, the VMM must be at a higher privilege level than the guest VM, which generally runs in user mode;
+  this also ensures that the execution of any privileged instruction will be handled by the VMM.
+  The basic requirements of system virtual:
+  \begin{itemize}
+    \item At least two processor modes, system and user.
+    \item A privileged subset of instructions that is available only in system mode, resulting in a trap if executed in user mode;
+    all system resources must be controllable only via these instructions.
+  \end{itemize}
+
+  \subsection{(Lack of) Instruction Set Architecture Support for Virtual Machines}
+  If VMs are planned for during the design of the ISa, it is relatively easy to reduce both the number of instructions that must be executed by a VMM and improve their emulation speed. \\
+  An architecture that allows the VM to execute directly on the hardware earns the title \emph{virtualizable} (the IBM 370 architecture has this label). \\
+
+  Many instructions sets, such as x86, ARMv7, and MIPS, were created without virtualization. \\
+
+  The VMM must ensure that the guest system only interacts with virtual resources, so a conventional guest OS runs as a user mode program on top of the VMM. \\
+  If a guest OS attempts to access or modify information related to hardware resources via a privileged instruction, it will trap to the VMM.
+  The VMM can then effect the appropriate changes to corresponding real resources. \\
+
+  In the absence of such support, other measures must be taken.
+  A VMM must take special precautions to locate all problematic instructions and ensure that they behave correctly when executed by a guest OS, thereby increasing the complexity of the VMM and reducing the performance of running the VM.
+
+  \subsection{Protection and Instruction Set Architecture}
+  Protection is a joint effort of architecture and OSes, but architects had to modify some awkward details of existing instruction set architectures when virtual memory became popular. \\
+
+  VMM took three steps to improve performance of virtual machines:
+  \begin{enumerate}
+    \item Reduce the cost of processor virtualization
+    \item Reduce interrupt overhead cost due to virtualization
+    \item Reduce interrupt cost by steering interrupts to the proper VM without invoking the VMM
+  \end{enumerate}
+
+  \section{Virtual Memory}
+  Caches provide fast access to recently used portions of a program's code and data.
+  Similarly, the main memory can act as a ``cache'' for the secondary storage, usually implemented with magnetic disks.
+  This is called \emph{virtual memory}. \\
+
+  Historically, the major motivations for virtual memory are:
+  \begin{enumerate}
+    \item To allow efficient and safe sharing of memory among multiple programs, such as for the memory needed by multiple virtual machines for cloud computing.
+    \item To remove the programming burdens of a small, limited amounted of main memory.
+  \end{enumerate}
+  Now, the first reason still stands for virtual memory. \\
+
+  To allow multiple virtual machines to share the same memory, we must be able to protect the virtual machines from each other, ensuring that a program can only read and write the portions of main memory that have been assigned to it.
+  Main memory only needs to contain the active portions of the many virtual machines,just as a cache contains only the active portion of one program. \\
+  The principle of locality enables virtual memory as well as caches, and virtual memory allows us to efficiently share the processor as well as the main memory. \\
+
+  The VMs sharing the memory change dynamically while the VMs are running.
+  Due to this dynamic interaction, each program need to be compiled into its own \emph{address space}---a separate range of memory locations accessible only to this program.
+  Virtual memory implements the translation of a program's address space to \emph{physical addresses}.
+  This translation process enforces \emph{protection} of a program's address space from other virtual machines. \\
+
+  The second motivation for virtual memory is to allow a single user program to exceed the size of primary memory.
+  Virtual memory automatically manages the two levels of the memory hierarchy represented by main memory (sometimes called \emph{physical memory} to distinguish it from virtual memory) and secondary storage. \\
+
+  A virtual memory block is called a \emph{page}, and a virtual memory miss is called a \emph{page fault}.
+  With virtual memory, the processor produces a \emph{virtual address}, which is translated by a combination of hardware and software to a \emph{physical address}, which is used to access main memory.
+
+  \begin{figure}[!htp]
+  \centering{
+    \includegraphics[width=0.6\textwidth]{pictures/addressMapping.png}
+  }
+  \end{figure}
+
+  The figure above shows the virtually addressed memory with pages mapped to main memory.
+  The process is \emph{address mapping} or \emph{address translation}. \\
+
+  The two memory hierarchy levels controlled by virtual memory are usually DRAMs and flash memory in personal mobile devices and DRAMs and magnetic disks in services. \\
+
+  Virtual memory simplifies loading the program for execution by providing \emph{relocation}.
+  Relocation maps the virtual addresses used by a program to different physical addresses before the addresses are used to access memory.
+  This relocation allows a program to be loaded anywhere in main memory.
+  All virtual memory systems in use today relocate the program as a set of fixed-size blocks (pages), thereby eliminating the need to find a contiguous block of memory to allocate to a program;
+  instead, the OS only need to find a sufficient number of pages in main memory. \\
+
+  In virtual memory, the address is broken into a \emph{virtual page number} and a \emph{page offset}.
+
+  \begin{figure}[H]
+  \centering{
+    \includegraphics[width=0.6\textwidth]{pictures/vAddressMapToPAddress.png}
+    \caption{Mapping from a virtual to a physical address}
+  }
+  \end{figure}
+
+  The figure above shows how a virtual address space of 4 GiB maps to the main memory space of 1 GiB (physical page number is 18, so $2^{18}$ allows 1 GiB). \\
+  The physical page number constitutes the upper portion of the physical address, while the page offset, which is not changed, constitutes the lower portion.
+  The number of bits in the page offset field determines the page size.
+  The number of pages addressable with the virtual address need not match the number of pages addressable with the physical address. \\
+  Having a larger number of virtual pages than physical pages is the basis for the illusion of an essentially unbounded amount of virtual memory. \\
+
+  The high cost of a page fault motivates many design choices in virtual memory systems.
+  A \emph{page fault} to disk will take millions of clock cycles to process.
+  This miss penalty, dominated by the time to get the first word for typical page sizes, leads to several key decisions in designing virtual memory systems:
+  \begin{itemize}
+    \item Pages should be large enough to try to amortize the high access time.
+    Sizes from 4 KiB to 16 KiB are typical today.
+    New desktops and server systems are being developed to support 32 KiB and 64 KiB pages, but new embedded systems are going to 1 KiB pages
+    \item Organizations that reduce the page fault rate are attractive.
+    The primary technology used here is to allow fully associative placement of pages in memory
+    \item Page faults can be handled in software because the overhead will be small compared to the disk access time.
+    In addition, software can afford to use clever algorithms for choosing how to place pages because even small reductions in the miss rate will pay for the cost of such algorithms
+    \item Write-through will not work for virtual memory, since writes takes too long.
+    Instead, virtual memory systems use write-back.
+  \end{itemize}
+
+  \subsection{Placing a Page and Finding It Again}
+  Due to the high penalty for a page fault, designers reduce page fault frequency by optimizing page placement.
+  If a virtual page is allowed to be mapped to any physical page, the operating system can then choose to replace any page it wants when a page fault occurs. \\
+  The ability to use a clever and flexible replacement scheme reduces the page fault rate and simplifies the use of fully associative placement of pages. \\
+
+  The difficulty of using fully associative is in locating an entry, since it can be anywhere in the upper level of the hierarchy.
+  A full search is impractical. \\
+  In virtual memory systems, we locate pages by using a table that indexes the memory called a \emph{page table}, which resides in memory.
+  A page table is indexed with the page number from the virtual address to discover the corresponding physical page number.
+  Each program has its own page table, which maps the virtual address space of that program to main memory. \\
+  To indicate the location of the page table in memory, the hardware includes a register that points to the start of the page table;
+  this is called the \emph{page table register}. \\
+
+  The page table, together with the program counter and the registers, specifies the \emph{state} of a virtual machine.
+  If another virtual machine is allowed to use the processor, we must save this state.
+  Later, after restoring this state, the virtual machine can continue execution.
+  This state is often referred to as a \emph{process}. \\
+  The process is considered \emph{active} when it is in possession of the processor;
+  \emph{inactive} otherwise. \\
+
+  The figure below uses a page table register, the virtual address, and the indicated page table to show how the hardware can form a physical address.
+
+  \begin{figure}[H]
+  \centering{
+    \includegraphics[width=0.75\textwidth]{pictures/pageTable.png}
+  }
+  \end{figure}
+
+  A valid bit is used in each page table entry.
+  If the bit if off, the page is not present in main memory and a page fault occurs.
+  If the bit is on, the page is in memory and the entry contains the physical page number.
+  The page table contains a mapping for every possible virtual page, so no tags are required. \\
+  The index that is used to access the page table consists of the full block address, which is the virtual page number.
+
+  \subsection{Page Faults}
+  If the valid bit for a virtual page is off, a page fault occurs.
+  The OS must be given control, which is done with the exception mechanism.
+  Once it gets control, it must find the page in the next level of the hierarchy (usually flash memory or magnetic disk) and decide where to place the requested page in main memory. \\
+
+  The virtual address alone does not immediately tell us where the page is on the disk.
+  We must keep track of the location on disk of each page in virtual address space. \\
+
+  Since a page in memory cannot be known in advance if it is to be replaced, the OS usually creates the space on flash memory or disk for all the pages of a process when it creates the process.
+  This space is called the \emph{swap space}.
+  The OS also creates a data structure to record where each virtual page is stored on disk.
+  The data structure may be part of the page table or may be an auxiliary data structure indexed in the same way as the page table.
+
+  \begin{figure}[H]
+  \centering{
+    \includegraphics[width=0.7\textwidth]{pictures/pageTableMappings.png}
+  }
+  \end{figure}
+
+  In the figure above, the page table maps each page in virtual memory to either a page in main memory or a page stored on disk, which is the next level in the hierarchy. \\
+
+  The OS also creates a data structure that tracks which processes and which virtual addresses use each physical page.
+  When a page fault occurs, if all the pages in main memory are in use, the operating system must choose a page to replace.
+  Since we want to minimize the number of page faults, most OSes try to choose a page that is hypothesized to be not needed in the near future;
+  OSes use the \emph{least recently used} (LRU) replacement scheme to use the past to predict the future.
+  The replaced pages are written to swap space on the disk. \\
+
+  \textbf{Elaboration}: \\
+  A range of techniques is used to reduce the amount of storage required for the page table.
+  The following five techniques aim at reducing the total maximum storage required as well as minimizing the main memory dedicated to page tables:
+  \begin{enumerate}
+    \item Keep a limit register that restricts the size of the page table for a given process.
+    Requires that the address space expand in only one direction
+    \item Most languages require two areas whose size is expandable: one area holds the stack and the other area holds the heap.
+    Due to this duality, it is convenient to divide the page table and let it grow from the highest address down, as well as from the lowest address up.
+    There will be two separate page tables and two separate limits.
+    The major disadvantage of this scheme is that it does not work well when the address space is used in a sparse fashion rather than as a contiguous set of virtual addresses
+    \item Apply a hash function to the virtual address so that the page table need only be only the size of the number of physical pages in main memory.
+    This structure is called an \emph{inverted page table}
+    \item Multiple levels of page tables can reduce the total amount of page table storage.
+    This is useful with very large address spaces and in software systems that require noncontiguous allocation.
+    The primary disadvantage is the more complex process for address translation
+    \item Allow the page tables to be paged.
+  \end{enumerate}
+  For more, refer to page 436 (Section 5.7) in ``Computer Organization and Design''.
+
+  \subsection{What about Writes?}
+  The different between access time to the cache and main memory is tens to hundreds of cycles, and write-through schemes can be used, although we need a write buffer to hide the latency of the write from the processor. \\
+  In a virtual memory system, writes to the next level of the hierarchy (disk) can take millions of processor clock cycles;
+  therefore, building a write buffer to allow the system to write-through to disk would be impractical.
+  Instead, virtual memory systems must use write-back, performing the individual writes into the page in memory, and copying the page back to disk when it is replaced in memory. \\
+
+  Disk transfer time is small compared with its access time, copying back an entire page is much more efficient than writing individual words back to the disk;
+  thus, this is why write-back scheme has another advantage in a virtual memory system. \\
+  A write-back operation is still costly, despite being more efficient than transferring individual words.
+  We would like to know whether a page needs to be copied back when we choose to replace it.
+  To track if a page has been written since it was read into the memory, a \emph{dirty bit} is added to the page table.
+  The dirty bit is set when any word in a page is written. \\
+  If the OS replaces the page, the dirty bit indicates if the page needs to be written out before its location in memory can be given to another page. \\
+  A modified page is often referred as a \emph{dirty page}.
+
+  \subsection{Making Address Translation Fast: the TLB}
+  Since page tables are stored in main memory, every memory access by a program can take at least twice as long: one memory access to obtain the physical address and a second access to get the data.
+  To improve access performance, relying on locality of reference to the page table is key.
+  When a translation for a virtual page number is used, it is likely to be needed again in the near future, because the references to the words on that page have both temporal and spatial locality. \\
+
+  A special cache is included to keep track of recently used translations;
+  it is referred to as a \emph{translation-lookaside buffer} (TLB), or it is more accurate to refer to it as a translation cache.
+
+  \begin{figure}[H]
+  \centering{
+    \includegraphics[width=0.7\textwidth]{pictures/TLB.png}
+  }
+  \end{figure}
+
+  Each tag entry in the TLB holds a portion of the virtual page number, and each data entry of the TLB holds a physical page number.
+  The TLB is accessed instead of the page table on every reference, so the TLB need to include other status bits, such as the dirty and the reference bits. \\
+  The translations-lookaside buffer is a cache, so it must have a tag field.
+  If there is no matching entry in the TLB for a page, the page table must be examined. \\
+  The page table either supplies a physical page number for the page (which can then be used to build a TLB entry) or indicates that the page resides on disk, in which case a page fault occurs. \\
+  Since the page table has an entry for every virtual page, no tag field is needed;
+  unlike a TLB, a page table is \emph{not} a cache. \\
+
+  On every reference, the virtual page number is looked up in the TLB. \\
+  If there is a hit, the physical page number is used to form the address, and the corresponding reference bit is turned on. \\
+  If the processor is performing a write, the dirty bit is also turned on. \\
+
+  If a miss in the TLB occurs, we must determine if it is page fault or a TLB miss.
+  If the page exists in memory, then the TLB miss indicates that the translation is missing.
+  In such cases, the processor can handle the TLB miss by loading the translation from the page table into the TLB and then trying the reference again. \\
+  If the page is not present in memory, then the miss indicates a page fault.
+  In this case, the processor invokes the OS using an exception. \\
+  The TLB has many fewer entries than the number of pages in main memory, TLB misses will be much more frequent than true page faults. \\
+
+  TLB misses can be handled either in hardware or in software.
+  There can be little performance differences between the two approaches, since the basic operations are the same for either case. \\
+
+  After a TLB miss occurs and the missing translation has been retrieved from the page table, a TLB entry needs to be selected to be replaced.
+  The reference and dirty bits are contained in the TLB entry, so these bits need to be copied back to the page table entry when an entry is replaced.
+  These bits are the only portion of the TLB entry that can be changed. \\
+  Using write-back---that is, copying these entries back at miss time rather than when they are written---is very efficient, since the TLB miss rate is expected to be small. \\
+
+  Some typical values for a TLB might be:
+  \begin{itemize}
+    \item TLB size: 16-512 entries
+    \item Block size: 1-2 page table entries (typically 4-8 bytes each)
+    \item Hit time: 0.5-1 clock cycle
+    \item Miss penalty: 10-100 clock cycles
+    \item Miss rate: 0.01\%-1\%
+  \end{itemize}
+
+  Some systems use small, fully associative TLBs because a fully associative mapping has a lower miss rate;
+  furthermore, the TLB is small, so the cost of a fully associative mapping is not too high. \\
+  Other systems use large TLBs, often with small associativity. \\
+  With a fully associative mapping, choosing the entry to replace becomes tricky since implementing a hardware LRU scheme is too expensive.
+  In addition, TLB misses are much more frequent that page faults and thus must be handled more cheaply, so we cannot afford an expensive software algorithm (as we can for page faults). \\
+  As a result, many systems provide some support for randomly choosing an entry to replace.
+
+  \subsection{Integrating Virtual Memory, TLBs, and Caches}
+  Virtual memory and cache systems work together as a hierarchy, so data cannot be in the cache unless it is present in main memory. \\
+  The hierarchy is maintained with the help of the operating system which flushes the contents of any page from the cache when it decides to migrate the page to disk.
+  At the same time, the OS modifies the page tables and TLB, so that an attempt to access any data on the migrated page will generate a page fault. \\
+
+  In the best case, a virtual address is translated by the TLB and sent to the cache where the appropriate data is found, retrieved, and sent back to the processor. \\
+
+  In the worst case, a reference can be miss in all three components of the memory hierarchy: the TLB, the page table, and the cache. \\
+
+  Possible combinations of events in the TLB, virtual memory system, and cache in table below.
+  \begin{center}
+  \begin{tabular}{| c | C{1cm} | c | C{8cm} |}
+  \hline
+  TLB & Page Table & Cache & Possible? If so, under what circumstances? \\
+  \hline
+  Hit & Hit & Miss & Possible, although the page table is never really checked if TLB hits. \\
+  \hline
+  Miss & Hit & Hit & TLB misses, but entry found in page table; after retry, data is found in cache. \\
+  \hline
+  Miss & Hit & Miss & TLB misses, but entry found in page table; after retry, data misses in cache. \\
+  \hline
+  Miss & Miss & Miss & TLB misses and is followed by a page fault; after retry, data must miss in cache. \\
+  \hline
+  Hit & Miss & Miss & Impossible; cannot have a translation in TLB if page is not present in memory. \\
+  \hline
+  Hit & Miss & Hit & Impossible; cannot have a translation in TLB if page is not present in memory. \\
+  \hline
+  Miss & Miss & Hit & Impossible; data cannot be allowed in cache if the page is not in memory. \\
+  \hline
+  \end{tabular}
+  \end{center}
+
+  The table above assumes that all memory addresses are translated to physical addresses before the cache is accessed. \\
+  The cache is \emph{physically indexed} and \emph{physically tagged} (both the cache index and tag are physical, rather than virtual addresses). \\
+  The amount of time to access memory, assuming a cache hit, must accommodate both a TLB access and a cache access;
+  these accesses can be \emph{pipelined}. \\
+
+  Alternatively, The processor can index the cache with an address that is completely or partially virtual.
+  This is called a \emph{virtually addressed cache}, and it uses tags that are virtual addresses;
+  hence, such a ache is \emph{virtually indexed} and \emph{virtually tagged}. \\
+  In such caches, the address translation hardware (TLB) is unused during normal cache access, since the cache is accessed with a virtual address that has not been translated to a physical address. \\
+  This takes the TLB out of the critical path, reducing cache latency.
+  However, when a cache miss occurs, the processor needs to translate the address to a physical address so that it can fetch the cache block from main memory. \\
+
+  When the cache is accessed with a virtual address and pages are shared between processes, there is a possibility of \emph{aliasing}.
+  Aliasing is a situation in which two addresses access the same object;
+  it can occur in virtual memory when there are two virtual address for the same physical page. \\
+  The ambiguity creates an issue, because a word on such a page may be cached in two different locations, each corresponding to different virtual addresses.
+  The ambiguity allows one program to write the data without the other program being aware that the data had changed. \\
+  Completely virtually addressed caches either introduce design limitations on the cache and TLB to reduce aliases or require the OS, and perhaps the user as well, to take steps to prevent aliases. \\
+
+  A compromise between the two design points is caches that are virtually indexes---sometimes using just the page-offset portion of the address, which is really a physical address since it is not translated---but use physical tags.
+  These designs, which are \emph{virtually indexed} but \emph{physically tagged}, attempts to achieve the performance advantages of virtually indexed caches with the architecturally simpler advantage of a \emph{physically addressed cache}. \\
+  However, there must be careful coordination between the minimum page size, the cache size, and associativity. \\
+
+  \subsection{Implementing Protection with Virtual Memory}
+  The most important function of virtual memory is to allow sharing of a single main memory by multiple processes, while providing memory protection among these processes and the operating system. \\
+  The protection mechanism must ensure that although multiple processes are sharing the same main memory, one renegade process cannot write into the address space of another user process or into the OS either intentionally or unintentionally.
+  The write access bit in the TLB can protect a page from being written.
+  Without this level of protection, viruses would be even more widespread. \\
+
+  To enable the OS to implement protection in the virtual memory system, the hardware must provide at least the three basic capabilities (note that the first two are the same requirements for VMs):
+  \begin{enumerate}
+    \item Support at least two modes that indicate whether the running process is a user process or an OS process, variously called a \emph{supervisor} process, a \emph{kernel} process, or an \emph{executive process}
+    \item Provide a portion of the processor state that a user process can read but not write.
+    This includes the user/supervisor mode bit, which dictates whether the processor is in user or supervisor mode, the page table pointer, and the TLB.
+    The OS uses special supervisor mode only instruction to write these elements
+    \item Provide mechanisms whereby the processor can go from user mode to supervisor mode and vice versa.
+    The first direction is typically accomplished by a \emph{system call} exception, implemented as a special instruction (\emph{syscall} in MIPS) that transfers control to a dedicated location in supervisor code space.
+    As with any other exception, the PC from the point of the system call is saved in the exception PC (EPC), and the processor is placed in supervisor mode.
+    To return to user mode from the exception, use the \emph{return from exception} (ERET) instruction, which resets to user mode and jumps to the address in EPC
+  \end{enumerate}
+
+  By using these mechanisms and storing the page tables in the operating system's address space, the OS can change the page table while preventing a user process from changing them, ensuring that a user process can access only the storage provided to it by the OS. \\
+
+  Each process has its own virtual address space.
+  If the OS keeps the page tables organized so that the independent virtual pages map to disjoint physical pages, one process will not be able to access another's data. \\
+  This of course requires a user process be unable to change the page table mapping.
+  Thus, the page tables can be placed in the protected address space of the operating system such that the OS can modify the page tables but not any user processes. \\
+
+  When processes want to share information in a limited way, the OS must assist them, since accessing the information of another process requires changing the page table of the accessing process.
+  The write access bit can be used to restrict the sharing to just reading, and this bit can only be changed by the operating system. \\
+  Any bits that determine the access rights for a page must be included in both the page table and the TLB, because the page table is accessed only on a TLB \emph{miss}.
+
+  \subsection{Handling TLB Misses and Page Faults}
+  A TLB miss occurs when no entry in the TLB matches a virtual address. \\
+  A TLB miss can indicate one of two possibilities:
+  \begin{enumerate}
+    \item The page is present in memory, and we need only create the missing TLB entry
+    \item The page is not present in memory, and we need to transfer control to the operating system to deal with a page fault
+  \end{enumerate}
+
+  MIPS handles a TLB miss in software.
+  It brings the page table entry from memory and then re-executes the instruction that caused the TLB miss.
+  Upon re-executing, it will get a TLB hit.
+  If the page table entry indicates the page is not in memory, this time it will get a page fault exception. \\
+
+  Handling a TLB miss or page fault requires using the exception mechanism to interrupt the active process, transferring control to the OS, and later resuming exception of the interrupted process.
+  A page fault will be recognized sometime during the clock cycle used to access memory.
+  To restart the instruction after the page fault is handled, the program counter of the instruction that caused the page fault must be saved in the exception program counter (EPC). \\
+
+  In addition, a TLB miss or page fault exception must be asserted by the end of the same clock cycle that the memory access occurs, so that the next clock cycle will begin exception processing rather than continue normal instruction execution.
+  If the page fault was not recognized in this clock cycle, a load instruction could overwrite a register, and it can cause disasters when the instruction is restarted. \\
+  By deasserting the write control line to the memory, the write into memory can be prevented from completing when there is a page fault. \\
+
+  Between the time we being executing the exception handler in the operating system and the time that the operating system has saved all the state of the process, the operating system is particularly vulnerable.
+  For example, another exception can occur when processing the first exception in the operating system, the control unit would overwrite the EPC, making it impossible to return to the instruction that caused the page fault. \\
+  This can be avoided by providing the ability to \emph{disable} and \emph{enable exceptions}.
+  When an exception first occurs, the processor sets a bit that disables all other exceptions;
+  this could happen at the same time the processor sets the supervisor mode bit. \\
+  The OS will then save just enough state to allow it to recover if another exception occurs---namely, the EPC and Cause registers.
+  The OS can then re-enable exceptions. \\
+  These steps make sure that exceptions will not cause the processor to lose any state and thereby be unable to restart execution of the interrupting instructions. \\
+
+  ONce the OS knows the virtual address that caused the page fault, it must complete the following steps:
+  \begin{enumerate}
+    \item Look up the page table entry using the virtual address and find the location of the referenced page on disk
+    \item Choose a physical page to replace, if the chosen page is dirty, it must be written out to disk before a new virtual page can be brought into this physical page
+    \item Start a read to bring the referenced page from disk into the chosen physical page
+  \end{enumerate}
+
+  The last step will take millions of processor clock cycles (so will the second if the replaced page is dirty);
+  accordingly, the OS will usually select another process to execute in the processor until the disk access completes.
+  Since the OS saves the state of the process, it can freely give control of the processor to another process. \\
+
+  When the read of the page from disk is complete, the OS can restore the state of the process that originally caused the page fault and execute the instruction that returns from the exception.
+  This instruction will reset the processor from kernel to user mode, as well as restore the program counter.
+  The user process and re-executes the instruction that faulted, accesses the requested page successfully, and continues execution. \\
+
+  Page fault exceptions for data accesses are difficult to implement properly in a processor because of combination of three characteristics:
+  \begin{enumerate}
+    \item They occur in the middle of instructions, unlike instruction page faults
+    \item The instruction cannot be completed before handling the exception
+    \item After handling the exception, the instruction must be restarted as if nothing had occurred
+  \end{enumerate}
+  Making instructions \emph{restartable}, so that the exception can be handled and the instruction later continued.
+  Each instruction writes only one data item which occurs at the end of the instruction cycle.
+  So the instruction can be prevented from completing by not writing and restart the instruction at the beginning. \\
+
+  In MIPS, when a TLB miss occurs, the page number of the reference is saved in a special register called \textbf{BadVAddr} and generates an exception.
+
+
+
+
+
 
 
 
@@ -2061,6 +2509,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   \begin{itemize}
     \item When counting the number of clock cycles for a sequence of MIPS instructions, there is a ``ramp up'' time of 4 cycles to take into consideration.
     \item The access time to memory is typically $> 100$ processor cycles
+    \item The location of the TLB miss handler is at address 8000 0000\textsubscript{hex}
   \end{itemize}
 
   \newpage
