@@ -2486,9 +2486,188 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   \end{enumerate}
   Making instructions \emph{restartable}, so that the exception can be handled and the instruction later continued.
   Each instruction writes only one data item which occurs at the end of the instruction cycle.
-  So the instruction can be prevented from completing by not writing and restart the instruction at the beginning. \\
+  So the instruction can be prevented from completing by not writing and restart the instruction at the beginning.
 
-  In MIPS, when a TLB miss occurs, the page number of the reference is saved in a special register called \textbf{BadVAddr} and generates an exception.
+  \subsection{Summary of Virtual Memory}
+  Virtual memory is the level of memory hierarchy that manages caching between the main memory and secondary memory.
+  Virtual memory allows a single program to expand its address space beyond the limits of main memory.
+  Virtual memory supports sharing of the main memory among multiple, simultaneously active processes, in a protected manner. \\
+
+  Managing the hierarchy between main memory and disk is challenging due to the high cost of page faults.
+  Several techniques are used to reduce the miss rate:
+  \begin{enumerate}
+    \item Pages are made large to take advantage of spatial locality and to reduce the miss rate
+    \item Thee mapping between virtual addresses and physical addresses, which is implemented with a page table, is made fully associative so that a virtual page can be placed anywhere in main memory
+    \item The OS uses techniques, such as LRU and a reference bit, to choose which pages to replace
+  \end{enumerate}
+  Writes to secondary memory are expensive, so virtual memory uses a write-back scheme and also tracks whether a page is unchanged (using a dirty bit) to avoid writing unchanged pages. \\
+
+  The virtual memory mechanism provides address translation from a virtual address used by the program to the physical address space used for accessing memory.
+  The address translation allows protected sharing of the main memory and provides several additional benefits, such as simplifying memory allocation.
+  Ensuring that processes are protected from each other requires that only the operating system can change the address translations, which is implemented by preventing user programs from changing the page tables.
+  Controlled sharing of pages among processes can be implemented with the help of the operating system and access bits in the page table that indicate whether the user program has read or write access to a page. \\
+
+  If a processor had to access a page table resident in memory to translate every access, virtual memory would be too expensive, as caches would be pointless.
+  Instead, a TLB acts as a cache for translations from the page table.
+  Addresses are then translated from virtual to physical using the translations in the TLB. \\
+
+  Caches, virtual memory, and TLBs all rely on a common set of principles and policies.
+  The next section discusses this common framework. \\
+
+  If a program routinely accesses more virtual memory than it has physical memory, it will run very slowly.
+  Such a program would be continuously swapping pages between memory and disk, called \emph{thrashing}.
+
+  \section{A Common Framework for Memory Hierarchy}
+  Many of the aspects of memory hierarchies differ quantitatively, but many of the policies and features that determine how a hierarchy functions are similarly qualitatively (shown in table below).
+  \begin{center}
+  \begin{tabular}{| C{2.5cm} | C{2cm} | C{2.5cm} | C{2.58cm} | C{2.1cm} |}
+  \hline
+  Feature & Typical values for L1 caches & Typical values for L2 caches
+  & Typical values for paged memory & Typical values for a TLB \\
+  \hline
+  \small Total size in blocks & 250 - 2,000 & 2,500 - 25,000 & 16,000 - 250,000 & 40 - 1024 \\
+  \hline
+  \small Total size in kilobytes & 16 - 64 & 125 - 2,500 & 1,000,000 - 1,000,000,000 & 0.25 - 16 \\
+  \hline
+  \small Block size in bytes & 16 - 64 & 64 - 128 & 4,000 - 64,000 & 4 - 32 \\
+  \hline
+  \small Miss penalty in clocks & 10 - 25 & 100 - 1,000 & 10,000,000 - 100,000,000 & 10 - 1,000 \\
+  \hline
+  \small Miss rates (global for L2) & 2\% - 5\% & 0.1\% - 2\% & 0.00001\% - 0.0001\% & 0.01\% - 2\% \\
+  \hline
+  \end{tabular}
+  \end{center}
+
+  \subsection{Question 1: Where Can a Block Be Placed?}
+  Block placement in the upper level of the memory hierarchy can use a range of schemes, from direct-mapped to set associative to fully associative.
+  Note that the entire range of schemes can be thought of as variations on a set-associative scheme where the number of sets and the number of blocks per set varies:
+  \begin{center}
+  \begin{tabular}{| c | c | c |}
+  \hline
+  Scheme Name & Number of Sets & Blocks per Set \\
+  \hline
+  {\small Direct mapped} & {\small Number of blocks in cache} & {\small 1} \\
+  \hline
+  {\small Set associative}
+  & $\frac{\text{Number of blocks in the cache}}{\text{Associativity}}$
+  & {\small Associativity (typically 2 - 16)} \\
+  \hline
+  {\small Fully associative} & {\small 1} & {\small Number of blocks in the cache} \\
+  \hline
+  \end{tabular}
+  \end{center}
+  The advantage of increasing the degree of associativity is that it usually decreases the miss rate.
+  The improvement in miss rate comes from reducing misses that compete for the same location. \\
+  As the cache size grow, the relative improvement from associativity increases only slightly;
+  since the overall miss rate of a larger cache is lower, the opportunity for improving the miss rate decreases and the absolute improvement in the miss rate from associativity shrinks. \\
+  The potential disadvantages of associativity are increases cost and slower access time.
+
+  \subsection{Question 2: How Is a Block Found?}
+  The block is located depending on the block placement scheme:
+  \begin{center}
+  \begin{tabular}{| c | c | c |}
+  \hline
+  Associativity & Location Method & Comparisons Required \\
+  \hline
+  {\small  Direct mapped} & {\small Index} & {\small 1} \\
+  \hline
+  {\small Set associative} & {\small Index the set, search among the elements}
+  & {\small Degree of associativity} \\
+  \hline
+  {\small \multirow{2}{*}{Full}} & {\small Search all cache entries}
+  & {\small Size of the cache} \\
+  \cline{2-3}
+  & {\small Separate lookup table} & {\small 0} \\
+  \hline
+  \end{tabular}
+  \end{center}
+  Including the L2 cache on the chip enables much higher associativity, because the hit times are not as critical and the designer does not have to rely on standard SRAM chips as the building blocks. \\
+  Fully associative caches are prohibitive except for small sizes, where the cost of the comparators is not overwhelming and where the absolute miss rate improvements are greatest. \\
+
+  In virtual memory systems, a separate mapping table---the page table---is kept to index the memory.
+  In addition to the storage required for the table, using an index table requires an extra memory access.
+  The choice of full associativity for page placement and the extra table is motivated by:
+  \begin{enumerate}
+    \item Full associativity is beneficial, since misses are very expensive
+    \item Full associativity allows software to use sophisticated replacement schemes that are designed to reduce the miss rate
+    \item The full map can be easily indexed with no extra hardware and no search required
+  \end{enumerate}
+  Therefore, virtual memory systems almost always use fully associative placement. \\
+
+  Set-associative scheme is often used for caches and TLBs, where the access combines indexing and the search of a small set.
+
+  \subsection{Question 3: Which Block Should Be Replaced on a Cache Miss?}
+  When a miss occurs in an associative cache, a block must be replaced.
+  In a fully associative cache, all blocks are candidates for replacement.
+  If the cache is set associative, we must choose among the blocks in the set.
+  Replacement is easy in a direct-mapped cache (only one candidate). \\
+
+  Two primary strategies for replacement:
+  \begin{enumerate}
+    \item \emph{Random}: Candidates blocks are randomly selected, possibly using some hardware assistance
+    \item \emph{Least recently used} (LRU): The block replaced is the one that has been unused for the longest time
+  \end{enumerate}
+  Practically, LRU is costly to implement for hierarchies with more than a small degree of associativity (typically two or four), since tracking the usage information is costly. \\
+
+  For larger associativity, either LRU is approximated or random replacement is used. \\
+  In caches, the replacement algorithm is in the hardware, so the scheme should be easy to implement.
+  Random replacement is simply to build in hardware, and for a two-way set-associative cache, random replacement has a miss rate about 1.1 times higher than LRU replacement. \\
+  As the caches become larger, the miss rate for both replacement strategies falls, and the absolute difference becomes small. \\
+  Random replacement can sometimes be better than the simple LRU approximation that are easily implemented in hardware. \\
+
+  In virtual memory, some form of LRU is always approximated, since even a tiny reduction in the miss rate can be important when the cost of a miss is enormous. \\
+  Reference bits are equivalent functionality are often provided to make it easier for the operating system to track a set of less recently used pages.
+
+  \subsection{Question 4: What Happens on a Write?}
+  Two basic options for how memory hierarchies deal with writes:
+  \begin{enumerate}
+    \item \emph{Write-through}: The information is written to both the block in the cache and the block in the lower level of the memory hierarchy (main memory for a cache). \\
+    Advantages include:
+    \begin{itemize}
+      \item Misses are simpler and cheaper because they never require a block to be written back to the lower level
+      \item Write-through is easier to implement than write-back, although to be practical,a write-through cache will still need to use a write buffer
+    \end{itemize}
+    \item \emph{Write-back}: The information is written only to the block in the cache.
+    The modified block is written to the lower level of the hierarchy only when it is replaced.
+    Virtual memory systems always use write-back. \\
+    Advantages include:
+    \begin{itemize}
+      \item Individual words can be written by the processor at the rate that the cache, rather than the memory,can accept them
+      \item Multiple writes within a block require only one write to the lower level in the hierarchy
+      \item When blocks are written back, the system can make effective use of a high-bandwidth transfer,since the entire block is written
+    \end{itemize}
+  \end{enumerate}
+
+  In virtual memory systems, only a write-back policy is practical due to the long latency of a write to the lower level of the hierarchy. \\
+
+  The rate at which writes are generated by a processor generally exceeds the rate at which the memory system can process them, even allowing for physically and logically wider memories and burst modes for DRAM.
+
+  \subsection{The Three Cs: An Intuitive Model for Understanding the Behavior of Memory Hierarchies}
+  All misses in a memory hierarchy fit into one of three categories (the \emph{three Cs}):
+  \begin{itemize}
+    \item \emph{Compulsory misses}: These are cache misses caused by the first access to a block that has never been in the cache.
+    These are also called \emph{cold-start misses}
+    \item \emph{Capacity misses}: These are cache misses caused when the cache cannot contain all the blocks needed during execution of a program.
+    Capacity misses occur when blocks are replaced and then later retrieved
+    \item \emph{Conflict misses}: These are misses that occur in set-associative or direct-mapped caches when multiple blocks compete for the same set.
+    Conflict misses are those misses in a direct-mapped or set-associative cache that are eliminated in a fully associative cache of the same size.
+    These misses are also called \emph{collision misses}
+  \end{itemize}
+
+  The three sources of misses can be directly tackled by changing some aspect of the cache design. \\
+
+  Conflict misses arise directly from contention for the same cache block, increasing associativity reduces conflict misses.
+  Associativity, however, may slow access time, leading to lower overall performance. \\
+
+  Capacity misses can be reduced by enlarging the cache;
+  second-level caches have been growing steadily larger for many years.
+  When the cache becomes larger, the access time increases as well, which could lead to lower overall performance.
+  Thus, first-level caches have been slowly growing. \\
+
+  Compulsory misses are generated by the first reference to a block, the primary way for cache system to reduce the number of compulsory misses is to increase the block size.
+  This reduces the number of references required to touch each block of the program once, because the program will consist of fewer cache block.
+  Increasing the block size too much can have a negative effect on performance due to increase in miss penalty.
+
 
 
 
