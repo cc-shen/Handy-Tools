@@ -2159,7 +2159,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   The figure above shows the virtually addressed memory with pages mapped to main memory.
   The process is \emph{address mapping} or \emph{address translation}. \\
 
-  The two memory hierarchy levels controlled by virtual memory are usually DRAMs and flash memory in personal mobile devices and DRAMs and magnetic disks in services. \\
+  The two memory hierarchy levels controlled by virtual memory are usually DRAMs and flash memory in personal mobile devices and DRAMs and magnetic disks in servers. \\
 
   Virtual memory simplifies loading the program for execution by providing \emph{relocation}.
   Relocation maps the virtual addresses used by a program to different physical addresses before the addresses are used to access memory.
@@ -2189,7 +2189,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
     \item Pages should be large enough to try to amortize the high access time.
     Sizes from 4 KiB to 16 KiB are typical today.
     New desktops and server systems are being developed to support 32 KiB and 64 KiB pages, but new embedded systems are going to 1 KiB pages
-    \item Organizations that reduce the page fault rate are attractive.
+    \item Organizations that reduce the page fault rate are preferred.
     The primary technology used here is to allow fully associative placement of pages in memory
     \item Page faults can be handled in software because the overhead will be small compared to the disk access time.
     In addition, software can afford to use clever algorithms for choosing how to place pages because even small reductions in the miss rate will pay for the cost of such algorithms
@@ -2275,7 +2275,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
     The primary disadvantage is the more complex process for address translation
     \item Allow the page tables to be paged.
   \end{enumerate}
-  For more, refer to page 436 (Section 5.7) in ``Computer Organization and Design''.
+  For more details, refer to page 436 (Section 5.7) in ``Computer Organization and Design''
 
   \subsection{What about Writes?}
   The different between access time to the cache and main memory is tens to hundreds of cycles, and write-through schemes can be used, although we need a write buffer to hide the latency of the write from the processor. \\
@@ -2634,7 +2634,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
     \begin{itemize}
       \item Individual words can be written by the processor at the rate that the cache, rather than the memory,can accept them
       \item Multiple writes within a block require only one write to the lower level in the hierarchy
-      \item When blocks are written back, the system can make effective use of a high-bandwidth transfer,since the entire block is written
+      \item When blocks are written back, the system can make effective use of a high-bandwidth transfer, since the entire block is written
     \end{itemize}
   \end{enumerate}
 
@@ -2668,17 +2668,48 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   This reduces the number of references required to touch each block of the program once, because the program will consist of fewer cache block.
   Increasing the block size too much can have a negative effect on performance due to increase in miss penalty.
 
+  \section{ARM Processor 32-bit Architecture}
+  ARM has 16 registers.
+  Registers are faster than memory.
+  Each register is 32 bits.
 
 
+  Benefits of ARM:
+  \begin{itemize}
+    \item Lower power consumption
+    \item Simple instruction set
+    \item Adaptable to many different applications
+    \item ARM allows other companies to use and build on their architecture
+  \end{itemize}
 
+  \subsection{Design Principle}
+  \textbf{Regularity Supports Design Simplicity}:
+  \begin{itemize}
+    \item Consistent instruction format (3 main instructions formats)
+    \begin{itemize}
+      \item Data processing allows 3 register operands or 2 registers and 1 immediate
+      \item Memory loading and storing
+      \item Branch
+    \end{itemize}
+    \item Same number of operands (two sources and one destination)
+    \item Ease of encoding and handling in handling hardware
+  \end{itemize}
 
+  \textbf{Make the common case fast}:
+  \begin{itemize}
+    \item ARM includes only simple, commonly used instructions
+    \item Hardware to decode and execute instructions kept simple, small, and fast
+    \item More complex instructions (that are less common) performed using multiple simple instructions
+    \item ARM is a \emph{Reduced Instruction Set Computer} (RISC), with a small number of simple instructions
+    \item Other architectures, such as Intel's x86, are \emph{Complex Instruction Set Computers} (CISC)
+  \end{itemize}
 
-
-
-
-
-
-
+  \textbf{Smaller is faster}:
+  \begin{itemize}
+    \item ARM includes only a small number of registers
+    \item Reuse these registers over and over in functions or
+    \item subroutines
+  \end{itemize}
 
 
 
