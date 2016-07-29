@@ -753,6 +753,160 @@
   Note that $\frac{RSS}{TSS}$ should be high if the model is a good fit. \\
   As ESS $\uparrow$, the model is not a good fit.
 
+  \newpage
+  \section{Comparing the Means of Two Population}
+  This is also known as \emph{Test for Equality of Means}.
+  \subsection{Case I: Common Variance}
+  Suppose $Y_{11}, Y_{12}, \dots, Y_{1n_{1}}$ is a random sample sample from $N(\mu_{1}, \sigma^2)$; \\
+  and \emph{independently} $Y_{21}, Y_{22}, \dots, Y_{2n_{2}}$ is a random sample from $N(\mu_{2}, \sigma^2)$. \\
+
+  Both populations have the same variance $\sigma^2$. \\
+
+  Maximum Likelihood Estimators:
+  \begin{align*}
+    \widetilde{\mu_{1}} &= \frac{1}{n_{1}}\sum_{i=1}^{n_{1}}Y_{1i} = \bar{Y_{1}} \\
+    \widetilde{\mu_{2}} &= \frac{1}{n_{2}}\sum_{i=1}^{n_{2}}Y_{2i} = \bar{Y_{2}} \\
+    \widetilde{\sigma}^{2} &=
+    \frac{1}{n_{1} + n_{2}}\sum_{j=1}^{2}\sum_{i=1}^{n_{j}}(Y_{ij} - \widetilde{\mu_{j}})^{2}
+  \end{align*}
+
+  An estimator of $\sigma^2$, also referred to as the \emph{pooled estimator of variance} adjusted for the degrees of freedom is
+  \begin{align*}
+    S_{p}^{2} &= \frac{(n_{1} - 1)S_{1}^{2} + (n_{2} - 1)S_{2}^{2}}{n_{1} + n_{2} - 2} \\
+    &= \frac{n_{1} + n_{2}}{n_{1} + n_{2} - 2}\widetilde{\sigma}^{2}
+  \end{align*}
+  where
+  $$S_{j}^{2} = \frac{1}{n_{j} - 1}\sum_{i=1}^{n_{j}}(Y_{ji} - \bar{Y_{j}})^{2}, ~~ j = 1,2$$
+
+  The estimator $S_{p}^{2}$ can be written as a \emph{weighted average} of the estimators $S_{j}^{2}$, written as
+  $$S_{p}^{2} = \frac{w_{1}S_{1}^{2} + w_{2}S_{2}^{2}}{w_{1} + w_{2}}$$
+  where $w_{j} = n_{j} - 1$ \\
+
+  We use $S_{p}^{2}$ for $\sigma^{2}$ instead of $\widetilde{\sigma}^{2}$ since $E(S_{p}^{2}) = \sigma^2$. \\
+
+  \textbf{Confidence Interval for} $\mu_{1} - \mu_{2}$ \\
+  $$\bar{Y}_{1} - \bar{Y}_{2} \sim N\left(\mu_{1} - \mu_{2},
+  \sigma^{2}\left(\frac{1}{n_{1}} + \frac{1}{n_{2}}\right)\right)$$
+
+  $$\frac{(\bar{Y}_{1} - \bar{Y}_{2}) - (\mu_{1} - \mu_{2})}
+  {S_{p}\sqrt{\frac{1}{n_{1}} + \frac{1}{n_{2}}}} \sim t(n_{1} + n_{2} - 2)$$
+
+  $$\frac{(n_{1} + n_{2} - 2)S_{p}^{2}}{\sigma^2} =
+  \frac{1}{\sigma^2}\sum_{j=1}^{2}\sum_{i=1}^{n_{j}}(Y_{ji} - \bar{Y}_{j})^{2} \sim
+  \chi^{2}(n_{1} + n_{2} - 2)$$
+
+  The $100p\%$ confidence interval for $\mu_{1} - \mu_{2}$ is given by
+  $$\left[~\bar{y}_1 - \bar{y}_2 \pm t^{*}s_{p}\sqrt{\frac{1}{n_{1}} + \frac{1}{n_{2}}}~\right]$$
+  where $P(|T| \leq t^{*}) = p$ and $T \sim t(n_{1} + n_{2} - 2)$. \\
+
+  \textbf{Hypothesis Testing for} $\mu_{1} - \mu_{2}$ \\
+  To test $H_{0} : \mu_{1} - \mu_{2} = 0$, use the test statistic
+  $$D = \frac{|\bar{Y}_{1} - \bar{Y}_{2} - 0|}{S_{p}\sqrt{\frac{1}{n_{1}} + \frac{1}{n_{2}}}}
+  = \frac{|\bar{Y}_{1} - \bar{Y}_{2}|}{S_{p}\sqrt{\frac{1}{n_{1}} + \frac{1}{n_{2}}}}$$
+
+  The observed value of the test statistic is
+  $$d = \frac{|\bar{y}_{1} - \bar{y}_{2}|}{s_{p}\sqrt{\frac{1}{n_{1}} + \frac{1}{n_{2}}}}$$
+  and
+  $$\text{p-value} = P(|T| \geq d) = 2[1 - P(T \leq d)]$$
+  where $T \sim t(n_{1} + n_{2} - 2)$.
+
+  \subsection{Case II: Unequal Variances}
+  Note: assuming large sample size
+  $$\frac{\bar{Y}_{1} - \bar{Y}_{2} - (\mu_{1} - \mu_{2})}
+  {\sqrt{\frac{S_{1}^{2}}{n_{1}} + \frac{S_{2}^{2}}{n_{2}}}}
+  \rightarrow Z \sim N(0, 1)$$
+
+  The $100p\%$ confidence interval for $\mu_{1} - \mu_{2}$ is given by
+  $$\left[~\bar{y}_1 - \bar{y}_2 \pm z^{*}\sqrt{\frac{s_1}{n_{1}} + \frac{s_2}{n_{2}}}~\right]$$
+  where $P(|Z| \leq z^{*}) = p$ and $Z \sim N(0, 1)$. \\
+
+  For test statistic, use
+  $$D = \frac{|\bar{Y}_{1} - \bar{Y}_{2} - (\mu_{1} - \mu_{2})|}
+  {\sqrt{\frac{S_{1}^{2}}{n_{1}} + \frac{S_{2}^{2}}{n_{2}}}}
+  \rightarrow Z \sim N(0, 1)$$
+
+  \subsection{Case III: Matched Pair}
+  Often experimental studies designed to compare means are conducted with \emph{pairs of units}, where the responses within a pair are not independent. \\
+
+  We have the following sample pair data:
+  \[
+  \begin{pmatrix}
+    b_{1} & \dots & b_{n} \\
+    a_{1} & \dots & a_{n}
+  \end{pmatrix}
+  \]
+  which can be constructed into a new data set $(y_1, \dots, y_n)$ where $y_i = b_i - a_i$. \\
+  The new model becomes
+  $$Y_{i} \sim N(\mu, \sigma^{2})$$
+  and
+  $$\bar{Y} \sim N(\mu, \frac{\sigma^{2}}{n})$$
+
+  The $100p\%$ confidence interval for $\mu$ is given by
+  $$\left[~\bar{y} \pm t^{*}\frac{s}{\sqrt{n}}~\right]$$
+  where $P(|T| \leq T^{*}) = p$ and $T \sim t(n - 1)$. \\
+
+  The test statistic (testing for equality is that $H_{0} : \mu = 0$)
+  $$D = \frac{|\bar{Y} - \mu_{0}|}{S/\sqrt{n}}$$
+  and
+  $$d = \frac{|\bar{Y}|}{s/\sqrt{n}}$$
+  where p-value $= P(D \geq d) = P(|T_{n-1}| \geq d)$ \\
+
+  Note: an equivalent way of testing $\mu_{1} = \mu_{2}$ is to see whether 0 belongs to the confidence interval.
+
+  \newpage
+  \section{Multinomial Models and Goodness of Fit Tests}
+  Instead of 2 categories, we have $k$ mutually exclusive and exhaustive categories. \\
+  $\theta_{i} =$ probability of observation will be in category $i$; fixed for every $i$.
+  \subsection{Likelihood Ratio Test for the Multinomial Model}
+  The joint probability function is
+  \[
+  f(y_{1}, y_{2}, \dots, y_{k}; \theta_{1}, \theta_{2}, \dots, \theta_{k})
+  =
+  \frac{n!}{y_{1}!y_{2}!\cdots y_{k}!}\theta_{1}^{y_{1}}\theta_{2}^{y_{2}}\cdots\theta_{k}^{y_{k}}
+  \]
+  where $y_{j} = 0, 1, \dots$ and $\sum_{j=1}^{k}y_{j} = n$ \\
+  The probabilities $\theta_{j}$ satisfies $0 < \theta_{j} < 1$ and $\sum_{j=1}^{k}\theta_{j} = 1$, so there are only $k - 1$ unknown parameters in this model. \\
+
+  The likelihood function is
+  \begin{align*}
+    L(\theta_{1}, \theta_{2}, \dots, \theta_{k}) &=
+    \frac{n!}{y_{1}!y_{2}!\cdots y_{k}!}\theta_{1}^{y_{1}}\theta_{2}^{y_{2}}\cdots\theta_{k}^{y_{k}} \\
+    L(\Theta) &= \prod_{j=1}^{k}\theta_{j}^{y_{j}}
+  \end{align*}
+  $L(\Theta)$ is maximized by $\hat{\Theta} = (\hat{\theta}_{1}, \hat{\theta}_{2}, \dots, \hat{\theta}_{k})$ where $\hat{\theta}_{j} = y_{j} / n, ~j = 1, 2, \dots, k$ \\
+
+  The likelihood ratio statistic is defined as
+  $$\Lambda = -2\ln\left[\frac{L(\widetilde{\Theta}_{0})}{L(\widetilde{\Theta})}\right]$$
+  then, under the assumption that the null hypothesis is true, it can be written as
+  \begin{align*}
+    \Lambda &= 2\sum_{j=1}^{k}
+    Y_{j}\ln\left[\frac{\widetilde{\theta}_{j}}{\theta_{j}(\widetilde{\alpha})}\right] \\
+    \Lambda &= 2\sum_{j=1}^{k}Y_{j}\ln\left(\frac{Y_{j}}{E_{j}}\right) \\
+    \lambda &= 2\sum_{j=1}^{k}Y_{j}\ln\left(\frac{y_{j}}{e_{j}}\right) \\
+  \end{align*}
+  Noting that $\widetilde{\theta}_{j} = \frac{Y_{j}}{n}$ and the expected frequencies under $H_0$ as
+  $$E_{j} = n\theta_{j}(\widetilde{\alpha}) ~\text{for}~j=1, 2, \dots, k$$
+  If $n$ is large, the p-value from observed data can be approximately via
+  \[
+  \text{p-value} = P(\Lambda \geq \lambda; H_{0}) \approx P(W \geq \lambda)
+  ~\text{where}~ W \sim \chi^{2}(k - p - 1)
+  \]
+  \textbf{Note}: approximation is accurate when $n$ is large ($n > 50$) and no $\theta_{j}$ is too small ($n_{j} \geq 5$). \\
+  $p$ is the number of parameters to estimate under the null hypothesis. \\
+  $dim(\alpha) = p < k - 1$ \\
+
+  An alternative test statistic is the Pearson goodness of fit statistic
+  $$D = \sum_{j=1}^{k}\frac{(Y_{j} - E_{j})^{2}}{E_{j}} \sim \chi^{2}(k - p - 1)$$
+
+  \subsection{Goodness of Fit Tests}
+  To check the fit of a probability distribution is by comparing the observed frequencies $f_{j}$ and the expected frequencies $e_{j} = n\hat{p}_{j}$
+
+  \subsection{Contingency Table}
+  To tests the independence of data in a study. \\
+
+  The degrees of freedom of the Chi-squared approximation are
+  $$k - p - 1 = (a - 1)(b - 1)$$
+  where $a$ and $b$ are the number of rows and columns respectively.
 
   \newpage
   \section{To-do}
