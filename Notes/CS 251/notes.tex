@@ -113,6 +113,8 @@
   $$\text{CPU time} = \text{Instruction count} \times \text{CPI} \times \text{Clock cycles time}$$
   Note that CPU varies by \emph{instruction mix}, which is a measure of the dynamic frequency of instructions across one or many programs.
 
+  \newpage
+
   \section{From Zero To One, Abstractions}
   \includePicture{0.6}{pictures/abstractionLevel.png}{Levels of abstraction for electronic computing system}
 
@@ -154,7 +156,6 @@
 
   \blfootnote{When adding operands with different signs, overflow cannot occur because the sum must be no larger than one of the operands.}
   \newpage
-
   \subsection{Logic Gates}
   A circuit element that performs a basic logic function \\ \\
   \textbf{Single Input} \\
@@ -197,6 +198,8 @@
   The DC transfer characteristics of a gate describe the output voltage as a function of the input voltage when the input is changed slowly enough that the output can keep up. \\
   Called transfer characteristics because they describe the relationship between input and output voltages.
 
+  \newpage
+
   \section{CMOS Transistors}
   Transistors are electrically controlled switches that turn ON or OFF when a voltage or current is applied to a control terminal. \\
   Two main types of transistors are bipolar transistors and metal-oxide-semiconductor field effect transistors (MOSFETs or MOS transistors).
@@ -235,10 +238,12 @@
   When a voltage $V$ is applied to one of the conductors, the conductor accumulates electric \emph{charge} $Q$ and the other conductor accumulates the opposite charge $-Q$. \\
   The \emph{capacitance} C of the capacitor is the ratio of charge to voltage: $C = \frac{Q}{V}$.
   The capacitance is proportional to the size of the conductors and inversely proportional the distance between them. \\
-  Capacitance is important because charing or discharging a conductor takes time and energy. More capacitance means that a circuit will be slower and require more energy to operate.
+  Capacitance is important because charging or discharging a conductor takes time and energy. More capacitance means that a circuit will be slower and require more energy to operate.
 
   \subsection{nMOS and pMOS Transistors}
-  \includegraphics{pictures/nMOSpMOS.png} \\
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{pictures/nMOSpMOS.png}
+  \end{center}
   A MOSFET is a sandwich of several layers of conducting and insulating materials. \\
   There are two flavors of MOSFETs: nMOS and pMOS. \\
   The n-type transistors, called \emph{nMOS}, have regions of n-type dopants adjacent tot he gate called the \emph{source} and the \emph{drain} and are built on a p-type semiconductor substrate. \\
@@ -287,6 +292,7 @@
   The disadvantage is that a short circuit exists between $V_{DD}$ and GND when the output is LOW; the weak pMOS and nMOS transistors are both ON.
   The short circuit draws continuous power, so pseudo-nMOS logic must be used sparingly.
 
+  \newpage
   \section{Summary So Far}
   \emph{There are 10 kinds of people in this world: those who can count in
 binary and those who can't.} \\
@@ -306,6 +312,7 @@ binary and those who can't.} \\
   nMOS transistors turn ON when the gate is 1. \\
   pMOS transistors turn ON when the gate is 0.
 
+  \newpage
   \section{Introduction to Combinational Logic Design}
   In digital electronics, a \emph{circuit} is a network that processes discrete-valued variables. \\
   A circuit can be viewed as a black box, with
@@ -332,8 +339,8 @@ binary and those who can't.} \\
   The functional specification of a combination circuit expresses the output values in terms of the current input values. \\
   The timing specification of a combinational circuit consists of lower and upper bounds on the delay from input to put. \\
 
-  To simply drawings, a single line with a slash through it and a number next to it is often used to indicate a \emph{bus}, a bundle of of multiple signals.
-\\
+  To simply drawings, a single line with a slash through it and a number next to it is often used to indicate a \emph{bus}, a bundle of of multiple signals. \\
+
   \begin{wrapfigure}{l}{0.25\textwidth}
     \centering
     \includegraphics[width=0.25\textwidth]{pictures/busExample.png}
@@ -361,6 +368,7 @@ binary and those who can't.} \\
 
   The functional specification of a combinational circuit is usually expressed as a truth table or a Boolean equation.
 
+  \newpage
   \section{Boolean Equations}
   Boolean equations deal with variables that are either TRUE or FALSE, so they are perfect for describing digital logic.
 
@@ -387,6 +395,7 @@ binary and those who can't.} \\
   The sum-of-products form provides a Boolean equation for any truth table with any number of variables.
   Unfortunately, it does not necessarily generate the simplest equation.
 
+  \newpage
   \section{Boolean Algebra}
   \subsection{Axioms}
   \includegraphics[scale=0.7]{pictures/booleanAlgAxiom.png}
@@ -397,6 +406,7 @@ binary and those who can't.} \\
   \subsection{Theorems of Several Variables}
   \includegraphics[scale=0.65]{pictures/booleanAlgMultVar.png}
 
+  \newpage
   \section{From Logic to Gates}
   A \emph{schematic} is a diagram of a digital circuit showing the elements and the wires that connect them together. \\
 
@@ -444,7 +454,6 @@ binary and those who can't.} \\
 
   \subsubsection{2:1 Multiplexer}
   \begin{wrapfigure}{r}{0.25\textwidth}
-    \centering
     \includegraphics[width=0.25\textwidth]{pictures/2_1_mux.png}
   \end{wrapfigure}
   Image shows the schematic and truth table for a 2:1 multiplexer with two data inputs, $D_0$ and $D_1$, as select input, $S$, and one output, $Y$. \\
@@ -487,6 +496,7 @@ binary and those who can't.} \\
   When using decoders to build logic, it is easiest to express functions as a truth table or in canonical sum-of-products form.
   A $N$-input function with $M$ 1's in the truth table can be built with an $N:2^{N}$ decoder and an $M$-input or gate attached to all of the minterms containing 1's in the truth table.
 
+  \newpage
   \section{Summary So Far}
   A digital circuit is a module with discrete-valued inputs and outputs and a specification describing the function and timing of the module. \\
 
@@ -512,13 +522,14 @@ binary and those who can't.} \\
   These indicate the longest and shortest times between an input change and the consequent output change. \\
   Calculating the propagation delay of a circuit involves identifying the critical path through the circuit, then adding up the propagation delays of each element along that path.
 
+  \newpage
   \section{Introduction to Sequential Logic Design}
   The output of sequential logic depend on both current and prior input values. \\
   Hence, sequential logic has memory.
   Sequential logic might explicitly remember certain previous inputs, or it might distill the prior inputs into a smaller amount of information called the \emph {state} of the system. \\
   The state of a digital sequential circuit is a set of bits called \emph{state variables} that contain all the information about the past necessary to explain the future behavior of the circuit.
 
-  \section{Latches and Flip-Flops}
+  \subsection{Latches and Flip-Flops}
   The fundamental building block of memory is a \emph{bistable} element, an element with two stable states. \\
   An element with $N$ stable states conveys $\log_{2}N$ bits of information, so a bistable element stores one bit. \\
   The state of the cross-coupled inverters is contained in one binary state variable, $Q$.
@@ -533,11 +544,9 @@ binary and those who can't.} \\
   Although the cross-coupled inverters can store a bit of information, they are not practical because the user has no inputs to control the states. \\
   However, other bistable elements, such as \emph{latches} and \emph{flip-flops}, provide inputs to control the value of the state variable.
 
-  \blfootnote{Just a $Y$ is commonly used for the output of combinational logic, $Q$ is commonly used for the output of sequential logic.}
-
+  \blfootnote{$Y$ is commonly used for the output of combinational logic, $Q$ is commonly used for the output of sequential logic.}
   \newpage
-
-  \subsection{SR Latch}
+  \subsubsection{SR Latch}
   \begin{wrapfigure}{r}{0.25\textwidth}
     \centering
     \includegraphics[width=0.25\textwidth]{pictures/srLatch.png}
@@ -550,17 +559,31 @@ binary and those who can't.} \\
   Consider the four possible combinations of $R$ and $S$:
   \begin{itemize}
     \item[\emph{Case I:}] $R = 1, S = 0$ \\
-    N1 sees at least one TRUE input, $R$, so it produces a FALSE output on $Q$. N2 sees both $Q$ and $S$ FALSE, so it produces a TRUE output on $\overline{Q}$.
+    N1 sees at least one TRUE input, $R$, so it produces a FALSE output on $Q$.
+    N2 sees both $Q$ and $S$ FALSE, so it produces a TRUE output on $\overline{Q}$.
     \item[\emph{Case II:}] $R = 0, S = 1$ \\
-    N1 receives inputs of 0 and $\overline{Q}$. Because we don't yet know $\overline{Q}$, we can't determine the output $Q$. N2 receives at least one TRUE input, $S$, so it produces a FALSE output on $\overline{Q}$. Now we can revisit N1, knowing that both inputs are FALSE, so the output $Q$ is TRUE.
+    N1 receives inputs of 0 and $\overline{Q}$.
+    Because we don't yet know $\overline{Q}$, we can't determine the output $Q$.
+    N2 receives at least one TRUE input, $S$, so it produces a FALSE output on $\overline{Q}$.
+    Now we can revisit N1, knowing that both inputs are FALSE, so the output $Q$ is TRUE.
     \item[\emph{Case III:}] $R = 1, S = 1$ \\
-    N1 and N2 both set at least one TRUE input ($R$ or $S$), so each produces a FALSE output. Hence $Q$ and $\overline{Q}$ are both FALSE.
+    N1 and N2 both set at least one TRUE input ($R$ or $S$), so each produces a FALSE output.
+    Hence $Q$ and $\overline{Q}$ are both FALSE.
     \item[\emph{Case IV:}] $R = 0, S = 0$ \\
-    N1 receives inputs of 0 and $\overline{Q}$. Because we don't yet know $\overline{Q}$, we can't determine the output. N2 receives inputs of 0 and $Q$. Because we don't yet know $Q$, we can't determine the output. Now we are stuck. This is reminiscent of the cross-coupled inverters. But we know that $Q$ must either be 0 or 1. So we can solve the problem by checking what happens in each of these sub-cases.
-    \item[\emph{Case IVa:}] $Q = 0$ \\
-    Because $S$ and $Q$ are FALSE, N2 produces a TRUE output on $\overline{Q}$. Now N1 receives one TRUE input, $\overline{Q}$, so its output, $Q$, is FALSE.
-    \item[\emph{Case IVb:}] $Q = 1$ \\
-    Because $Q$ is TRUE, N2 produces a FALSE output on $\overline{Q}$. Now N1 receives two FALSE inputs, $R$ and $\overline{Q}$, so its output, $Q$, is TRUE.
+    N1 receives inputs of 0 and $\overline{Q}$.
+    Because we don't yet know $\overline{Q}$, we can't determine the output.
+    N2 receives inputs of 0 and $Q$.
+    Because we don't yet know $Q$, we can't determine the output.
+    Now we are stuck.
+    This is reminiscent of the cross-coupled inverters.
+    But we know that $Q$ must either be 0 or 1.
+    So we can solve the problem by checking what happens in each of these sub-cases.
+    \begin{itemize}
+      \item[\emph{Sub-case a:}] $Q = 0$ \\
+      Because $S$ and $Q$ are FALSE, N2 produces a TRUE output on $\overline{Q}$. Now N1 receives one TRUE input, $\overline{Q}$, so its output, $Q$, is FALSE.
+      \item[\emph{Sub-case b:}] $Q = 1$ \\
+      Because $Q$ is TRUE, N2 produces a FALSE output on $\overline{Q}$. Now N1 receives two FALSE inputs, $R$ and $\overline{Q}$, so its output, $Q$, is TRUE.
+    \end{itemize}
   \end{itemize}
 
   Suppose $Q$ has some known prior value, $Q_{prev}$, before we enter Case IV. $Q_{prev}$ is either 0 or 1, and represents the state of the system.
@@ -573,7 +596,7 @@ binary and those who can't.} \\
   When $S$ is asserted, the state is set to 1. \\
   When neither is asserted, the state retains its old value.
 
-  \subsection{D Latch}
+  \subsubsection{D Latch}
   The SR latch is awkward because it behaves strangely when both $S$ and $R$ are simultaneously asserted.
   Moreover, the $S$ and $R$ inputs conflate the issues of \emph{what} and \emph{when}.
   Asserting one of the inputs determines not only \emph{what} the state should be but also \emph{when} it should change. \\
@@ -588,7 +611,7 @@ binary and those who can't.} \\
   It blocks the new data from flowing through to $Q$, and $Q$ retains the old value. \\
   The D latch updates its state continuously $CLK = 1$.
   \newpage
-  \subsection{D Flip-Flop}
+  \subsubsection{D Flip-Flop}
   \begin{wrapfigure}{r}{0.3\textwidth}
     \centering
     \includegraphics[width=0.3\textwidth]{pictures/dFlipFlop.png}
@@ -616,21 +639,21 @@ binary and those who can't.} \\
 
   A D flip-flop is also known as a \emph{master-slave flip-flop}, an \emph{edge-triggered flip-flop}, or a \emph{positive edge-triggered flip-flop}.
 
-  \subsection{Register}
+  \subsubsection{Register}
   A $N$-bit register is a bank of $N$ flip-flops that share a common $CLK$ input, so that all bits of the register are updated at the same time. \\
   Registers are the key building block of most sequential circuits. \\
 
   For a 32-bit architectures, a register would typically have 32 flip-flops in parallel (i.e. one for each bit). \\
   A \emph{register file} is a way of organizing registers. \\
-  \includePicture{1.0}{pictures/registerFile.png}{A register file.} \label{registerFile}
+  \includePicture{1.0}{pictures/registerFile.png}{A register file.} \label{registerFile} \\
 
-  \subsubsection{Reading from a Register File}
+  \textbf{Reading from a Register File} \\
   The values of all 32 registers go through two multiplexers. \\
   The first multiplexer determines which register value will be routed to the 1\textsuperscript{st} output. \\
   The second multiplexer determines which register value will be routed to the 2\textsuperscript{nd} output. \\
   It will take 5 select lines to uniquely identify each source register (when there are 32 registers).
 
-  \subsubsection{Writing to a Register File}
+  \textbf{Writing to a Register File} \\
   The address of the register $d$, is routed through a decoder which determines which D flip-flop to write to. \\
   When the $d^{\text{th}}$ decoder line and the \emph{RegWrite} line are both 1, they pass a 1 through the $d^{\text{th}}$ AND gate and raise the $C$ input of the $d^{\text{th}}$ D flip-flop to 1. \\
   The data will now be written to Register $\$d^{\text{th}}$.
@@ -660,7 +683,7 @@ binary and those who can't.} \\
   If a state has multiple arcs leaving it, the arcs are labeled to show what input triggers each transition.
   In the image, when in state $S0$, the system will remain in that state if $T_{A}$ is TRUE and move to $S1$ if $T_{A}$ is FALSE. \\
   If a state has a single arc leaving it, that transition always occurs regardless of the inputs.
-  In the image, when in state $S1$, the system will always move to $S2$. \\
+  In the image, when in state $S1$, the system will always move to $S2$.
 
   \subsection{State Transition Table}
   \includePicture{0.8}{pictures/stateTTableStateEncode.png}{Example Transition Table and its Encoding}
@@ -719,8 +742,7 @@ binary and those who can't.} \\
   A group of flip-flops sharing a common clock is called a register.
   Flip-flops may also receive reset or enable control signals. \\
 
-  Finite state machines are a powerful technique for designing sequential circuits.
-  For procedure on designing an FSM, refer to \ref{FSM_Review} (FSM Review). \\
+  Finite state machines are a powerful technique for designing sequential circuits. \\
 
   Synchronous sequential circuits have a timing specification including to clock-to-$Q$ propagation and contamination delay, $t_{pcq}$ and $t_{ccq}$, and the setup and hold times, $t_{setup}$ and $t_{hold}$. \\
   For correct operation, their inputs must be stable during an aperture time that starts a setup time before the rising edge of the clock and ends a hold time after the rising edge of the clock. \\
@@ -734,6 +756,7 @@ binary and those who can't.} \\
   The throughput is the number of tokens that the system can process per unit time.
   Parallelism improves the system throughput.
 
+  \newpage
   \section{Multiplication}
   \includegraphics[width=1.0\textwidth]{pictures/multiplication.png} \\
   The first operand is called the \emph{multiplicand} and the second the \emph{multiplier}.
@@ -1108,6 +1131,7 @@ binary and those who can't.} \\
   Thus, we use pipelining to improve the efficiency and throughput.
   Pipelining improves efficiency by executing multiple instructions simultaneously.
 
+  \newpage
   \section{An Overview of Pipelining}
   \emph{Pipelining} is an implementation technique in which multiple instructions are overlapped in execution. \\
   The idea to that all steps---called \emph{stages} in pipelining---are operating concurrently.
@@ -2717,6 +2741,8 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   \newpage
   \section{Notes and Things to Watch Out For}
   \begin{itemize}
+    \item Multiplexers can be built from tri-state buffers.
+    It is arranged such that only one buffer is active at a time.
     \item When counting the number of clock cycles for a sequence of MIPS instructions, there is a ``ramp up'' time of 4 cycles to take into consideration.
     \item The access time to memory is typically $> 100$ processor cycles
     \item The location of the TLB miss handler is at address 8000 0000\textsubscript{hex}
