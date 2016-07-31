@@ -550,14 +550,15 @@
   Notice that $\Lambda(\theta_0)$ is the square of the standard Normal Distribution random variable
   $$\frac{\bar{Y} - \mu_0}{\sigma/\sqrt{n}}$$
   Therefore, it has exactly a $\chi_{1}^{2}$ distribution.
+
   \newpage
   \section{Simple Linear Regression Model}
   $Y_{i}$ is the \emph{Response Variate}; attribute whose variability we want to explain. \\
   $X_{i}$ is the \emph{Explanatory Variable} and is given.
   We want explain $Y$ by using $X$. \\
 
-  The relevant degree of freedom for an additive model is
-  $$= n - \text{number of unknown parameters in the systematic part of the model}$$
+  The relevant degree of freedom for an additive model is equal to
+  $$n - \text{number of unknown parameters in the systematic part of the model}$$
 
   Assumptions made:
   \begin{enumerate}
@@ -593,6 +594,7 @@
   = \sum_{i=1}^{n}(x_{i} - \bar{x})Y_{i}
   = \sum_{i=1}^{n}x_{i}Y_{i} - n\bar{x}\bar{Y} \\
   S_{yy} &= \sum_{i=1}^{n}(Y_{i} - \bar{Y})^{2}
+  = \sum_{i=1}^{n}(Y_{i} - \bar{Y}^{2})Y_{i}
   = \sum_{i=1}^{n}Y_{i}^{2} - n\bar{Y}^{2}
   \end{align*}
 
@@ -630,7 +632,7 @@
   then the $100p\%$ confidence interval for $\beta$ is given by
   $$\left[~ \hat{\beta} \pm t^{*}\frac{S_{e}}{\sqrt{S_{xx}}} ~\right]$$
   where
-  $$P(|T| \leq t^{*}) = p ~~~ T \sim t_{n-2}$$
+  $$P(|T| \leq t^{*}) = p, ~~~ T \sim t_{n-2}$$
   \newline
   \textbf{Test of Hypothesis of No Relationship} \\
   To test the hypothesis of no relationship or $H_{0}: \beta = 0$, we use the test statistic
@@ -638,7 +640,7 @@
   with observed value of
   $$d = \frac{|\hat{\beta} - 0|}{s_{e} / \sqrt{S_{xx}}}$$
   and p-value given by
-  $$\text{p-value} = P\left(~|T| \geq \frac{|\hat{\beta} - 0|}{s_{e} / \sqrt{S_{xx}}}~\right)$$
+  $$\text{p-value} = P\left(|T| \geq \frac{|\hat{\beta} - 0|}{s_{e} / \sqrt{S_{xx}}}\right)$$
   where $T \sim t_{n-2}$
 
   \subsubsection{$\alpha$}
@@ -811,7 +813,7 @@
   where $T \sim t(n_{1} + n_{2} - 2)$.
 
   \subsection{Case II: Unequal Variances}
-  Note: assuming large sample size
+  \textbf{Note}: assuming large sample size
   $$\frac{\bar{Y}_{1} - \bar{Y}_{2} - (\mu_{1} - \mu_{2})}
   {\sqrt{\frac{S_{1}^{2}}{n_{1}} + \frac{S_{2}^{2}}{n_{2}}}}
   \rightarrow Z \sim N(0, 1)$$
@@ -843,7 +845,7 @@
 
   The $100p\%$ confidence interval for $\mu$ is given by
   $$\left[~\bar{y} \pm t^{*}\frac{s}{\sqrt{n}}~\right]$$
-  where $P(|T| \leq T^{*}) = p$ and $T \sim t(n - 1)$. \\
+  where $P(|T| \leq t^{*}) = p$ and $T \sim t(n - 1)$. \\
 
   The test statistic (testing for equality is that $H_{0} : \mu = 0$)
   $$D = \frac{|\bar{Y} - \mu_{0}|}{S/\sqrt{n}}$$
@@ -851,7 +853,7 @@
   $$d = \frac{|\bar{Y}|}{s/\sqrt{n}}$$
   where p-value $= P(D \geq d) = P(|T_{n-1}| \geq d)$ \\
 
-  Note: an equivalent way of testing $\mu_{1} = \mu_{2}$ is to see whether 0 belongs to the confidence interval.
+  \textbf{Note}: an equivalent way of testing $\mu_{1} = \mu_{2}$ is to see whether 0 belongs to the confidence interval.
 
   \newpage
   \section{Multinomial Models and Goodness of Fit Tests}
