@@ -80,13 +80,7 @@
   \end{align*}
   In addition, \emph{standard deviation} is then
   $$s = \sqrt{s^{2}}$$
-  \subsubsection{Range}
-  Range is the difference between highest and lowest value in the sample
-  $$range = y_{(n)} - y_{(1)}$$
-  where
-  $$y_{(1)} = min(y_{1}, \dots, y_{n})$$
-  and
-  $$y_{(n)} = max(y_{1}, \dots, y_{n})$$
+
   \subsubsection{Quantiles and Interquartile Range} \label{iqr}
   \begin{defn}
     Let $\{y_{(1)}, y_{(2)}, \dots, y_{(n)}\}$ where $y_{(1)} \leq y_{(2)} \leq \dots \leq y_{(n)}$ be the ordered statistic for the data set $\{y_1, y_2, \dots, y_n\}$.
@@ -102,6 +96,14 @@
   The third(upper) quartile is $q(0.75)$, also the 75\textsuperscript{th} percentile. \\
 
   The \emph{interquartile range} is $IQR = q(0.75) - q(0.25)$
+
+  \subsubsection{Range}
+  Range is the difference between highest and lowest value in the sample
+  $$range = y_{(n)} - y_{(1)}$$
+  where
+  $$y_{(1)} = min(y_{1}, \dots, y_{n})$$
+  and
+  $$y_{(n)} = max(y_{1}, \dots, y_{n})$$
 
   \subsection{Measure of Shape}
   \subsubsection{Skewness}
@@ -183,7 +185,7 @@
   ~~\text{and}~~
   \hat{\sigma} = \left[\frac{1}{n}\sum_{i=1}^{n}(y_{i} - \bar{y})^{2}\right]^{1/2}
   $$
-  Note that $\hat{\sigma} \not = \sigma$ (sample variance).
+  Note that $\hat{\sigma} \not = s$ (sample variance).
 
   \subsection{Invariance Property of Maximum Likelihood Estimates}
   \begin{theorem}
@@ -227,6 +229,8 @@
   $$\sum_{i=1}^{n}\frac{2Y_{i}}{\mu} \sim \chi_{2n}^{2}$$
   and
   $$P\left(a \leq \sum_{i=1}^{n}\frac{2Y_{i}}{\mu} \leq b\right) = p$$
+  Which the confidence interval is
+  $$\left[\frac{2\sum Y_{i}}{b}, \frac{2\sum Y_{i}}{a}\right]$$
 
   \subsection{Chi-Squared Distribution $\sim X_{k}^{2}$}
   The Gamma function is
@@ -730,7 +734,7 @@
   \textbf{Prediction Interval for Future Response} \\
   $$Y - \widetilde{\mu}(x) \sim N\left(0, \sigma^{2}\left(1 + \frac{1}{n} + \frac{(x - \bar{x})^{2}}{S_{xx}}\right)\right)$$
   Thus,
-  $$\frac{Y - \widetilde{\mu}(x)}{S_{e}\sqrt{1 + \frac{1}{n} + \frac{(x - \bar{x})^{2}}{S_{xx}}}} \sim N(0, 1)$$
+  $$\frac{Y - \widetilde{\mu}(x)}{\sigma\sqrt{1 + \frac{1}{n} + \frac{(x - \bar{x})^{2}}{S_{xx}}}} \sim N(0, 1)$$
   Or
   $$\frac{Y - \widetilde{\mu}(x)}{S_{e}\sqrt{1 + \frac{1}{n} + \frac{(x - \bar{x})^{2}}{S_{xx}}}} \sim t_{n-2}$$
   \newline

@@ -1258,7 +1258,7 @@ binary and those who can't.} \\
     \item[1a] EX/MEM.RegisterRd = ID/EX.RegisterRs
     \item[1b] EX/MEM.RegisterRd = ID/EX.RegisterRt
     \item[2a] MEM/WB.RegisterRd = ID/EX.RegisterRs
-    \item[2b] MEM/WB.RegisterRd = ID/EX.RegisterRs
+    \item[2b] MEM/WB.RegisterRd = ID/EX.RegisterRt
   \end{enumerate}
 
   \begin{ex}
@@ -1269,7 +1269,7 @@ binary and those who can't.} \\
       or  $13, $6, $2
     \end{verbatim}
     Then sub-and is a type 1a hazard (EX/MEM.RegisterRd = ID/EX.RegisterRs)
-    Whereas sub-or is a type 2b hazard (MEM/WB.RegisterRd = ID/EX.RegisterRs)
+    Whereas sub-or is a type 2b hazard (MEM/WB.RegisterRd = ID/EX.RegisterRt)
   \end{ex}
   This forwarding may not always work because some instructions do not write registers;
   sometimes it would forward when it shouldn't. \\
@@ -1550,7 +1550,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   As distance from the processor increases, the size of the memories and the access time both increases. \\
 
   The data is similarly hierarchical: a level closer to the processor is generally a subset of any level further away, and all the data is stored at the lowest level (hard disk).
-  A memory hierarchy can consist of multiple levels, but data is copied between only two adjacent levels at a time, so we ca n focus out attention on just two levels.
+  A memory hierarchy can consist of multiple levels, but data is copied between only two adjacent levels at a time, so we can focus out attention on just two levels.
   The upper level---the closer to the processor---is smaller and faster than the lower level, since the upper level uses technology that is more expensive.
   The minimum unit of information that can be either present or not present in the two-level hierarchy is called a \emph{block} or a \emph{line}. \\
 
@@ -1569,7 +1569,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   There are four primary technologies used in memory hierarchies. \\
   Main memory is implemented from DRAM (dynamic random access memory), while levels closer the processor (caches) uses SRAM (static random access memory). \\
   DRAM is less costly per bit than SRAM, although it is substantially slower.
-  The price difference arises because DRAM uses significantly less area per bit of memory, and DRAMs thus have larger capacity for the same amount of silicon. \\
+  The price difference arises because DRAM uses significantly less area per bit of memory, and DRAMs thus have larger capacity for the same amount of silicon.
 
   \subsection{SRAM Technology}
   SRAMs are simply integrated circuits that are memory arrays with (usually) a single access port that can provide either a read or a write. \\
@@ -1982,7 +1982,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   Both reliability and availability are quantifiable measures, rather than just synonyms for dependability. \\
   Shrinking MTTR can help availability as much as increasing MTTF. \\
 
-  To increase MMTF, you can improve the quality of the components or design systems to continue operation in the presence of components that have failed.
+  To increase MTTF, you can improve the quality of the components or design systems to continue operation in the presence of components that have failed.
   Hence, failure needs to be defined with respect to a context, as failure of a component may not lead to a failure of the system. \\
   The term \emph{fault} is used to mean failure of a component. \\
   Three ways to improve MTTF (mean time to failure):
@@ -2160,7 +2160,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   Now, the first reason still stands for virtual memory. \\
 
   To allow multiple virtual machines to share the same memory, we must be able to protect the virtual machines from each other, ensuring that a program can only read and write the portions of main memory that have been assigned to it.
-  Main memory only needs to contain the active portions of the many virtual machines,just as a cache contains only the active portion of one program. \\
+  Main memory only needs to contain the active portions of the many virtual machines, just as a cache contains only the active portion of one program. \\
   The principle of locality enables virtual memory as well as caches, and virtual memory allows us to efficiently share the processor as well as the main memory. \\
 
   The VMs sharing the memory change dynamically while the VMs are running.
