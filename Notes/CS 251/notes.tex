@@ -1447,6 +1447,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   \includegraphics[width=1.0\textwidth]{pictures/finalPipelineDataPath.png}
   \end{figure}
 
+  \newpage
   \section{Exceptions}
   Control is the most challenging aspect of processor design: it is both the hardest part to get right and the hardest part to make fast.
   One of the hardest parts of control is implementing \emph{exceptions} and \emph{interrupts}. \\
@@ -1643,6 +1644,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   The last component of a disk access, \emph{transfer time}, is the time to transfer a block of bits.
   The transfer time is a function of the sector size, the rotation speed, and the recording density of a track.
 
+  \newpage
   \section{The Basics of Caches}
   \emph{Cache} represents the level of memory hierarchy between the processor and main memory.
   Cache is also used to refer to any storage managed to take advantage of locality of access. \\
@@ -2692,11 +2694,11 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   This reduces the number of references required to touch each block of the program once, because the program will consist of fewer cache block.
   Increasing the block size too much can have a negative effect on performance due to increase in miss penalty.
 
+  \newpage
   \section{ARM Processor 32-bit Architecture}
-  ARM has 16 registers.
-  Registers are faster than memory.
-  Each register is 32 bits.
-
+  ARM has 16 registers. \\
+  Registers are faster than memory. \\
+  Each register is 32 bits. \\
 
   Benefits of ARM:
   \begin{itemize}
@@ -2705,6 +2707,29 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
     \item Adaptable to many different applications
     \item ARM allows other companies to use and build on their architecture
   \end{itemize}
+
+  \textbf{Register Uses}
+  \begin{center}
+  \begin{tabular}{|l|l|}
+    \hline
+    Name    & Use \\
+    \hline
+    R0      & Argument/Return value/Temporary variable \\
+    \hline
+    R1-R3   & Arguments/Temporary variables \\
+    \hline
+    R4-R11  & Saved variables \\
+    \hline
+    R12     & Temporary variable \\
+    \hline
+    R13 (SP)& Stack Pointer \\
+    \hline
+    R14 (LR)& Link Register \\
+    \hline
+    R15 (PC)& Program Counter \\
+    \hline
+  \end{tabular}
+  \end{center}
 
   \subsection{Design Principle}
   \textbf{Regularity Supports Design Simplicity}:
@@ -2735,17 +2760,75 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
     \item subroutines
   \end{itemize}
 
+  \newpage
+  \section{VAX Architecture}
+  \subsection{Microprogramming}
+  \textbf{Idea}: control unit for datapath runs program for each assembly instruction. \\
+  Multi-cycle datapath so far too simple for microprogramming.
+  \begin{itemize}
+    \item Microprogram needs scratch registers.
+    \item Microprogram needs conditional branches
+  \end{itemize}
+  Need to extend datapath, modify to give us extra power
+  \begin{itemize}
+    \item Extra registers in register file
+    \item Control lines to specify read/write registers
+    \item Control specify constants
+    \item Status bits sent to control
+  \end{itemize}
 
+  \subsection{Microinstructions}
+  \textbf{Idea}: write a sequence of microinstructions for each assembly instruction.
+  \begin{itemize}
+    \item One microinstruction = one set of signals to datapath (once clock cycle)
+    \item Each microinstruction specifies sequencing
+    \item Fields of microinstruction have specified meanings
+    \item Represent values symbolically to make them readable
+    \item Usually very architecture-specific
+  \end{itemize}
+  Microinstructions stored in Read-Only-Memory (ROM) \\
+  Microinstruction is similar to assembly language instruction, but usually closer to control lines of hardware. \\
+  Each microinstruction specifies how to use the datapath and specifies which is the next microinstruction. \\
 
+  \subsection{VAX: A Microprogrammed Architecture}
+  Some instructions run faster than others. \\
+
+  Goals of VAX:
+  \begin{itemize}
+    \item Direct support for high-level language constructs (procedure calls, multi-way branching, loop control, array subscript calculation)
+    \item Minimize code space to save memory
+  \end{itemize}
+
+  Variable length instruction encoding (from 1 to 54 bytes). \\
+  Sixteen 32-bit registers, R0 through R15.
+  Some are special (e.g. R15 is PC, R14 is stack memory). \\
+  Large number of instructions (304) and data types. \\
+
+  \subsubsection{Instruction Encoding}
+  First byte is opcode (or first two).
+  Opcode implies number of operands, data type. \\
+  For each operand, one byte with addressing mode and register name (4 bits each). \\
+  More information may follow if needed (e.g. constants). \\
+
+  Example instruction:
+  \begin{itemize}
+    \item[MOVC3] : copy a string
+    \item[SCANC] : scan for character
+    \item[AOBLEQ] : add one and branch on less than or equal
+    \item[INSQUE] : insert into queue
+    \item[CRC] : calculate cyclic redundancy check
+    \item[POLY] : evaluate polynomial
+  \end{itemize}
 
   \newpage
   \section{Notes and Things to Watch Out For}
   \begin{itemize}
-    \item Multiplexers can be built from tri-state buffers.
+    \item Multiplexers can be built from tristate buffers.
+    \item Tristate buffers are commonly used on \emph{busses} that connect multiple chips (e.g. microprocessor).
     It is arranged such that only one buffer is active at a time.
     \item When counting the number of clock cycles for a sequence of MIPS instructions, there is a ``ramp up'' time of 4 cycles to take into consideration.
-    \item The access time to memory is typically $> 100$ processor cycles
-    \item The location of the TLB miss handler is at address 8000 0000\textsubscript{hex}
+    \item The access time to memory is typically $> 100$ processor cycles.
+    \item The location of the TLB miss handler is at address 8000 0000\textsubscript{hex}.
   \end{itemize}
 
   \newpage
