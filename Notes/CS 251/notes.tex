@@ -1724,7 +1724,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   For instance, a cache that holds 1024 words is called a 4 KiB cache. \\
 
   Large blocks exploit spatial locality to lower miss rates.
-  The miss rate may go up eventually if the block size becomes a significant fraction of the cache size, because the number of blocks that can be held in the ache will become small, and there will be a great deal of competition for those blocks.
+  The miss rate may go up eventually if the block size becomes a significant fraction of the cache size, because the number of blocks that can be held in the cache will become small, and there will be a great deal of competition for those blocks.
   Thus resulting in a block being bumped out of the cache before many of its words are accessed.
   Spatial locality among the words in a block decreases with a very large block; consequently, the benefits in the miss rate become smaller. \\
 
@@ -2833,6 +2833,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
     \item Multiplexers can be built from tristate buffers.
     \item Tristate buffers are commonly used on \emph{busses} that connect multiple chips (e.g. microprocessor).
     It is arranged such that only one buffer is active at a time.
+    \item Multicycle has shorter clock cycles but it always uses 5 clock cycles for each instruction.
     \item When counting the number of clock cycles for a sequence of MIPS instructions, there is a ``ramp up'' time of 4 cycles to take into consideration.
     \item The access time to memory is typically $> 100$ processor cycles.
     \item The location of the TLB miss handler is at address 8000 0000\textsubscript{hex}.
