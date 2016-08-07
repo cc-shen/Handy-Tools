@@ -878,7 +878,7 @@ binary and those who can't.} \\
   Note that a register write must be explicitly indicated by asserting the write control signal, $RegWrite$.
   Writes are edge-triggered, so that all write inputs must be valid at the clock edge. \\
 
-  The inputs carrying the register number to the register file are all 5 bites wide, whereas the lines carrying data values are 32 bits wide. \\
+  The inputs carrying the register number to the register file are all 5 bits wide, whereas the lines carrying data values are 32 bits wide. \\
   The operation to be performed by the ALU is controlled with the ALU operation signal, which will be 4 bits wide.
 
   \subsection{Memory-Reference Operations}
@@ -1611,14 +1611,14 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   The rotating access scheme is called \emph{address interleaving}. \\
 
   Memory for servers are commonly sold on small boards called \emph{dual inline memory modules} (DIMMs).
-  SIMMs typically contain 4 to 16 DRAMs, and they are normally organized to be 8 bytes wide for server systems.
+  DIMMs typically contain 4 to 16 DRAMs, and they are normally organized to be 8 bytes wide for server systems.
 
   \subsection{Flash Memory}
   Flash memory is a type of \emph{electrically erasable programmable read-only memory} (EEPROM). \\
   Unlike disks and DRAM, writes can wear out flash memory bits.
   To cope with such limits, most flash products include a controller to spread the writes by remapping blocks that have been written many times to less trodden blocks;
   this is called \emph{wear leveling}.
-  Wear leveling lowers the potential performance of flash, but is is needed unless higher-level software monitors block wear.
+  Wear leveling lowers the potential performance of flash, but it is needed unless higher-level software monitors block wear.
   Flash controllers that perform wear leveling can also improve yield by mapping out memory cells that were manufactured incorrectly.
 
   \subsection{Disk Memory}
@@ -2414,7 +2414,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
 
   Alternatively, The processor can index the cache with an address that is completely or partially virtual.
   This is called a \emph{virtually addressed cache}, and it uses tags that are virtual addresses;
-  hence, such a ache is \emph{virtually indexed} and \emph{virtually tagged}. \\
+  hence, such a cache is \emph{virtually indexed} and \emph{virtually tagged}. \\
   In such caches, the address translation hardware (TLB) is unused during normal cache access, since the cache is accessed with a virtual address that has not been translated to a physical address. \\
   This takes the TLB out of the critical path, reducing cache latency.
   However, when a cache miss occurs, the processor needs to translate the address to a physical address so that it can fetch the cache block from main memory. \\
@@ -2480,7 +2480,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   If the page fault was not recognized in this clock cycle, a load instruction could overwrite a register, and it can cause disasters when the instruction is restarted. \\
   By deasserting the write control line to the memory, the write into memory can be prevented from completing when there is a page fault. \\
 
-  Between the time we being executing the exception handler in the operating system and the time that the operating system has saved all the state of the process, the operating system is particularly vulnerable.
+  Between the time we begin executing the exception handler in the operating system and the time that the operating system has saved all the state of the process, the operating system is particularly vulnerable.
   For example, another exception can occur when processing the first exception in the operating system, the control unit would overwrite the EPC, making it impossible to return to the instruction that caused the page fault. \\
   This can be avoided by providing the ability to \emph{disable} and \emph{enable exceptions}.
   When an exception first occurs, the processor sets a bit that disables all other exceptions;
@@ -2489,7 +2489,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   The OS can then re-enable exceptions. \\
   These steps make sure that exceptions will not cause the processor to lose any state and thereby be unable to restart execution of the interrupting instructions. \\
 
-  ONce the OS knows the virtual address that caused the page fault, it must complete the following steps:
+  Once the OS knows the virtual address that caused the page fault, it must complete the following steps:
   \begin{enumerate}
     \item Look up the page table entry using the virtual address and find the location of the referenced page on disk
     \item Choose a physical page to replace, if the chosen page is dirty, it must be written out to disk before a new virtual page can be brought into this physical page
@@ -2802,7 +2802,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   Variable length instruction encoding (from 1 to 54 bytes). \\
   Sixteen 32-bit registers, R0 through R15.
   Some are special (e.g. R15 is PC, R14 is stack memory). \\
-  Large number of instructions (304) and data types. \\
+  Large number of instructions (304) and data types.
 
   \subsubsection{Instruction Encoding}
   First byte is opcode (or first two).
@@ -2835,6 +2835,5 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   \section{To-do}
   \begin{enumerate}
     \item Include Two's Complement
-    \item Add tri-state buffers and its uses
   \end{enumerate}
 \end{document}
