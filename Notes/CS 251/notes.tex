@@ -2731,6 +2731,13 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   \end{tabular}
   \end{center}
 
+  Difference between ARM and MIPS:
+  \begin{itemize}
+    \item ARM has 16 register; MIPS has 32
+    \item ARM has only 1 ALU in EX stage; MIPS has 2
+    \item ARM has 3 registers to read instructions; MIPS reads only 2
+  \end{itemize}
+
   \subsection{Design Principle}
   \textbf{Regularity Supports Design Simplicity}:
   \begin{itemize}
@@ -2780,7 +2787,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   \subsection{Microinstructions}
   \textbf{Idea}: write a sequence of microinstructions for each assembly instruction.
   \begin{itemize}
-    \item One microinstruction = one set of signals to datapath (once clock cycle)
+    \item One microinstruction = one set of signals to datapath (one clock cycle)
     \item Each microinstruction specifies sequencing
     \item Fields of microinstruction have specified meanings
     \item Represent values symbolically to make them readable
@@ -2829,6 +2836,8 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
     \item When counting the number of clock cycles for a sequence of MIPS instructions, there is a ``ramp up'' time of 4 cycles to take into consideration.
     \item The access time to memory is typically $> 100$ processor cycles.
     \item The location of the TLB miss handler is at address 8000 0000\textsubscript{hex}.
+    \item If memory addresses are word aligned, the least two significant bits are 00.
+    \item The offset bits for virtual/physical memory is the $\log_2(\text{page size})$. For example, a page size of 4 KiB has 12 bits for offset, $\log_2(4096) = 12$.
   \end{itemize}
 
   \newpage
