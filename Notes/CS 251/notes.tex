@@ -757,15 +757,15 @@ binary and those who can't.} \\
   \newpage
   \section{Multiplication}
   \includegraphics[width=1.0\textwidth]{pictures/multiplication.png} \\
-  The first operand is called the \emph{multiplicand} and the second the \emph{multiplier}.
-  The final result is called the \emph{product}. \\\
+  The first operand is called the \textbf{multiplicand} and the second the \textbf{multiplier}.
+  The final result is called the \textbf{product}. \\\
   Number of bits in the product is considerably larger than the number in either the multiplicand or the multiplier.
   If ignoring the sign bit, the length of the multiplication of an $n$-bit multiplicand and an $m$-bit multiplier is a product that is $n + m$ bits long.
   So $n + m$ bits are required to represent all possible products.
 
   \section{Floating Point}
-  A number in scientific notation that has no leading 0s is called a \emph{normalized} number, which is the usual way to write it. \\
-  \emph{Floating point} is computer arithmetic that represents numbers in which the binary point is not fixed. \\
+  A number in scientific notation that has no leading 0s is called a \defnterm{normalized} number, which is the usual way to write it. \\
+  \defnterm{Floating point} is computer arithmetic that represents numbers in which the binary point is not fixed. \\
   A standard scientific notation for reals in normalized form offers tree advantages:
   \begin{enumerate}
     \item It simplifies exchange of data that includes floating-point numbers.
@@ -776,20 +776,20 @@ binary and those who can't.} \\
   \subsection{Floating-Point Representation}
   \includegraphics[width=1.0\textwidth]{pictures/mipsFloat.png} \\
   $s$ is the sign of the floating-point number (1 meaning negative).
-  \emph{exponent} is the value of the 8-bit exponent field (including the sign of the exponent).
-  \emph{fraction} is the 23-bit number. \\
+  \textbf{exponent} is the value of the 8-bit exponent field (including the sign of the exponent).
+  \textbf{fraction} is the 23-bit number. \\
   Generally, floating-point numbers are of the form: $$(-1)^{s} \times F \times 2^{E}$$
   F involves the value in the fraction field and E involves the value in the exponent field.
 
-  \blfootnote{\emph{overflow}: positive exponent becomes too large to fit in the exponent field}
-  \blfootnote{\emph{underflow}: negative exponent becomes too large to fit in the exponent field}
+  \blfootnote{\defnterm{overflow}: positive exponent becomes too large to fit in the exponent field}
+  \blfootnote{\defnterm{underflow}: negative exponent becomes too large to fit in the exponent field}
 
-  A \emph{double precision} floating-point number is represented in two 32-bit words.
+  A \textbf{double precision} floating-point number is represented in two 32-bit words.
   The exponent is the value of the 11-bit exponent field.
   Fraction is the 52-bit number in the fraction field. \\
   \includePicture{0.85}{pictures/floatingPoints.png}{IEEE 754 encoding of floating-point numbers.}
 
-  This is also known as the \emph{IEEE 754 floating-point standard}.
+  This is also known as the \textbf{IEEE 754 floating-point standard}.
   This standard has greatly improved both the ease of porting floating-point programs and the quality of computer arithmetic. \\
   In IEEE 754, the leading 1-bit of normalized binary number is implicit, so the number is actually 24 bits long in single precision. \\
 
