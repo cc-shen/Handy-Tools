@@ -2,8 +2,10 @@
 \usepackage[margin = 1.5in]{geometry}
 \setlength{\parindent}{0in}
 \usepackage{amsfonts, amssymb, amsthm, mathtools, tikz, qtree, float}
-\usepackage[lined]{algorithm2e}
+\usepackage{algpseudocode, algorithm, algorithmicx}
 \usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{DejaVuSans}
 \usepackage{ae, aecompl, color}
 \usepackage[pdftex, pdfauthor={Charles Shen}, pdftitle={CS 251: Computer Organization and Design}, pdfsubject={Lecture notes from CS 251: Computer Organization and Design at the University of Waterloo}, pdfkeywords={CS 251, course notes, notes, Waterloo, University of Waterloo}, pdfproducer={LaTeX}, pdfcreator={pdflatex}]{hyperref}
 \usepackage{cleveref}
@@ -11,7 +13,7 @@
 \usepackage{multicol, multirow, array}
 
 \DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
-
+\renewcommand*\familydefault{\sfdefault}
 \definecolor{darkish-blue}{RGB}{25,103,185}
 
 \hypersetup{
@@ -117,7 +119,6 @@
 
   \section{From Zero To One, Abstractions}
   \includePicture{0.6}{pictures/abstractionLevel.png}{Levels of abstraction for electronic computing system}
-
   \subsection{The Three -Y's}
   \begin{itemize}
     \item [\textbf{Hierarchy}] involves dividing a system into modules, then further subdividing each of these modules until the pieces are easy to understand
@@ -126,7 +127,8 @@
   \end{itemize}
 
   \subsection{Hexadecimal Number System}
-  \begin{tabular} {c | c | c}
+  \begin{tabular} {| c | c | c |}
+  \hline
   Hexadecimal Digit & Decimal Digit & Binary Equivalent \\ \hline \hline
   0 & 0 & 0000 \\ \hline
   1 & 1 & 0001 \\ \hline
@@ -143,7 +145,7 @@
   C & 12 & 1100 \\ \hline
   D & 13 & 1101 \\ \hline
   E & 14 & 1110 \\ \hline
-  F & 15 & 1111 \\
+  F & 15 & 1111 \\ \hline
   \end{tabular}
 
   \subsection{Bytes, Nibbles, and All That Jazz}
@@ -159,38 +161,33 @@
   \subsection{Logic Gates}
   A circuit element that performs a basic logic function \\ \\
   \textbf{Single Input} \\
-  \includegraphics[scale=0.9]{pictures/notGate.png}
-  \includegraphics[scale=0.9]{pictures/bufGate.png} \\
+  \includegraphics[scale=0.7]{pictures/notGate.png}
+  \includegraphics[scale=0.7]{pictures/bufGate.png} \\
   \textbf{Double Output} \\
-  \includegraphics[scale=0.9]{pictures/andGate.png}
-  \includegraphics[scale=0.9]{pictures/orGate.png}
-  \includegraphics[scale=0.9]{pictures/nandGate.png}
-  \includegraphics[scale=0.9]{pictures/norGate.png}
-  \includegraphics[scale=0.9]{pictures/xorGate.png}
+  \includegraphics[scale=0.7]{pictures/andGate.png}
+  \includegraphics[scale=0.7]{pictures/orGate.png}
+  \includegraphics[scale=0.7]{pictures/nandGate.png}
+  \includegraphics[scale=0.7]{pictures/norGate.png}
+  \includegraphics[scale=0.7]{pictures/xorGate.png}
 
   \subsection{Beneath the Digital Abstraction}
   A digital system uses discrete-valued variables. \\
   Variables are represented by continuous physical quantities such as the voltage on a wire, the position of a gear, or the level of fluid in a cylinder.
-  \begin{ex}
-    Consider representing a binary signal A with a voltage on a wire. \\
-    Let 0 volts (V) indicate A = 0 and 5V indicate A = 1. \\
-    Any real system must tolerate some noise, so 4.97V probably ought to be interpreted as A = 1 as well. \\
-    But what about 4.3V? Or 2.8V? Or 2.5000000V?
-  \end{ex}
+
   \subsubsection{Supply Voltage}
-  Suppose the lowest voltage in the system is 0V, also called ground or GND \\
-  The highest voltage in the system comes from the power supply and is usually called $V_{DD}$
+  Suppose the lowest voltage in the system is 0V, also called ground or GND. \\
+  The highest voltage in the system comes from the power supply and is usually called $V_{DD}$.
 
   \subsubsection{Logic Levels}
-  Mapping of a continuous variable onto a discrete binary variable is done by defining logic levels.
-  First gate is called the driver and the second gate is called the receiver.
+  Mapping of a continuous variable onto a discrete binary variable is done by defining logic levels. \\
+  First gate is called the driver and the second gate is called the receiver. \\
   Output of the driver is connected to the input of the receiver. \\
-  The driver produces a LOW (0) output in the range of 0 to $V_{OL}$ or a HIGH (1) output in the range of $V_{OH}$ to $V_{DD}$
+  The driver produces a LOW (0) output in the range of 0 to $V_{OL}$ or a HIGH (1) output in the range of $V_{OH}$ to $V_{DD}$.
 
   \subsubsection{Noise Margins}
-  If the output of the driver is to be correctly interpreted at the input of the receiver, we must choose $V_{OL} < V_{IL}$ and $V_{OH} > V_{IH}$ \\
-  Even if the output of the driver is contaminated by some noise, the input of the receiver will still detect the correct logic level.
-  Noise margin is the amount of noise that could be added to a worst-case output such that the signal can still be interpreted as a valid input
+  If the output of the driver is to be correctly interpreted at the input of the receiver, we must choose $V_{OL} < V_{IL}$ and $V_{OH} > V_{IH}$. \\
+  Even if the output of the driver is contaminated by some noise, the input of the receiver will still detect the correct logic level. \\
+  \emph{Noise margin} is the amount of noise that could be added to a worst-case output such that the signal can still be interpreted as a valid input.
 
   \blfootnote{Note: power flows from drain to source.}
 
@@ -202,7 +199,7 @@
 
   \section{CMOS Transistors}
   Transistors are electrically controlled switches that turn ON or OFF when a voltage or current is applied to a control terminal. \\
-  Two main types of transistors are bipolar transistors and metal-oxide-semiconductor field effect transistors (MOSFETs or MOS transistors).
+  Two main types of transistors are \emph{bipolar transistors} and \emph{metal-oxide-semiconductor field effect transistors} (MOSFETs or MOS transistors).
 
   \subsection{Semiconductors}
   MOS transistors are built from silicon. \\
@@ -246,14 +243,14 @@
   \end{center}
   A MOSFET is a sandwich of several layers of conducting and insulating materials. \\
   There are two flavors of MOSFETs: nMOS and pMOS. \\
-  The n-type transistors, called \emph{nMOS}, have regions of n-type dopants adjacent tot he gate called the \emph{source} and the \emph{drain} and are built on a p-type semiconductor substrate. \\
+  The n-type transistors, called \emph{nMOS}, have regions of n-type dopants adjacent to the gate called the \emph{source} and the \emph{drain} and are built on a p-type semiconductor substrate. \\
   The \emph{pMOS} transistors are just the opposite, consisting of p-type source and drain regions in an n-type \emph{substrate}. \\
   A MOSFET behaves as a voltage-controlled switch in which the gate voltage creates an electric field that turns ON or OFF a connection between the source and drain. \\
   nMOS transistors pass 0's well but passes 1's poorly.
   Similarly, pMOS transistors pass 1's well but 0's poorly. \\
   nMOS transistors need a p-type substrate, and pMOS transistors need an n-type substrate.
   To build both flavors of transistors on the same chip, manufacturing processes typically start with a p-type wafer, then implant n-type region called wells where the pMOS transistors should go.
-  These processes that provide both flavors of transistors are called Complementary MOS or CMOS.
+  These processes that provide both flavors of transistors are called \emph{Complementary MOS} or CMOS.
   \begin{wrapfigure}{r}{0.5\textwidth}
     \centering
     \includegraphics[width=0.5\textwidth]{pictures/nMOSpMOSGate.png}
@@ -309,13 +306,15 @@ binary and those who can't.} \\
   \end{itemize}
 
   Logic gates are commonly built from CMOS transistors, which behave as electrically controlled switches. \\
-  nMOS transistors turn ON when the gate is 1. \\
-  pMOS transistors turn ON when the gate is 0.
+  nMOS transistors turn ON when the gate is 1;
+  passes 0's well but passes 1's poorly. \\
+  pMOS transistors turn ON when the gate is 0;
+  passes 1's well but 0's poorly. \\
 
   \newpage
   \section{Introduction to Combinational Logic Design}
-  In digital electronics, a \emph{circuit} is a network that processes discrete-valued variables. \\
-  A circuit can be viewed as a black box, with
+  A \emph{circuit} is a network that processes discrete-valued variables.
+  It can be viewed as a black box, with:
   \begin{itemize}
     \item one or more discrete-valued \emph{input terminals}
     \item one or more discrete-valued \emph{output terminals}
@@ -326,13 +325,11 @@ binary and those who can't.} \\
   An \emph{element} is itself a circuit with inputs, outputs, and a specification. \\
   A \emph{node} is a wire, whose voltage conveys a discrete-valued variable.
   Nodes are classified as \emph{input, output, \emph{or} internal}. \\
-  Input receive values from the external world. \\
-  Output deliver values to the external world. \\
+  Input receive values from the external world. Output deliver values to the external world. \\
   Wires that are not inputs or outputs are called internal nodes. \\
 
-  Digital circuits are classified as \emph{combinational \emph{or} sequential}. \\
-  A combinational circuit's outputs depend only on the current values of the inputs; in other words, it combines the current input values to compute the output.
-  For example, a logic gate is a combinational circuit. \\
+  Digital circuits are classified as either \emph{combinational \emph{or} sequential}. \\
+  A combinational circuit's outputs depend only on the current values of the inputs; in other words, it combines the current input values to compute the output. \\
   A sequential circuit's outputs depend on both current and previous values of the inputs; in other words, it depends on the input sequence. \\
   A combinational circuit is \emph{memoryless}, but a sequential circuit has \emph{memory}. \\
 
@@ -340,14 +337,7 @@ binary and those who can't.} \\
   The timing specification of a combinational circuit consists of lower and upper bounds on the delay from input to put. \\
 
   To simply drawings, a single line with a slash through it and a number next to it is often used to indicate a \emph{bus}, a bundle of of multiple signals. \\
-
-  \begin{wrapfigure}{l}{0.25\textwidth}
-    \centering
-    \includegraphics[width=0.25\textwidth]{pictures/busExample.png}
-  \end{wrapfigure}
-  In Figure 2.6(a), it represents a block of combination logic with three inputs and output outputs. \\
   If the number of bits is unimportant or obvious from the context, the slash may be shown without a number. \\
-  Figure 2.6(b) indicates two blocks of combinational logic with an arbitrary number of outputs from one block serving as inputs to the second block. \\
 
   The rules of \emph{combinational composition} tell us how we can build a large combinational circuit from smaller combinational circuit elements. \\
   A circuit is combinational if it consists of interconnected circuit elements such that:
@@ -358,15 +348,15 @@ binary and those who can't.} \\
   \end{itemize}
 
   Examples: \\
-  \includegraphics{pictures/combinationalCircuitExample.png}
-  (a) is combinational. It is constructed from two combinational circuit elements (inverters $I1$ and $I2$). It has three nodes: $n1$, $n2$, and $n3$. $n1$ is an input to the circuit and to $I1$; $n2$ is an internal node, which is the output of $I1$ and the input to $I2$; $n3$ is the output of the circuit and of $I2$. \\
-  (b) is \emph{not} combinational, because there is a cyclic path: the output of the XOR feeds back to one of its input. Hence, a cyclic path starting at $n4$ passes through the XOR to $n5$, which returns to $n4$. \\
+  \includegraphics[width=1.0\textwidth]{pictures/combinationalCircuitExample.png}
+  (a) is combinational. It is constructed from two combinational circuit elements. It has three nodes. $n1$ is an input to the circuit and to $I1$; $n2$ is an internal node, which is the output of $I1$ and the input to $I2$; $n3$ is the output of the circuit and of $I2$. \\
+  (b) is \emph{not} combinational, because there is a cyclic path: the output of the XOR feeds back to one of its input. \\
   (c) is combinational. \\
-  (d) is not combinational, because node $n6$ connects to the output terminals of both $I3$ and $I4$. \\
-  (e) is combinational, illustrating two combinational circuits connecting to from a larger combinational circuit. \\
-  (f) does not obey the rules of combinational composition because it has a cyclic path through the two elements. Depending on the functions of the elements, it may or may not be a combinational circuit. \\
+  (d) is \emph{not} combinational, because node $n6$ connects to the output terminals of both $I3$ and $I4$. \\
+  (e) is combinational. \\
+  (f) is \emph{not} combinational, because it has a cyclic path through the two elements. \\
 
-  The functional specification of a combinational circuit is usually expressed as a truth table or a Boolean equation.
+  \textbf{Note}: the functional specification of a combinational circuit is usually expressed as a truth table or a Boolean equation.
 
   \newpage
   \section{Boolean Equations}
@@ -383,17 +373,18 @@ binary and those who can't.} \\
   A \emph{minterm} is a product involving all of the inputs to the function.
   $A\overline{B}\overline{C}$ is a minterm for a function of the three variables $A$, $B$, and $C$, but $\overline{A}B$ is not, because it does not involve $C$. \\
 
-  Similarly, the OR of one or more literals is called a \emph{sum}.
-  A \emph{maxterm} is a sum involving all of the inputs to the function. $A + \overline{B} + C$ is a maxterm for a function of the three variables $A$, $B$, and $C$.
+  The OR of one or more literals is called a \emph{sum}. \\
+  A \emph{maxterm} is a sum involving all of the inputs to the function.
+  $A + \overline{B} + C$ is a maxterm for a function of the three variables $A$, $B$, and $C$.
 
   \subsection{Sum-of-Products Form}
-  A truth table of $N$ inputs contains $2^{N}$ rows, one for each possible value of the inputs. \\
-  Each row in a truth value is associated with a minterm that is TRUE for that row. \\
-  A Boolean equation can be written for any truth table by summing each of the minterms for which the output, $Y$, is TRUE.
+  A truth table of $N$ inputs contains $2^{N}$ rows, one for each possible value of the inputs.
+  Each row in a truth value is associated with a minterm that is TRUE for only that row. \\
+  A Boolean Equation can be written for any truth table by summing each of the minterms for which the output, $Y$, is TRUE.
   This is called the \emph{sum-of-products canonical form} of a function because it is the sum (OR) of products (ANDs forming minterms). \\
 
-  The sum-of-products form provides a Boolean equation for any truth table with any number of variables.
-  Unfortunately, it does not necessarily generate the simplest equation.
+  The sum-of-products form provides a Boolean Equation for any truth table with any number of variables.
+  However, it does not necessarily generate the simplest equation.
 
   \newpage
   \section{Boolean Algebra}
@@ -448,17 +439,16 @@ binary and those who can't.} \\
   Combinational logic is often grouped into larger building blocks to build more complex systems.
   This is an application of the principle of abstraction, hiding the unnecessary gate-level details to emphasize the function of the building block.
 
+  \begin{wrapfigure}{r}{0.25\textwidth}
+    \includegraphics[width=0.25\textwidth]{pictures/2_1_mux.png}
+  \end{wrapfigure}
   \subsection{Multiplexers}
   \emph{Multiplexers}, also known as \emph{mux}, are among the most commonly used combinational circuits.
   They choose an output from among several possible inputs based on the value of a \emph{select} signal.
 
   \subsubsection{2:1 Multiplexer}
-  \begin{wrapfigure}{r}{0.25\textwidth}
-    \includegraphics[width=0.25\textwidth]{pictures/2_1_mux.png}
-  \end{wrapfigure}
   Image shows the schematic and truth table for a 2:1 multiplexer with two data inputs, $D_0$ and $D_1$, as select input, $S$, and one output, $Y$. \\
-  The multiplexer chooses between the two data inputs based on the select:
-  if $S = 0$, $Y = D_0$, and if $S = 1$, $Y = D_1$.  \\
+  The multiplexer chooses between the two data inputs based on the select: if $S = 0$, $Y = D_0$, and if $S = 1$, $Y = D_1$.
   $S$ is also called a control signal because it controls what the multiplexer does. \\
 
   Multiplexers can be built from tristate buffers. \\
@@ -469,7 +459,7 @@ binary and those who can't.} \\
   \subsubsection{Wider Multiplexers}
   A 4:1 multiplexer has four data inputs and one output.
   Two select signals are needed to choose among the four data inputs.
-  The 4:1 mux can be built using sum-of-products logic, tristates, or multiple 2:1 mux. \\
+  The 4:1 multiplexer can be built using sum-of-products logic, tristates, or multiple 2:1 multiplexers. \\
 
   The product terms enabling the tristates can be formed using AND gates and inverters.
   They can also be formed using a decoder. \\
@@ -477,11 +467,11 @@ binary and those who can't.} \\
   In general, an $N:1$ multiplexer needs $log_{2} N$ select lines.
 
   \subsubsection{Multiplexer Logic}
-  Multiplexers can be used as \emph{lookup tables} to perform logic functions.
- \\
+  Multiplexers can be used as \emph{lookup tables} to perform logic functions. \\
   In general, a $2^{N}$-input multiplexer can be programmed to perform any N-input logic functions by applying 0's and 1's to the appropriate data inputs. \\
   By changing the data inputs, the multiplexer can be reprogrammed to perform a different function.
 
+  \newpage
   \subsection{Decoder}
   A decoder has $N$ inputs and $2^{N}$ outputs. \\
   It asserts exactly one of its outputs depending on the input combination.
@@ -500,7 +490,7 @@ binary and those who can't.} \\
   \section{Summary So Far}
   A digital circuit is a module with discrete-valued inputs and outputs and a specification describing the function and timing of the module. \\
 
-  The function of a combinational circuit can be given by a truth table or a Boolean equation. The Boolean equation for any truth table can be obtained systematically using sum-of-products or product-of-sums form. \\
+  The function of a combinational circuit can be given by a truth table or a Boolean Equation. The Boolean Equation for any truth table can be obtained systematically using sum-of-products or product-of-sums form. \\
   In sum-of-products form, the function is written as the sum (OR) of one or more implicants.
   Implicants are the product (AND) of literals.
   Literals are the true or complementary forms of the input variables.  \\
@@ -849,6 +839,7 @@ binary and those who can't.} \\
   An arithmetic-logical or load instruction must write the data from the ALU or memory back into a register. \\
   For a branch instruction, it may be required to change the next instruction address based on the comparison; otherwise, the PC should be incremented by 4 to get the address of the next instruction.
 
+  \newpage
   \section{Building a Data-path}
   \includePicture{0.7}{pictures/readingFetchingInstruction.png}{A portion of the data-path used for fetching instructions and incrementing the program counter.}
   A \emph{data-path element} is a unit used to operate within a processor.
@@ -2651,14 +2642,14 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
     Advantages include:
     \begin{itemize}
       \item Misses are simpler and cheaper because they never require a block to be written back to the lower level
-      \item Write-through is easier to implement than write-back, although to be practical,a write-through cache will still need to use a write buffer
+      \item Write-through is easier to implement than write-back, although to be practical, a write-through cache will still need to use a write buffer
     \end{itemize}
     \item \emph{Write-back}: The information is written only to the block in the cache.
     The modified block is written to the lower level of the hierarchy only when it is replaced.
     Virtual memory systems always use write-back. \\
     Advantages include:
     \begin{itemize}
-      \item Individual words can be written by the processor at the rate that the cache, rather than the memory,can accept them
+      \item Individual words can be written by the processor at the rate that the cache, rather than the memory, can accept them
       \item Multiple writes within a block require only one write to the lower level in the hierarchy
       \item When blocks are written back, the system can make effective use of a high-bandwidth transfer, since the entire block is written
     \end{itemize}
