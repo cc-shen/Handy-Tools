@@ -7,10 +7,13 @@
 \usepackage[utf8]{inputenc}
 \usepackage{DejaVuSans}
 \usepackage{ae, aecompl, color}
-\usepackage[pdftex, pdfauthor={Charles Shen}, pdftitle={CS 251: Computer Organization and Design}, pdfsubject={Lecture notes from CS 251: Computer Organization and Design at the University of Waterloo}, pdfkeywords={CS 251, course notes, notes, Waterloo, University of Waterloo}, pdfproducer={LaTeX}, pdfcreator={pdflatex}]{hyperref}
-\usepackage{cleveref}
 \usepackage{wrapfig}
 \usepackage{multicol, multirow, array}
+\usepackage{imakeidx}
+\makeindex[columns=2, title=Indices, intoc]
+
+\usepackage[pdftex, pdfauthor={Charles Shen}, pdftitle={CS 251: Computer Organization and Design}, pdfsubject={Lecture notes from CS 251: Computer Organization and Design at the University of Waterloo}, pdfkeywords={CS 251, course notes, notes, Waterloo, University of Waterloo}, pdfproducer={LaTeX}, pdfcreator={pdflatex}]{hyperref}
+\usepackage{cleveref}
 
 \DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
 \renewcommand*\familydefault{\sfdefault}
@@ -38,6 +41,8 @@
     \footnotesize $\leftarrow$ \underline{#1}}
   }
 }
+
+\newcommand{\defnterm}[1]{\textbf{\textcolor{teal}{#1}}\index{#1}}
 
 \newcommand{\includePicture}[3]{
   \begin{figure}[!ht]
@@ -72,30 +77,33 @@
   \href{mailto:echen902@gmail.com}{echen902@gmail.com}.}
 
   \maketitle
+  \thispagestyle{empty}
   \newpage
+  \pagenumbering{roman}
   \tableofcontents
   \newpage
+  \pagenumbering{arabic}
 
   \section{Performance}
   \subsection{Defining Performance}
   Performance can be defined in terms of more than just speed.
   Different performance metrics are required for different scenarios.
-  To an individual, the performance in interest is \emph{response time}---the time between the start and completion of a task---also referred to as \emph{execution time}. \\
-  To a data-center manager, the interest is in \emph{throughput} or \emph{bandwidth}---the total amount of work done in a given time.
+  To an individual, the performance in interest is \defnterm{response time}---the time between the start and completion of a task---also referred to as \defnterm{execution time}. \\
+  To a data-center manager, the interest is in \defnterm{throughput} or \defnterm{bandwidth}---the total amount of work done in a given time.
 
   \subsection{Measuring Performance}
   Time is the measure of computer performance; the computer that performs the same amount of work in the least time is the fastest. \\
-  Program execution time is measured in seconds per program, this is usually known as \emph{elapsed time, wall clock time, \emph{or} response time}. \\
+  Program execution time is measured in seconds per program, this is usually known as \defnterm{elapsed time}, wall clock time, or \defnterm{response time}. \\
 
   Computers are often shared, so a processor may work on several programs simultaneously.
   In which, the system attempts to optimize throughput rather than attempting to minimize the elapsed time for a program. \\
 
-  The \emph{CPU execution time}, also knowns as \emph{CPU time}, makes the distinction between the elapsed time and the actual time the CPU spends computing for a specific task. \\
-  Further distinction can be made, \emph{user CPU time}, the CPU time spent in the program, and \emph{system CPU time}, the CPU time spent in the operating system performing tasks on behalf of the program. \\
+  The \defnterm{CPU execution time}, also knowns as \defnterm{CPU time}, makes the distinction between the elapsed time and the actual time the CPU spends computing for a specific task. \\
+  Further distinction can be made, \defnterm{user CPU time}, the CPU time spent in the program, and \defnterm{system CPU time}, the CPU time spent in the operating system performing tasks on behalf of the program. \\
 
   Another measure of performance is using a measure that relates to how fast the hardware can perform basic functions. \\
   Almost all computers are constructed using a clock that determines when events take place in the hardware.
-  These discrete time intervals are called \emph{clock cycles} (or ticks, clock ticks, clock periods, clocks, cycles). \\
+  These discrete time intervals are called \defnterm{clock cycles} (or ticks, clock ticks, clock periods, clocks, cycles). \\
   The length of a clock period can be either the time for a complete clock cycle (e.g. 250 picoseconds, or 250 ps) or the clock rate (e.g. 4 gigahertz, or 4GHz), which is the inverse of the clock period.
   $$1ps = 1 \times 10^{-12} = \frac{1}{1,000,000,000,000}$$
 
@@ -108,12 +116,12 @@
 
   \subsection{Instruction Performance}
   $$\text{CPU clock cycles} = ~\parbox{3cm}{Instructions for\\a program} \times ~\parbox{4cm}{Average clock cycles\\per instruction}$$
-  \emph{Clock cycles per instruction}, which is the average number of clock cycles each instruction takes to execute, is often abbreviated as \emph{CPI}. \\
+  \defnterm{Clock cycles per instruction}, which is the average number of clock cycles each instruction takes to execute, is often abbreviated as \textbf{CPI}. \\
   CPI is an average of all the instructions executed in the program because different instructions may take different amounts of time depending on what they do.
 
   \subsection{The Classic CPU Performance Equation}
   $$\text{CPU time} = \text{Instruction count} \times \text{CPI} \times \text{Clock cycles time}$$
-  Note that CPU varies by \emph{instruction mix}, which is a measure of the dynamic frequency of instructions across one or many programs.
+  Note that CPU varies by \defnterm{instruction mix}, which is a measure of the dynamic frequency of instructions across one or many programs.
 
   \newpage
 
@@ -149,8 +157,8 @@
   \end{tabular}
 
   \subsection{Bytes, Nibbles, and All That Jazz}
-  A group of eight bits is called a \emph{byte}. Represents $256 = 2^{8}$ possibilities. \\
-  A group of four bits is called a \emph{nibble}. Represents $16 = 2^{4}$ possibilities. \\
+  A group of eight bits is called a \defnterm{byte}. Represents $256 = 2^{8}$ possibilities. \\
+  A group of four bits is called a \defnterm{nibble}. Represents $16 = 2^{4}$ possibilities. \\
   A microprocessor is a processor built on a single chip. \\
   Microprocessors handle data in chunks called words. The size of a word depends on the architecture of the microprocessor. \\
   Within a group of bits, the bit in the 1's column is called the least significant bit (lsb), and the bit at the other end is called the most significant bit (msb). \\
@@ -187,7 +195,7 @@
   \subsubsection{Noise Margins}
   If the output of the driver is to be correctly interpreted at the input of the receiver, we must choose $V_{OL} < V_{IL}$ and $V_{OH} > V_{IH}$. \\
   Even if the output of the driver is contaminated by some noise, the input of the receiver will still detect the correct logic level. \\
-  \emph{Noise margin} is the amount of noise that could be added to a worst-case output such that the signal can still be interpreted as a valid input.
+  \defnterm{Noise margin} is the amount of noise that could be added to a worst-case output such that the signal can still be interpreted as a valid input.
 
   \blfootnote{Note: power flows from drain to source.}
 
@@ -199,7 +207,7 @@
 
   \section{CMOS Transistors}
   Transistors are electrically controlled switches that turn ON or OFF when a voltage or current is applied to a control terminal. \\
-  Two main types of transistors are \emph{bipolar transistors} and \emph{metal-oxide-semiconductor field effect transistors} (MOSFETs or MOS transistors).
+  Two main types of transistors are \defnterm{bipolar transistors} and \defnterm{metal-oxide-semiconductor field effect transistors} (MOSFETs or MOS transistors).
 
   \subsection{Semiconductors}
   MOS transistors are built from silicon. \\
@@ -231,9 +239,9 @@
   The diode symbol intuitively shows that current only flows in one direction.
 
   \subsection{Capacitors}
-  A \emph{capacitor} consists of two conductors separated by an insulator. \\
+  A \defnterm{capacitor} consists of two conductors separated by an insulator. \\
   When a voltage $V$ is applied to one of the conductors, the conductor accumulates electric \emph{charge} $Q$ and the other conductor accumulates the opposite charge $-Q$. \\
-  The \emph{capacitance} C of the capacitor is the ratio of charge to voltage: $C = \frac{Q}{V}$.
+  The \defnterm{capacitance} C of the capacitor is the ratio of charge to voltage: $C = \frac{Q}{V}$.
   The capacitance is proportional to the size of the conductors and inversely proportional the distance between them. \\
   Capacitance is important because charging or discharging a conductor takes time and energy. More capacitance means that a circuit will be slower and require more energy to operate.
 
@@ -243,14 +251,14 @@
   \end{center}
   A MOSFET is a sandwich of several layers of conducting and insulating materials. \\
   There are two flavors of MOSFETs: nMOS and pMOS. \\
-  The n-type transistors, called \emph{nMOS}, have regions of n-type dopants adjacent to the gate called the \emph{source} and the \emph{drain} and are built on a p-type semiconductor substrate. \\
-  The \emph{pMOS} transistors are just the opposite, consisting of p-type source and drain regions in an n-type \emph{substrate}. \\
+  The n-type transistors, called \defnterm{nMOS}, have regions of n-type dopants adjacent to the gate called the \defnterm{source} and the \defnterm{drain} and are built on a p-type semiconductor substrate. \\
+  The \defnterm{pMOS} transistors are just the opposite, consisting of p-type source and drain regions in an n-type substrate. \\
   A MOSFET behaves as a voltage-controlled switch in which the gate voltage creates an electric field that turns ON or OFF a connection between the source and drain. \\
   nMOS transistors pass 0's well but passes 1's poorly.
   Similarly, pMOS transistors pass 1's well but 0's poorly. \\
   nMOS transistors need a p-type substrate, and pMOS transistors need an n-type substrate.
   To build both flavors of transistors on the same chip, manufacturing processes typically start with a p-type wafer, then implant n-type region called wells where the pMOS transistors should go.
-  These processes that provide both flavors of transistors are called \emph{Complementary MOS} or CMOS.
+  These processes that provide both flavors of transistors are called \defnterm{Complementary MOS} or CMOS.
   \begin{wrapfigure}{r}{0.5\textwidth}
     \centering
     \includegraphics[width=0.5\textwidth]{pictures/nMOSpMOSGate.png}
@@ -267,7 +275,7 @@
   \end{wrapfigure}
   At times, designers find it convenient to use an ideal switch that can pass both 0 and 1 well. \\
   nMOS transistors are good at passing 0 and pMOS transistors are good at passing 1, so the parallel combination of the two passes both values well. \\
-  Image to the right shows such a circuit, called \emph{transmission gate \emph{or} pass gate}. \\
+  Image to the right shows such a circuit, called \defnterm{transmission gate} or \defnterm{pass gate}. \\
   The two sides of the switch are called \emph{A \emph{and} B} because a switch is bidirectional and has no preferred input or output side.
   The control signals are called \emph{enables}, $EN$ and $\overline{EN}$. \\
   When $EN = 0$ and $\overline{EN} = 1$, both transistors are OFF.
@@ -322,9 +330,9 @@ binary and those who can't.} \\
     \item a \emph{timing specification} describing the delay between inputs changing and output responding
   \end{itemize}
   Peering inside the black box, circuits are composed of nodes and elements. \\
-  An \emph{element} is itself a circuit with inputs, outputs, and a specification. \\
-  A \emph{node} is a wire, whose voltage conveys a discrete-valued variable.
-  Nodes are classified as \emph{input, output, \emph{or} internal}. \\
+  An \defnterm{element} is itself a circuit with inputs, outputs, and a specification. \\
+  A \defnterm{node} is a wire, whose voltage conveys a discrete-valued variable.
+  Nodes are classified as \emph{input}, \emph{output}, or \emph{internal}. \\
   Input receive values from the external world. Output deliver values to the external world. \\
   Wires that are not inputs or outputs are called internal nodes. \\
 
@@ -336,10 +344,10 @@ binary and those who can't.} \\
   The functional specification of a combination circuit expresses the output values in terms of the current input values. \\
   The timing specification of a combinational circuit consists of lower and upper bounds on the delay from input to put. \\
 
-  To simply drawings, a single line with a slash through it and a number next to it is often used to indicate a \emph{bus}, a bundle of of multiple signals. \\
+  To simply drawings, a single line with a slash through it and a number next to it is often used to indicate a \defnterm{bus}, a bundle of of multiple signals. \\
   If the number of bits is unimportant or obvious from the context, the slash may be shown without a number. \\
 
-  The rules of \emph{combinational composition} tell us how we can build a large combinational circuit from smaller combinational circuit elements. \\
+  The rules of \textbf{combinational composition} tell us how we can build a large combinational circuit from smaller combinational circuit elements. \\
   A circuit is combinational if it consists of interconnected circuit elements such that:
   \begin{itemize}
     \item Every circuit element is itself combinational
@@ -363,25 +371,25 @@ binary and those who can't.} \\
   Boolean equations deal with variables that are either TRUE or FALSE, so they are perfect for describing digital logic.
 
   \subsection{Terminology}
-  The \emph{complement} of a variable, $A$, is its inverse, $\overline{A}$. \\
-  The variables or its complement is called a \emph{literal}.
+  The \defnterm{complement} of a variable, $A$, is its inverse, $\overline{A}$. \\
+  The variables or its complement is called a \defnterm{literal}.
   For example, $A$, $\overline{A}$, $B$, and $\overline{B}$ are literals. \\
-  $A$ is called the \emph{true form} of the variable and $\overline{A}$ the complementary form; ``true form'' does not mean that $A$ is TRUE, but merely that $A$ does not have a line over it. \\
+  $A$ is called the \defnterm{true form} of the variable and $\overline{A}$ the complementary form; ``true form'' does not mean that $A$ is TRUE, but merely that $A$ does not have a line over it. \\
 
-  The AND of one or more literals is called a \emph{product} or an \emph{implicant}. \\
+  The AND of one or more literals is called a \defnterm{product} or an \defnterm{implicant}. \\
   $\overline{A}B$, $A\overline{B} \overline{C}$, and $B$ are all implicants for a function of three variables. \\
-  A \emph{minterm} is a product involving all of the inputs to the function.
+  A \defnterm{minterm} is a product involving all of the inputs to the function.
   $A\overline{B}\overline{C}$ is a minterm for a function of the three variables $A$, $B$, and $C$, but $\overline{A}B$ is not, because it does not involve $C$. \\
 
-  The OR of one or more literals is called a \emph{sum}. \\
-  A \emph{maxterm} is a sum involving all of the inputs to the function.
+  The OR of one or more literals is called a \defnterm{sum}. \\
+  A \defnterm{maxterm} is a sum involving all of the inputs to the function.
   $A + \overline{B} + C$ is a maxterm for a function of the three variables $A$, $B$, and $C$.
 
   \subsection{Sum-of-Products Form}
   A truth table of $N$ inputs contains $2^{N}$ rows, one for each possible value of the inputs.
   Each row in a truth value is associated with a minterm that is TRUE for only that row. \\
   A Boolean Equation can be written for any truth table by summing each of the minterms for which the output, $Y$, is TRUE.
-  This is called the \emph{sum-of-products canonical form} of a function because it is the sum (OR) of products (ANDs forming minterms). \\
+  This is called the \defnterm{sum-of-products canonical form} of a function because it is the sum (OR) of products (ANDs forming minterms). \\
 
   The sum-of-products form provides a Boolean Equation for any truth table with any number of variables.
   However, it does not necessarily generate the simplest equation.
@@ -399,7 +407,7 @@ binary and those who can't.} \\
 
   \newpage
   \section{From Logic to Gates}
-  A \emph{schematic} is a diagram of a digital circuit showing the elements and the wires that connect them together. \\
+  A \defnterm{schematic} is a diagram of a digital circuit showing the elements and the wires that connect them together. \\
 
   \textbf{Good Style in Circuit Drawing}:
   \begin{itemize}
@@ -409,7 +417,7 @@ binary and those who can't.} \\
   \end{itemize}
 
   \section{Multilevel Combinational Logic}
-  Logic in sum-of-products form is called \emph{two-level logic} because it consists of literals connected to a level of AND gates connected to a level of OR gates. \\
+  Logic in sum-of-products form is called \defnterm{two-level logic} because it consists of literals connected to a level of AND gates connected to a level of OR gates. \\
   Designers often build circuits with more than two levels of logic gates.
   These multilevel combinational circuits may use less hardware than their two-level counterparts. \\
   Bubble pushing is especially helpful in analyzing and designing multilevel circuits.
@@ -443,8 +451,8 @@ binary and those who can't.} \\
     \includegraphics[width=0.25\textwidth]{pictures/2_1_mux.png}
   \end{wrapfigure}
   \subsection{Multiplexers}
-  \emph{Multiplexers}, also known as \emph{mux}, are among the most commonly used combinational circuits.
-  They choose an output from among several possible inputs based on the value of a \emph{select} signal.
+  \defnterm{Multiplexers}, also known as \textbf{mux}, are among the most commonly used combinational circuits.
+  They choose an output from among several possible inputs based on the value of a \textbf{select} signal.
 
   \subsubsection{2:1 Multiplexer}
   Image shows the schematic and truth table for a 2:1 multiplexer with two data inputs, $D_0$ and $D_1$, as select input, $S$, and one output, $Y$. \\
@@ -475,7 +483,7 @@ binary and those who can't.} \\
   \subsection{Decoder}
   A decoder has $N$ inputs and $2^{N}$ outputs. \\
   It asserts exactly one of its outputs depending on the input combination.
-  The outputs are called \emph{one-hot}, because exactly one is ``hot'' (HIGH) at a given time. \\
+  The outputs are called \defnterm{one-hot}, because exactly one is ``hot'' (HIGH) at a given time. \\
 
   Example of 2:4 decoder and its implementation: \\
   \includegraphics{pictures/2_4_decoder.png}
@@ -516,11 +524,11 @@ binary and those who can't.} \\
   \section{Introduction to Sequential Logic Design}
   The output of sequential logic depend on both current and prior input values. \\
   Hence, sequential logic has memory.
-  Sequential logic might explicitly remember certain previous inputs, or it might distill the prior inputs into a smaller amount of information called the \emph {state} of the system. \\
-  The state of a digital sequential circuit is a set of bits called \emph{state variables} that contain all the information about the past necessary to explain the future behavior of the circuit.
+  Sequential logic might explicitly remember certain previous inputs, or it might distill the prior inputs into a smaller amount of information called the \defnterm{state} of the system. \\
+  The state of a digital sequential circuit is a set of bits called \defnterm{state variables} that contain all the information about the past necessary to explain the future behavior of the circuit.
 
   \subsection{Latches and Flip-Flops}
-  The fundamental building block of memory is a \emph{bistable} element, an element with two stable states. \\
+  The fundamental building block of memory is a \defnterm{bistable} element, an element with two stable states. \\
   An element with $N$ stable states conveys $\log_{2}N$ bits of information, so a bistable element stores one bit. \\
   The state of the cross-coupled inverters is contained in one binary state variable, $Q$.
   The value of $Q$ tells us everything about the past that is necessary to explain the future behavior of the circuit. \\
@@ -532,7 +540,7 @@ binary and those who can't.} \\
   It may differ each time the circuit is turned on. \\
 
   Although the cross-coupled inverters can store a bit of information, they are not practical because the user has no inputs to control the states. \\
-  However, other bistable elements, such as \emph{latches} and \emph{flip-flops}, provide inputs to control the value of the state variable.
+  However, other bistable elements, such as \textbf{latches} and \textbf{flip-flops}, provide inputs to control the value of the state variable.
 
   \blfootnote{$Y$ is commonly used for the output of combinational logic, $Q$ is commonly used for the output of sequential logic.}
   \newpage
@@ -542,24 +550,24 @@ binary and those who can't.} \\
     \includegraphics[width=0.25\textwidth]{pictures/srLatch.png}
   \end{wrapfigure}
 
-  \emph{SR latch} is one of the simplest sequential circuit as it is composed of two cross-coupled NOR gates. \\
+  \defnterm{SR latch} is one of the simplest sequential circuit as it is composed of two cross-coupled NOR gates. \\
   The latch has two inputs, $S$ and $R$, and two outputs, $Q$ and $\overline{Q}$. \\
   The SR latch is similar to the cross-coupled inverters, but its state can be controlled through the $S$ and $R$ inputs, which \emph{set} and \emph{reset} the output $Q$. \\
 
   Consider the four possible combinations of $R$ and $S$:
   \begin{itemize}
-    \item[\emph{Case I:}] $R = 1, S = 0$ \\
+    \item[Case I:] $R = 1, S = 0$ \\
     N1 sees at least one TRUE input, $R$, so it produces a FALSE output on $Q$.
     N2 sees both $Q$ and $S$ FALSE, so it produces a TRUE output on $\overline{Q}$.
-    \item[\emph{Case II:}] $R = 0, S = 1$ \\
+    \item[Case II:] $R = 0, S = 1$ \\
     N1 receives inputs of 0 and $\overline{Q}$.
     Because we don't yet know $\overline{Q}$, we can't determine the output $Q$.
     N2 receives at least one TRUE input, $S$, so it produces a FALSE output on $\overline{Q}$.
     Now we can revisit N1, knowing that both inputs are FALSE, so the output $Q$ is TRUE.
-    \item[\emph{Case III:}] $R = 1, S = 1$ \\
+    \item[Case III:] $R = 1, S = 1$ \\
     N1 and N2 both set at least one TRUE input ($R$ or $S$), so each produces a FALSE output.
     Hence $Q$ and $\overline{Q}$ are both FALSE.
-    \item[\emph{Case IV:}] $R = 0, S = 0$ \\
+    \item[Case IV:] $R = 0, S = 0$ \\
     N1 receives inputs of 0 and $\overline{Q}$.
     Because we don't yet know $\overline{Q}$, we can't determine the output.
     N2 receives inputs of 0 and $Q$.
@@ -569,9 +577,9 @@ binary and those who can't.} \\
     But we know that $Q$ must either be 0 or 1.
     So we can solve the problem by checking what happens in each of these sub-cases.
     \begin{itemize}
-      \item[\emph{Sub-case a:}] $Q = 0$ \\
+      \item[Sub-case a:] $Q = 0$ \\
       Because $S$ and $Q$ are FALSE, N2 produces a TRUE output on $\overline{Q}$. Now N1 receives one TRUE input, $\overline{Q}$, so its output, $Q$, is FALSE.
-      \item[\emph{Sub-case b:}] $Q = 1$ \\
+      \item[Sub-case b:] $Q = 1$ \\
       Because $Q$ is TRUE, N2 produces a FALSE output on $\overline{Q}$. Now N1 receives two FALSE inputs, $R$ and $\overline{Q}$, so its output, $Q$, is TRUE.
     \end{itemize}
   \end{itemize}
@@ -606,7 +614,7 @@ binary and those who can't.} \\
     \centering
     \includegraphics[width=0.3\textwidth]{pictures/dFlipFlop.png}
   \end{wrapfigure}
-  A \emph{D flip-flop} can be built from two back-to-back D latches controlled by complementary clocks. \\
+  A \defnterm{D flip-flop} can be built from two back-to-back D latches controlled by complementary clocks. \\
   The first latch, $L1$, is called the \emph{master}. \\
   The second latch, $L2$, is called the \emph{slave}. \\
   The node between them is named $N1$. \\
@@ -625,16 +633,16 @@ binary and those who can't.} \\
   \includegraphics[width=0.55\textwidth]{pictures/dFlipFlopExample.png} \\
   \caption{A D flip-flop example.}
   \end{figure}
-  A \emph{D flip-flop} copies $D$ to $Q$ on the rising edge of the clock, and remembers its state at all other times. \\
+  A D flip-flop copies $D$ to $Q$ on the rising edge of the clock, and remembers its state at all other times. \\
 
-  A D flip-flop is also known as a \emph{master-slave flip-flop}, an \emph{edge-triggered flip-flop}, or a \emph{positive edge-triggered flip-flop}.
+  A D flip-flop is also known as a \defnterm{master-slave flip-flop}, an \defnterm{edge-triggered flip-flop}, or a \defnterm{positive edge-triggered flip-flop}.
 
   \subsubsection{Register}
-  A $N$-bit register is a bank of $N$ flip-flops that share a common $CLK$ input, so that all bits of the register are updated at the same time. \\
+  A \emph{N}-bit register is a bank of \emph{N} flip-flops that share a common \emph{CLK} input, so that all bits of the register are updated at the same time. \\
   Registers are the key building block of most sequential circuits. \\
 
   For a 32-bit architectures, a register would typically have 32 flip-flops in parallel (i.e. one for each bit). \\
-  A \emph{register file} is a way of organizing registers. \\
+  A \defnterm{register file} is a way of organizing registers. \\
   \includePicture{1.0}{pictures/registerFile.png}{A register file.} \label{registerFile} \\
 
   \textbf{Reading from a Register File} \\
@@ -649,7 +657,7 @@ binary and those who can't.} \\
   The data will now be written to Register $\$d^{\text{th}}$.
 
   \section{Finite State Machines}
-  Synchronous sequential circuits can be drawn in the forms called \emph{finite state machines (FSMs)}.
+  Synchronous sequential circuits can be drawn in the forms called \defnterm{finite state machines} (FSMs).
   The name comes from a circuit with $k$ registers can be in one of a finite number ($2^{k}$) of unique states. \\
   A FSM has $M$ inputs, $N$ outputs, and $k$ bits of state.
   It also receives a clock and, optionally, a reset signal. \\
@@ -658,15 +666,15 @@ binary and those who can't.} \\
   Finite state machines provides a systematic way to design synchronous sequential circuits given a functional specification.
 
   Two general classes of finite state machines, characterized by their functional specifications. \\
-  In \emph{Moore machines}, the outputs depend only on the current state of the machine. \\
-  In \emph{Mealy machines}, the outputs depend on both the current state and the current inputs.
+  In \defnterm{Moore machines}, the outputs depend only on the current state of the machine. \\
+  In \defnterm{Mealy machines}, the outputs depend on both the current state and the current inputs.
 
   \begin{wrapfigure}{r}{0.4\textwidth}
     \includegraphics[width=0.4\textwidth]{pictures/stateTransistionDiagram.png}
   \end{wrapfigure}
 
   \subsection{State Transition Diagram}
-  A \emph{state transition diagram} indicates all the possible states of the system and the transitions between these states. \\
+  A \defnterm{state transition diagram} indicates all the possible states of the system and the transitions between these states. \\
   In a state transition diagram, circles represent states and arcs represent transitions betweens states. \\
   The transitions take place on the rising edge of the clock; the clock can hidden on the diagram because it is always present in a synchronous sequential circuit.
   In addition, the clock only controls when the transitions should occur, whereas the diagram indicates which transitions occur. \\
@@ -677,9 +685,9 @@ binary and those who can't.} \\
 
   \subsection{State Transition Table}
   \includePicture{0.8}{pictures/stateTTableStateEncode.png}{Example Transition Table and its Encoding}
-  A \emph{state transition table} indicates for each state and input, what the next state, $S'$, should be.
+  A \defnterm{state transition table} indicates for each state and input, what the next state, $S'$, should be.
   If the next state does not depend on a particular input, the don't care symbol (X) is used. \\
-  To build a real circuit, the states and outputs must be assigned \emph{binary encodings}.
+  To build a real circuit, the states and outputs must be assigned a \defnterm{binary encoding}.
 
   \subsection{State Encoding}
   If the state and output encodings were selected arbitrarily, a different choice would have resulted in a different circuit. \\
@@ -688,10 +696,10 @@ binary and those who can't.} \\
   It is possible to choose a good encoding by inspection, so that related states share bits. \\
 
   An important decision in state encoding is the choice between binary encoding and one-hot encoding. \\
-  With \emph{binary encoding}, each state is represented as a binary number.
+  With \defnterm{binary encoding}, each state is represented as a binary number.
   Because $K$ binary numbers can be represented by $\log_{2}K$ bits, a system with $K$ states only needs $\log_{2}K$ bits of state. \\
 
-  In \emph{one-hot encoding},  a separate bit of state is used for each state.
+  In \defnterm{one-hot encoding},  a separate bit of state is used for each state.
   It is called one-hot because only one bit is ``hot'' or TRUE at any time.
   \begin{ex}
     A one-hot encoded FSM with three states would have state encodings of 001, 010, and 100.
@@ -699,7 +707,7 @@ binary and those who can't.} \\
   Each bit of state is stored in a flip-flop, so one-hot encoding requires more flip-flops than binary encoding.
   However, with one-hot encoding, the next-state and output logic is often simpler, so fewer gates are required. \\
 
-  Another encoding is the \emph{one-cold} encoding, in which $K$ states are represented with $K$ bits, exactly one of which is FALSE.
+  Another encoding is the \defnterm{one-cold} encoding, in which $K$ states are represented with $K$ bits, exactly one of which is FALSE.
 
   \subsection{FSM Review} \label{FSM_Review}
   Finite state machines are a powerful way to systematically design sequential circuits from a written specification. \\
@@ -1055,7 +1063,7 @@ binary and those who can't.} \\
 
   \textbf{ALU Decoder}
   How the main decoder signals the ALU decoder: \\
-  \begin{tabular} {l | l}
+  \begin{tabular} {c | l}
   ALUOp\textsubscript{1:0} & Meaning \\ \hline \hline
   00 & Add \\ \hline
   01 & Subtract \\ \hline
@@ -1064,7 +1072,7 @@ binary and those who can't.} \\
   \end{tabular} \\
 
   The inputs (ALUOp\textsubscript{1:0} and Funct) and the output (ALUControl\textsubscript{2:0}): \\
-  \begin{tabular}{l | l | l}
+  \begin{tabular}{c | l | l}
   ALUOp\textsubscript{1:0} & Funct Field & ALUControl\textsubscript{2:0} \\ \hline \hline
   00 & X & 010 (Add) \\ \hline
   X1 & X & 110 (Subtract) \\ \hline
@@ -2837,4 +2845,7 @@ and (MEM/WB.RegisterRd = ID/EX.RegisterRt))   ForwardB = 01
   \begin{enumerate}
     \item Include Two's Complement
   \end{enumerate}
+
+  \clearpage
+  \printindex
 \end{document}
