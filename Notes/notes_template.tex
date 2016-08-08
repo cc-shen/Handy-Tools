@@ -7,11 +7,14 @@
 \usepackage[utf8]{inputenc}
 \usepackage{DejaVuSans}
 \usepackage{ae, aecompl, color}
+\usepackage{wrapfig}
+\usepackage{multicol, multicol, array}
+\usepackage{imakeidx}
+\makeindex[columns=2, title=Indices, intoc]
+
 %% REMEMBER TO FILL THIS TO BE COURSE SPECIFIC
 \usepackage[pdftex, pdfauthor={Charles Shen}, pdftitle={Placeholder Course: Course-Name}, pdfsubject={Lecture notes from Placeholder Course: at the University of Waterloo}, pdfkeywords={course notes, notes, Waterloo, University of Waterloo}, pdfproducer={LaTeX}, pdfcreator={pdflatex}]{hyperref}
 \usepackage{cleveref}
-\usepackage{wrapfig}
-\usepackage{multicol, multicol, array}
 
 \DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
 \renewcommand*\familydefault{\sfdefault}
@@ -40,12 +43,8 @@
   }
 }
 
-\newcommand{\includePicture}[3]{
-  \begin{figure}[!ht]
-  \centering
-  \scalebox{#1}{\includegraphics{#2}}
-  \caption{#3}
-  \end{figure}
+\newcommand{\defnterm}[1]{
+  \textbf{\textcolor{teal}{\index{#1}}}
 }
 
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
@@ -74,11 +73,15 @@
 \href{mailto:ccshen902@gmail.com}{ccshen902@gmail.com}.}
 
 \maketitle
+\thispagestyle{empty}
 \newpage
 \tableofcontents
 \newpage
 \pagenumbering{arabic}
 
+
+\clearpage
+\printindex
 \end{document}
 
 %%%%%%%%%%%%%%%%%%%%%
