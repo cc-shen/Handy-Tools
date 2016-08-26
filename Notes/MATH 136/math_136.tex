@@ -1,0 +1,164 @@
+\documentclass[12pt]{article}
+\usepackage[margin = 1.5in]{geometry}
+\setlength{\parindent}{0in}
+\usepackage{amsfonts, amssymb, amsthm, mathtools, tikz, qtree, float}
+\usepackage{algpseudocode, algorithm, algorithmicx}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{DejaVuSans}
+\usepackage{ae, aecompl, color}
+\usepackage{wrapfig}
+\usepackage{multicol, multicol, array}
+\usepackage{imakeidx}
+\makeindex[columns=2, title=Indices, intoc]
+
+\usepackage[pdftex, pdfauthor={Charles Shen}, pdftitle={MATH 136: Linear Algebra I}, pdfsubject={Theorems and more from MATH 136: at the University of Waterloo}, pdfkeywords={course notes, notes, Waterloo, University of Waterloo}, pdfproducer={LaTeX}, pdfcreator={pdflatex}]{hyperref}
+\usepackage{cleveref}
+
+\DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
+\renewcommand*\familydefault{\sfdefault}
+\definecolor{darkish-blue}{RGB}{25,103,185}
+
+\hypersetup{
+  colorlinks,
+  citecolor=darkish-blue,
+  filecolor=darkish-blue,
+  linkcolor=darkish-blue,
+  urlcolor=darkish-blue
+}
+
+\theoremstyle{definition}
+\newtheorem*{defn}{Definition}
+\newtheorem*{theorem}{Theorem}
+\newtheorem*{corollary}{Corollary}
+\newtheorem{ex}{Example}[section]
+
+\crefname{ex}{Example}{Example}
+
+\setlength{\marginparwidth}{1.5in}
+\newcommand{\lecture}[1]{
+  \marginpar{{
+    \footnotesize $\leftarrow$ \underline{#1}}
+  }
+}
+
+\newcommand{\defnterm}[1]{
+  \textbf{\textcolor{teal}{\index{#1}}}
+}
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\allowdisplaybreaks
+
+\makeatletter
+\def\blfootnote{\gdef\@thefnmark{}\@footnotetext}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%
+%% D O C U M E N T %%
+%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\let\ref\Cref
+\pagenumbering{roman}
+
+\title{\bf{MATH 136: Linear Algebra I}}
+\date{Winter 2015, University of Waterloo \\ \center Quick reference sheet.}
+\author{Charles Shen}
+
+\blfootnote{Feel free to email feedback to me at
+\href{mailto:ccshen902@gmail.com}{ccshen902@gmail.com}.}
+
+\maketitle
+\thispagestyle{empty}
+\newpage
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
+
+\section{Matrices}
+\begin{defn}
+  An \textbf{\textcolor{teal}{augmented matrix}} has the form $\left[A ~|~ \vec{b}~\right]$
+\end{defn}
+
+\begin{defn}
+  A \textbf{\textcolor{teal}{homogeneous matrix}} has the form $\left[A ~|~ \vec{0}~\right]$ \\
+  A homogeneous system is always consistent, $\vec{x} = \vec{0}$ is always a solution.
+\end{defn}
+
+\subsection{Elementary Row Operations}
+\begin{enumerate}
+  \item Add a multiple of one row to another: $R_{i} + cR_{j}$
+  \item Multiple a row by a non-zero constant: $cR_{i}$
+  \item Exchange two rows: $R_{i} \leftrightarrow R_{j}$
+\end{enumerate}
+
+\subsection{Reduced Row Echelon Form}
+\begin{defn}
+  A matrix $R$ is said to be in \textbf{\textcolor{teal}{Reduced Row Echelon Form}} (RREF) if:
+  \begin{enumerate}
+   \item All rows containing a non-zero entry are above rows which only contains zeros
+   \item The first non-zero entry in each non-zero row is $1$, called a \textbf{\textcolor{teal}{leading one}} (or a pivot)
+   \item The leading one in each non-zero row is to the right of the leading one in any row above it
+   \item A leading one is the only non-zero entry in its column
+  \end{enumerate}
+\end{defn}
+
+\begin{defn}
+  The \textbf{\textcolor{teal}{rank}} of a matrix $A$ is the number of leading ones in the RREF of the matrix.
+\end{defn}
+
+\subsection{System Rank Theorem}
+\begin{theorem}
+  Let $A$ be the coefficient matrix of a system of $m$ linear equations in $n$ unknowns $\left[A ~|~ \vec{b}~\right]$
+  \begin{enumerate}
+    \item If the rank of $A$ is less than the rank of the augmented matrix $\left[A ~|~ \vec{b}~\right]$, then the system is inconsistent
+    \item If the system $\left[A ~|~ \vec{b}~\right]$ is consistent, then the system contains $(n - rank(A))$ free variables
+    \item $rank(A) = m$ iff the system $\left[A ~|~ \vec{b}~\right]$ is consistent for every $\vec{b} \in \mathbb{R}^{m}$
+  \end{enumerate}
+\end{theorem}
+
+\section{Inverses}
+\subsection{Inverse of a 2-by-2 Matrix}
+\begin{align*}
+  \text{Suppose } A &=
+  \begin{bmatrix}
+    a & b \\
+    c & d
+  \end{bmatrix} \\
+  \text{Then } A^{-1} &= \frac{1}{ad - bc}
+  \begin{bmatrix}
+    d & -b \\
+    -c & a
+  \end{bmatrix}
+\end{align*}
+
+\subsection{Invertible Matrix Theorem}
+\begin{theorem}
+  For any $n \times n$ matrix $A$, the following are equivalent:
+  \begin{enumerate}
+    \item $A$ is invertible
+    \item $rank(A) = n$
+    \item RREF of $A = I$
+    \item $A\vec{x} = \vec{b}$ is consistent for all $\vec{b} \in \mathbb{R}^{n}$
+    \item The columns of $A$ terms are a linearly independent set
+    \item The columns of $A$ spans $\mathbb{R}^{n}$
+    \item The columns of $A$ forms a basis for $\mathbb{R}^{n}$
+    \item The rows of $A$ forms a basis for $\mathbb{R}^{n}$
+    \item $Col(A) = \mathbb{R}^{n}$
+    \item $Null(A) = \{\vec{0}\}$
+    \item $A^{\intercal}$ is invertible
+    \item $Row(A) = \mathbb{R}^{n}$
+    \item $Null(A^{\intercal}) = \{\vec{0}\}$
+  \end{enumerate}
+\end{theorem}
+
+\clearpage
+\printindex
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%
+%% D O C U M E N T %%
+%%%%%%%%%%%%%%%%%%%%%
