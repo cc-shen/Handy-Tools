@@ -43,7 +43,7 @@
 }
 
 \newcommand{\defnterm}[1]{
-  \textbf{\textcolor{teal}{\index{#1}}}
+  \textbf{\textcolor{teal}{#1}}\index{#1}
 }
 
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
@@ -77,6 +77,19 @@
 \tableofcontents
 \newpage
 \pagenumbering{arabic}
+
+\section{The Basics}
+\subsection{The Degree of a Vertex}
+\begin{theorem}
+  The number of vertices in a graph is always even.
+\end{theorem}
+
+The number $\delta(G) = min \{d(v) | v \in V\}$ is the \defnterm{minimum degree} of $G$
+
+\begin{theorem}
+  Every graph $G$ with at least one edge has a subgraph $H$ with $\delta(H) > \epsilon(H) \geq \epsilon(G)$.
+\end{theorem}
+
 
 \clearpage
 \printindex
