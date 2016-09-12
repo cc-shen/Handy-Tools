@@ -27,12 +27,15 @@
   urlcolor=darkish-blue
 }
 
-\theoremstyle{definition}
-\newtheorem{defn}{Definition}[subsection]
+\theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[subsection]
-\newtheorem{proposition}{Proposition}[subsection]
-\newtheorem{corollary}{Corollary}[subsection]
-\newtheorem{ex}{Example}[subsection]
+
+\theoremstyle{definition}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{ex}[theorem]{Example}
+\newtheorem{defn}{Definition}
 
 \crefname{ex}{Example}{Example}
 
@@ -43,9 +46,7 @@
   }
 }
 
-\newcommand{\defnterm}[1]{
-  \textbf{\textcolor{teal}{#1}}\index{#1}
-}
+\newcommand{\defnterm}[1]{\textbf{\textcolor{teal}{#1}}\index{#1}}
 
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
@@ -79,25 +80,170 @@
 \newpage
 \pagenumbering{arabic}
 
+%%%%%%%%%%%%%%%
+%% B A S I C %%
+%%%%%%%%%%%%%%%
+
 \section{The Basics}
 \subsection{The Degree of a Vertex}
-\begin{theorem}
+\begin{proposition}
   The number of vertices in a graph is always even.
-\end{theorem}
+\end{proposition}
 
 The number $\delta(G) = min \{d(v) | v \in V\}$ is the \defnterm{minimum degree} of $G$. \\
 The number $\Delta(G) = max \{d(V) | v \in V\}$ is the \defnterm{maximum degree} of $G$. \\
+The number
+$$d(G) = \frac{1}{|V|}\sum_{v \in V}d(v)$$
+is the \defnterm{average degree} of $G$. \\
 The \defnterm{average degree ratio} of $G$ is expressed as $\epsilon(G) = |E|/|V|$.
 
-\begin{theorem}
+\begin{proposition}
   Every graph $G$ with at least one edge has a subgraph $H$ with $\delta(H) > \epsilon(H) \geq \epsilon(G)$.
-\end{theorem}
+\end{proposition}
 
 \subsection{Paths and Cycles}
-\begin{theorem}
+The \emph{minimum} length of a cycle (contained) in a graph $G$ is the \defnterm{girth} $g(G)$ of $G$;
+the \emph{maximum} length of a cycle in $G$ is its \defnterm{circumference}.
+
+\begin{proposition}
   Every graph $G$ contains a path of length $\delta(G)$ and a cycle of at least $\delta(G) + 1$ (provided that $\delta(G) \geq 2$).
+\end{proposition}
+
+The greatest distance between any two vertices in $G$ is the \defnterm{diameter} of $G$, denoted by diam$G$.
+
+\begin{proposition}
+  Every graph $G$ containing a cycle satisfies $g(G) \leq 2\text{diam}G + 1$.
+\end{proposition}
+
+A vertex is \defnterm{central} in $G$ if its greatest distance from any other vertex is as small as possible.
+This distance is the \defnterm{radius} of $G$, denoted by rad$G$.
+
+\begin{proposition}
+  A graph $G$ is radius at most $K$ and maximum degree at most $d \geq 3$ has fewer than $\frac{d}{d-2}(d - 1)^{k}$ vertices.
+\end{proposition}
+
+\begin{theorem}
+  Let $G$ be a graph. If $d(G) \geq d \geq 2$ and $g(G) \geq g \in \mathbb{N}$ then $|G| \geq n_{0}(d, g)$.
 \end{theorem}
 
+\begin{corollary}
+  If $\delta(G) \geq 3$ then $g(G) < 2\log |G|$.
+\end{corollary}
+
+\subsection{Connectivity}
+\begin{proposition}
+  The vertices of a connected graph $G$ can always be enumerated, say $v_{1}, \dots, v_{n}$, so that $G_{i} = G[v_{1}, \dots, v_{i}]$ is connected for every $i$.
+\end{proposition}
+
+$G$ is called \defnterm{k-connected} (for $k \in \mathbb{N}$) if $|G| > k$ and $G - X$ is connected for every set $X \subseteq V$ with $|X| < k$.
+That is, no two vertices of $G$ are separated by fewer than $k$ other vertices. \\
+The greatest integer $k$ such that $G$ is k-connected is the \defnterm{connectivity} $\kappa(G)$ of G. \\
+$\kappa(G) = 0 \iff G$ is disconnected or a $K^{1}$, and $\kappa(K^{n}) = n - 1 \quad \forall n \geq 1$. \\
+
+If $|G| > 1$ and $G - F$ is connected for every set $F \subseteq E$ of fewer than $\ell$ edges, then $G$ is called \defnterm{$\ell$-edge-connected}. \\
+The greatest integer $\ell$ such that $G$ is $\ell$-edge connected is the \defnterm{edge-connectivity} $\lambda(G)$ of $G$. \\
+$\lambda(G) = 0$ if $G$ is disconnected.
+
+\begin{proposition}
+  If $G$ is non-trivial then $\kappa(G) \leq \lambda(G) \leq \delta(G)$.
+\end{proposition}
+
+By Proposition 1.4.2, high connectivity requires a large minimum degree. \\
+Conversely, large minimum degree does not ensure high connectivity, not even high edge-connectivity. \\
+A large minimum degree does imply the existence of a highly connected subgraph.
+
+\begin{theorem}
+  Let $0 \neq k \in \mathbb{N}$. Every graph $G$ with $d(G) \geq 4k$ has a $(k+1)$-connected subgraph $H$ such that $\epsilon(H) > \epsilon(G) - k$.
+\end{theorem}
+
+\subsection{Trees and Forests}
+\begin{theorem}
+  The following assertions are equivalent for a graph $T$:
+  \begin{enumerate}
+    \item[(i)] $T$ is a tree
+    \item[(ii)] Any two vertices of $T$ are linked by a unique path in $T$
+    \item[(iii)] $T$ is minimally, i.e. $T$ is connected but $T - e$ is disconnected for every edge $e \in T$
+    \item[(iv)] $T$ is maximally acyclic, i.e. $T$ contains no cycle but $T + xy$ does for any two non-adjacent vertices $x, y \in T$
+  \end{enumerate}
+\end{theorem}
+
+\begin{corollary}
+  The vertices of a tree can be enumerated, say as $v_{1}, \dots, v_{n}$, so that every $v_{i}$ with $i \geq 2$ has a unique neighbour in $\{v_{1}, \dots, v_{i - 1}\}$.
+\end{corollary}
+
+\begin{corollary}
+  A connected graph with $n$ vertices is a tree $\iff$ it has $n - 1$ edges.
+\end{corollary}
+
+\begin{corollary}
+  If $T$ is a tree and $G$ is any graph with $\delta(G) \geq |T| - 1$, then $T \subseteq G$, i.e. G has a subgraph isomorphic to $T$.
+\end{corollary}
+
+\begin{lemma}
+  Let $T$ be a normal tree in $G$.
+  \begin{enumerate}
+    \item[(i)] Any two vertices $x, y \in T$ are separated in $G$ by the set $\lceil x\rceil \cap \lceil y \rceil$.
+    \item[(ii)] If $S \subseteq V(T) = V(G)$ and $S$ is down-closed, then the components of $G - S$ are spanned by the sets $\lfloor x \rfloor$ with $x$ minimal in $T - S$.
+  \end{enumerate}
+\end{lemma}
+
+\begin{proposition}
+  Every connected graph contains a normal spanning tree, with any specified vertex as its root.
+\end{proposition}
+
+\subsection{Bipartite Graphs}
+\begin{proposition}
+  A graph is bipartite $\iff$ it contains no odd cycle.
+\end{proposition}
+
+\subsection{Contraction and Minors}
+\begin{proposition}
+  The minor relation $\preceq$ and the topological-minor relation are partial orderings on the class of finite graphs, i.e. they are reflexive, antisymmetric and transitive.
+\end{proposition}
+
+\begin{proposition}
+  A finite graph $G$ is an $IX \iff X$ can be obtained from $G$ by a sequence of edge contractions, i.e. $\iff$ there are graphs $G_{0}, \dots, G_{n}$ and edges $e_{i} \in G_{i}$ such that $G_{0} = G$, $G_{n} \simeq X$, and $G_{i+1} = G_{i}/e_{i} \quad \forall i < n$.
+\end{proposition}
+
+\begin{corollary}
+  Let $X$ and $Y$ be finite graphs, $X$ is a minor of $Y \iff$ there are graphs $G_{0}, \dots, G_{n}$ such that $G_{0} = Y$ and $G_{n} = X$ and each $G_{i+1}$ arises from $G_{i}$ by deleting an edge, contracting an edge, or deleting a vertex.
+\end{corollary}
+
+\begin{proposition}
+  \leavevmode
+  \begin{enumerate}
+    \item[(i)] Every $TX$ is also an $IX$;
+    thus, every topological minor of a graph is also its (ordinary) minor
+    \item[(ii)] If $\Delta(X) \leq 3$, then every $IX$ contains a $TX$;
+    thus, every minor with maximum degree at most 3 of a graph is also its topological minor.
+  \end{enumerate}
+\end{proposition}
+
+\subsection{Euler Tours}
+A closed walk in a graph is an \defnterm{Euler tour} if it traverses every edge of the graph exactly once. \\
+A graph is \defnterm{Eulerian} if it admits an Euler tour.
+
+\begin{theorem}
+  A connected graph is Eulerian $\iff$ every vertex has even degrees.
+\end{theorem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% C O N N E C T I V I T Y %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Connectivity}
+\subsection{2-Connected Graphs and Subgraphs}
+\begin{proposition}
+  A graph is 2-connected $\iff$ it can be constructed from a cycle by successively adding $H$-paths to graphs $H$ already constructed.
+\end{proposition}
+
+\begin{lemma}
+  Let $G$ be any graph.
+  \begin{enumerate}
+    \item[(i)] The cycles of $G$ are precisely the cycles of its blocks
+    \item[(ii)] The bonds of $G$ are precisely the minimal cuts of its blocks.
+  \end{enumerate}
+\end{lemma}
 
 \clearpage
 \printindex
