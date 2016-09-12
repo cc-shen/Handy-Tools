@@ -28,10 +28,11 @@
 }
 
 \theoremstyle{definition}
-\newtheorem*{defn}{Definition}
-\newtheorem*{theorem}{Theorem}
-\newtheorem*{corollary}{Corollary}
-\newtheorem{ex}{Example}[section]
+\newtheorem{defn}{Definition}[subsection]
+\newtheorem{theorem}{Theorem}[subsection]
+\newtheorem{proposition}{Proposition}[subsection]
+\newtheorem{corollary}{Corollary}[subsection]
+\newtheorem{ex}{Example}[subsection]
 
 \crefname{ex}{Example}{Example}
 
@@ -84,10 +85,17 @@
   The number of vertices in a graph is always even.
 \end{theorem}
 
-The number $\delta(G) = min \{d(v) | v \in V\}$ is the \defnterm{minimum degree} of $G$
+The number $\delta(G) = min \{d(v) | v \in V\}$ is the \defnterm{minimum degree} of $G$. \\
+The number $\Delta(G) = max \{d(V) | v \in V\}$ is the \defnterm{maximum degree} of $G$. \\
+The \defnterm{average degree ratio} of $G$ is expressed as $\epsilon(G) = |E|/|V|$.
 
 \begin{theorem}
   Every graph $G$ with at least one edge has a subgraph $H$ with $\delta(H) > \epsilon(H) \geq \epsilon(G)$.
+\end{theorem}
+
+\subsection{Paths and Cycles}
+\begin{theorem}
+  Every graph $G$ contains a path of length $\delta(G)$ and a cycle of at least $\delta(G) + 1$ (provided that $\delta(G) \geq 2$).
 \end{theorem}
 
 
