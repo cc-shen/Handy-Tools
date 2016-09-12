@@ -1,0 +1,88 @@
+\documentclass[12pt]{article}
+\usepackage[margin = 1.5in]{geometry}
+\setlength{\parindent}{0in}
+\usepackage{amsfonts, amssymb, amsthm, mathtools, tikz, qtree, float}
+\usepackage{algpseudocode, algorithm, algorithmicx}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{DejaVuSans}
+\usepackage{ae, aecompl, color}
+\usepackage{wrapfig}
+\usepackage{multicol, multicol, array}
+\usepackage{imakeidx}
+\makeindex[columns=2, title=Indices, intoc]
+
+\usepackage[pdftex, pdfauthor={Charles Shen}, pdftitle={SCI 206: The Physics of How Things Work}, pdfsubject={Lecture Notes from SCI 206: at the University of Waterloo}, pdfkeywords={course notes, notes, Waterloo, University of Waterloo}, pdfproducer={LaTeX}, pdfcreator={pdflatex}]{hyperref}
+\usepackage{cleveref}
+
+\DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
+\renewcommand*\familydefault{\sfdefault}
+\definecolor{darkish-blue}{RGB}{25,103,185}
+
+\hypersetup{
+  colorlinks,
+  citecolor=darkish-blue,
+  filecolor=darkish-blue,
+  linkcolor=darkish-blue,
+  urlcolor=darkish-blue
+}
+
+\theoremstyle{definition}
+\newtheorem*{defn}{Definition}
+\newtheorem*{theorem}{Theorem}
+\newtheorem*{corollary}{Corollary}
+\newtheorem{ex}{Example}[section]
+
+\crefname{ex}{Example}{Example}
+
+\setlength{\marginparwidth}{1.5in}
+\newcommand{\lecture}[1]{
+  \marginpar{{
+    \footnotesize $\leftarrow$ \underline{#1}}
+  }
+}
+
+\newcommand{\defnterm}[1]{
+  \textbf{\textcolor{teal}{#1}}\index{#1}
+}
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\allowdisplaybreaks
+
+\makeatletter
+\def\blfootnote{\gdef\@thefnmark{}\@footnotetext}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%
+%% D O C U M E N T %%
+%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\let\ref\Cref
+\pagenumbering{roman}
+
+\title{\bf{SCI 206: The Physics of How Things Work}}
+\date{Fall 2016, University of Waterloo \\ \center Notes written from Stefan Idziak's lectures.}
+\author{Charles Shen}
+
+\blfootnote{Feel free to email feedback to me at
+\href{mailto:ccshen902@gmail.com}{ccshen902@gmail.com}.}
+
+\maketitle
+\thispagestyle{empty}
+\newpage
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
+
+
+\clearpage
+\printindex
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%
+%% D O C U M E N T %%
+%%%%%%%%%%%%%%%%%%%%%
