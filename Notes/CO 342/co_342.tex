@@ -109,6 +109,9 @@ the \emph{maximum} length of a cycle in $G$ is its \defnterm{circumference}.
   Every graph $G$ contains a path of length $\delta(G)$ and a cycle of at least $\delta(G) + 1$ (provided that $\delta(G) \geq 2$).
 \end{proposition}
 
+The \defnterm{distance} $d_G(x, y)$ in $G$ of two vertices $x, y$ is the length of a shortest $x$-$y$ path in $G$;
+if no such path exists, we exist $d(x, y) = \infty$. \\
+
 The greatest distance between any two vertices in $G$ is the \defnterm{diameter} of $G$, denoted by diam$G$.
 
 \begin{proposition}
@@ -233,6 +236,20 @@ A graph is \defnterm{Eulerian} if it admits an Euler tour.
 
 \section{Connectivity}
 \subsection{2-Connected Graphs and Subgraphs}
+
+A relation, $\approx$ say, on a set $E$ is \defnterm{equivalence relation} if
+\begin{itemize}
+  \item $x \approx x$ for all $x$ in $E$ [reflexive]
+  \item whenever $x, y \in E$ and $x \approx y$ we also have $y \approx x$ [symmetric]
+  \item If $x \approx y$ and $y \approx z$ then $x \approx z$ [transitive]
+\end{itemize}
+
+If $E$ is the vertex set of a graph and $\approx$ means ``is joined by a path to'', then $\approx$ is an equivalence relation on $E$.
+
+\begin{lemma}
+  If $G$ is a graph then ``is equal to or lies in a circuit with'' is an equivalence relation on $E(G)$.
+\end{lemma}
+
 \begin{proposition}
   A graph is 2-connected $\iff$ it can be constructed from a cycle by successively adding $H$-paths to graphs $H$ already constructed.
 \end{proposition}
@@ -243,6 +260,30 @@ A graph is \defnterm{Eulerian} if it admits an Euler tour.
     \item[(i)] The cycles of $G$ are precisely the cycles of its blocks
     \item[(ii)] The bonds of $G$ are precisely the minimal cuts of its blocks.
   \end{enumerate}
+\end{lemma}
+
+\begin{theorem}
+  For a connected graph $G$ with at least three vertices, the following properties are equivalent:
+  \begin{itemize}
+    \item $G$ is 2-connected
+    \item any two edges of $G$ lie on a circuit (cycle)
+    \item any two vertices of $G$ lie on a circuit
+  \end{itemize}
+\end{theorem}
+
+\subsection{Blocks}
+A connected subgraph $H$ of $G$ is a \defnterm{block} of $G$ if it has no cut-vertex, but any subgraph of $G$ that contains $H$ properly is either not connected or has a cut-vertex.
+
+\begin{lemma}
+  Let $G$ be a graph. The equivalence classes of edges of $G$ under $\approx$ are precisely the edge sets of the blocks of $G$.
+\end{lemma}
+
+\begin{lemma}
+  Any cut vertex of a graph lies in at least two blocks.
+\end{lemma}
+
+\begin{lemma}
+  The block-cut vertex graph of a graph is a forest.
 \end{lemma}
 
 \clearpage
