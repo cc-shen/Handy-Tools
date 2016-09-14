@@ -28,10 +28,7 @@
 }
 
 \theoremstyle{definition}
-\newtheorem*{defn}{Definition}
-\newtheorem*{theorem}{Theorem}
-\newtheorem*{corollary}{Corollary}
-\newtheorem{ex}{Example}[section]
+\newtheorem{ex}{Example}[subsection]
 
 \crefname{ex}{Example}{Example}
 
@@ -42,9 +39,7 @@
   }
 }
 
-\newcommand{\defnterm}[1]{
-  \textbf{\textcolor{teal}{#1}}\index{#1}
-}
+\newcommand{\defnterm}[1]{\textbf{\textcolor{teal}{#1}}\index{#1}}
 
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
@@ -78,6 +73,114 @@
 \newpage
 \pagenumbering{arabic}
 
+\section{Motion}
+\lecture{Sept. 12, 2016}
+\subsection{Inertia}
+\defnterm{Inertia} states that a body in motion tends to remain in motion; a body at rest tends to remain at rest. \\
+
+At any particular moment, you're located at a \defnterm{position}---that is, it is a specific point in space. \\
+Whenever a position is reported, it is always as a \defnterm{distance} and \defnterm{direction} from some reference point. \\
+
+Position is an example of a vector quantity. \\
+A \defnterm{vector quantity} consists of both a magnitude and a direction; the \defnterm{magnitude} tells you how much of the quantity there is, while the \defnterm{direction} tells you which way the quantity is moving. \\
+
+\defnterm{Velocity} measures the rate at which your position is changing with time. \\
+Its magnitude is your \defnterm{speed}, the distance you travel in a certain amount of time,
+$$\text{speed} = \frac{\text{distance}}{\text{time}}$$
+and its direction is the direction in which you're heading. \\
+A velocity of zero is special, because it has no direction. \\
+
+When your velocity is constant and doesn't changes, you \defnterm{coast}.
+
+\subsection{Newton's Law}
+\defnterm{Newton's First Law of Motion}: an object that is not subject to any outside forces moves at a constant velocity, covering equal distances in equal times along a straight-line path. \\
+
+The outside influences referred in the first law are called \defnterm{forces}, a technical term for pushes and pulls. \\
+An object that moves in accordance with Newton's first law is said to be inertial. \\
+
+\defnterm{Mass} is the measure of your inertia, your resistance to changes in velocity.
+Almost everything in the universe has mass. \\
+Mass has no direction, so it's not a vector quantity. \\
+It is a \defnterm{scalar quantity}---that is, a quantity that only has an amount. \\
+
+When something pushes on you, your velocity changes; in other words, you accelerate. \\
+\defnterm{Acceleration}, a vector quantity, measures the rate at which your velocity is changing with time. \\
+Any changes in velocity is acceleration. \\
+
+You accelerate in response to the \defnterm{net force} you experience---the sum of all the individual forces being exerted on you.
+\begin{align*}
+\text{acceleration} &= \frac{\text{net force}}{\text{mass}} \\
+\text{net force} &= \text{mass} \cdot \text{acceleration} \\
+F_{net} &= m \cdot a
+\end{align*}
+This relationship is known as \defnterm{Newton's Second Law of Motion};
+the net force exerted on an object is equal to the object's mass times its acceleration.
+The acceleration is in the same direction as the net force. \\
+
+\defnterm{Newton's Third Law of Motion}: for every force that one object exerts on a second object, there is an equal but oppositely directed force that the second object exerts on the first object. \\
+
+Forces that are directed exactly away from surfaces are called \defnterm{normal forces}, since the term \defnterm{normal} is used by mathematicians to describe something that points exactly away from a surface---at a right angle or perpendicular to that surface.
+
+\subsection{Weight and Gravity}
+\defnterm{Gravity} is the physical phenomenon that produces attractive forces between every pair of objects in the universe. \\
+
+Earth exerts a downward force on any object near its surface.
+That object is attracted directly toward the center of Earth with a force we call the object's \defnterm{weight}.
+This weight is exactly proportional to the object's mass. \\
+Weight is how hard gravity pulls on an object, and mass is how difficult an object is to accelerate.
+
+We have
+$$\text{weight} = \text{mass} \cdot \text{acceleration due to gravity}$$
+In other words: you can lose weight by either reducing your mass or by going someplace, like a small planet, where gravity is weaker.
+
+The Earth's acceleration due to gravity is $9.8N/kg$ or $9.8m/s^{2}$.
+
+\subsection{The Velocity of a Falling Ball}
+The current (present) velocity can be calculated as
+\begin{align*}
+  \text{present velocity} &= \text{initial velocity} + \text{acceleration} \cdot \text{time} \\
+  v_{f} &= v_{i} + a \cdot t
+\end{align*}
+
+\subsection{The Position of a Falling Ball}
+The average velocity is exactly halfway in between the two individual velocities:
+$$\text{average velocity} = \text{initial velocity} + \frac{1}{2}\cdot\text{acceleration}\cdot\text{time}$$
+
+The present position can be calculated as the following:
+\begin{align*}
+  \text{present position} &= \text{initial position} + \text{initial velocity}\cdot\text{time} +
+  \frac{1}{2}\cdot\text{acceleration}\cdot\text{time}^{2} \\
+  x_f &= x_i + v_i \cdot t + \frac{1}{2} \cdot a \cdot t^2
+\end{align*}
+
+\subsection{Tossing the Ball Upward}
+The larger the initial velocity of the ball, the longer it rises and the higher it goes before its velocity is reduced to zero. \\
+It then descends for the same amount of time it spent rising. \\
+The higher the ball goes before it begins to descent, the longer it takes to return to the ground and the faster it's traveling when it arrives.
+
+\subsection{Energy}
+The capacity to make things happen is called \defnterm{energy}, and the process of making them happen is called \defnterm{work}. \\
+Energy and work are both physical quantities, meaning that both are measurable. \\
+
+Physical \defnterm{energy} is defined as the capacity to do work. \\
+Physical \defnterm{work} refers to the process of transferring energy. \\
+
+Energy is what's transferred, and work does the transferring.
+The most important characteristic of energy is that it's conserved.
+In physics, a \defnterm{conserved quantity} is one that can't be created or destroyed but that can be transferred between objects or, in the case of energy, be converted from one form to another. \\
+
+When you throw a ball, it picks up speed and undergoes an increase in \defnterm{kinetic energy}, energy of motion that allows the ball to do work on whatever it hits. \\
+When you list a rock, it shifts farther from Earth and undergoes an increase in \defnterm{gravitational potential energy}, energy stored in the gravitational forces between the rock and Earth that allows the rock to do work on whatever it falls on. \\
+\defnterm{Potential energy} is energy stored in the forces between or within objects.
+
+\subsection{Doing Work}
+To do work on an object, you must push on it while it moves in the direction of your push. \\
+This relationship can be expressed as the following:
+\begin{align*}
+  \text{work} &= \text{force} \cdot \text{distance} \\
+  W &= F \cdot d
+\end{align*}
+\emph{If you're not pushing or it's not moving, then you're not working.}
 
 \clearpage
 \printindex
