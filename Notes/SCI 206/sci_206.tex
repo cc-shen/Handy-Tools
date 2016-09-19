@@ -196,10 +196,14 @@ The~higher~it~was,&~the~harder~it~hits.
 
 A ramp provides \defnterm{mechanical advantage}, the process whereby a mechanical device redistributes the amount of force and distance that go into performing a specific amount of mechanical work.
 
-\subsection{Seesaw}
+\subsection{The Seesaw}
 Overall movement of an object from one place to another is called the \defnterm{translational motion}. \\
 A seesaw does not experience translational motion, it does turn around the pivot in the center, and thus it experiences a different kind of motion. \\
 Motion around a fixed amount (which prevents translation) is called \defnterm{rotational motion}. \\
+
+The concepts and laws of rotational motion have many analogies in the concepts and laws of translational motion.
+
+\subsection{The Motion of a Dangling Seesaw}
 
 \defnterm{Rotational inertia} states that a body that's rotating tends to remain rotating; a body thats not rotating tends to remain not rotating. \\
 At any particular moment, the seesaw is oriented in a certain way---that is, it has an \defnterm{angular position}.
@@ -207,13 +211,16 @@ It describes the seesaw's orientation relative to some reference orientation. \\
 
 \defnterm{Angular velocity} measures the rate at which the seesaw's angular position is changing with time. \\
 Its magnitude is the \defnterm{angular speed}, the angle through which the seesaw turns in a certain amount of time,
-$$\text{angular speed} = \frac{\text{change in angle}}{\text{time}}$$ \\
+$$\text{angular speed} = \frac{\text{change in angle}}{\text{time}}$$
+and its direction is the axis about which that rotation proceeds. \\
+The seesaw's \defnterm{axis of rotation} is the line in space about which the seesaw is rotating.
 
 \defnterm{Torques} is a technical term for twists and spins; its SI unit is \emph{newton-meter} ($N \cdot m$). \\
 
-\textbf{Newton's First Law of Rotational Motion} \\
+\defnterm{Newton's First Law of Rotational Motion} \\
 A rigid object that is not wobbling and is not subject to any outside torques rotates at a constant angular velocity, turning equal amounts in equal times about a fixed axis of rotation. \\
 
+\subsection{The Seesaw's Center of Mass}
 There is a special point in or near a free object about which all of its mass is evenly distributed and about which it naturally spins---its \defnterm{center of mass}. \\
 The axis of rotation passes right through this point so that, as the free object rotates, the center of mass doesn't move unless the object has an overall translational velocity. \\
 
@@ -221,10 +228,86 @@ The point around which all the physical quantities of rotation are defined is th
 For a free object, the natural pivot point is its center of mass. \\
 For a constrained object, the best pivot point may be determined by the constraints. \\
 
+\subsection{How the Seesaw Responds to Torques}
 The \defnterm{rotational mass} is the measure of an object's \emph{rotational} inertia, its resistance to changes in its \emph{angular} velocity;
 also known as \textbf{\textcolor{teal}{moment of inertia}}\index{moment of inertia|see {rotational mass}}. \\
 An object's rotational mass depends both on its ordinary mass and how that mass is distributed within the object. \\
-The SI unit for rotational mass is \emph{kilogram-meter\textsuperscript{2}} ($kg \cdot m^2$).
+The SI unit for rotational mass is \emph{kilogram-meter\textsuperscript{2}} ($kg \cdot m^2$). \\
+
+An object's rotational mass depends on how far its mass is from the axis of rotation, so its rotational mass may change when its axis of rotation changes, even if it's rotating about its center of mass. \\
+Less torque is required to spin a tennis racket about its handle (racket's mass is fairly close to the axis and the rotational mass is small) than to flip the racket head-over-handle (both the head and the handle are far away fro m the axis and the rotational mass is large). \\
+
+When something exerts a torque on an object, its angular velocity changes; i.e. it undergoes angular acceleration. \\
+The \defnterm{Angular acceleration} measures the rate at which the \emph{angular} velocity is changing with time;
+The SI unit is \emph{radian per second\textsuperscript{2}} ($1/s^{2}$). \\
+It's analogous to acceleration, which measures the rate at which an object's \emph{translational} velocity is changing with time. \\
+Just as with acceleration, angular acceleration involves both a magnitude and a direction.
+An object undergoes angular acceleration when its angular speed increases or decreases or when its angular velocity changes direction. \\
+If an object experiences several torques at once, it undergoes angular acceleration in response to the \defnterm{net torque} it experiences, the sum of all the individual torques being exerted on it.
+$$\text{angular acceleration} = \frac{\text{net torque}}{\text{rotational mass}}$$
+
+The relation is also known as \defnterm{Newton's Second Law of Rotational Motion}.
+$$\text{net torque} = \text{rotational mass} \cdot \text{angular acceleration}$$
+\emph{Spinning a marble is much easier than spinning a merry-go-round}. \\
+
+This law does not apply to nonrigid or wobbling objects, because nonrigid objects can change their rotational masses and wobbling ones are affected by more than one rotational mass simultaneously.
+
+\subsubsection{Summary}
+\begin{enumerate}
+  \item Your angular position indicates exactly how you're oriented
+  \item Your angular velocity measures the rate at which your angular position is changing with time
+  \item Your angular acceleration measures the rate at which your angular velocity is changing with time
+  \item For you to undergo angular acceleration, you must experience a net torque
+  \item The more rotational mass you have, the less angular acceleration you experience for a given torque
+\end{enumerate}
+
+\subsection{Forces and Torques}
+A force can produce a torque and a torque can produce a force. \\
+
+Nothing happens if you push on the seesaw exactly where the pivot passes through it;
+there's no angular acceleration! \\
+If you move a little away from the pivot, you can get the seesaw rotating, but you have to push hard. \\
+You do much better if you push on the end of the seesaw, where even a small force can start the seesaw rotating. \\
+The shortest distance and the direction from the pivot to the place where you push on the seesaw is a vector quantity called the \defnterm{lever arm};
+in general, the longer the lever arm, the less force it takes to cause a particular angular acceleration. \\
+The torque is proportional to the length of the lever arm;
+i.e. you obtain more torque by exerting force farther from the pivot or axis of rotation. \\
+
+When your force is directed parallel to the lever arm, it produces no torque. \\
+To produce a torque, your force must have a component that is perpendicular to the lever arm and only that perpendicular component contributes to the torque. \\
+
+The torque produced by a force is equal to the lever arm times that force, where we include on the component of the force that is perpendicular to the lever arm.
+$$\text{torque} = \text{lever arm} \cdot \text{force perpendicular to the lever arm}$$
+\emph{When twisting an unyielding object, it helps to use a long wrench}.
+
+\subsection{Balancing and Unbalancing the Seesaw}
+When a child sits on one end of the seesaw, the child's weight produces a torque on the seesaw about its pivot.
+Gravity is ultimately responsible for that torque, so it can be referred to as \emph{gravitational} torque. \\
+
+A \emph{balanced} seesaw experiences no overall gravitational torque about its pivot. \\
+If nothing twists it, the balanced seesaw is inertial---the net torque on it its zero. \\
+When the children aren't fidgeting, the seesaw is rigid and wobble-free, so it rotates at constant angular velocity, in according to Newton's first law of rotational mass.
+If it's motionless, it stays motionless.
+It it's running, it continues turning at a steady pace. \\
+
+Two children with unequal weight can also balance the seesaw by sitting at different distances from the pivot.
+A heavier child should sit closer to the pivot, and vice versa. \\
+
+With two children on the seesaw, it has a considerable weight but that weight produces no torque on the seesaw about its pivot. \\
+Because the seesaw's \defnterm{center of gravity}, the effective location of the seesaw's overall weight, is located at the pivot. \\
+With the center of gravity located at the pivot, gravity has no lever arm with which to produce a torque on the seesaw about the pivot. \\
+
+Any object or system of objects has a center of gravity---the effective location of its overall weight. \\
+While center of gravity is a gravitational concept and center of mass is an inertial concept, the two conveniently coincide;
+the seesaw's center of gravity and its center of mass are located at the same point.
+That coincidence stems from the proportionally between an object's weight and its mass near Earth's surface. \\
+
+\subsection{Levers and Mechanical Advantage}
+
+
+
+\newpage
+\section{Resonance}
 
 \clearpage
 \printindex
