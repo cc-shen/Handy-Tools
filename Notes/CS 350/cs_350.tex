@@ -3,9 +3,6 @@
 \setlength{\parindent}{0in}
 \usepackage{amsfonts, amssymb, amsthm, mathtools, tikz, qtree, float}
 \usepackage{algpseudocode, algorithm, algorithmicx}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{DejaVuSans}
 \usepackage{ae, aecompl, color}
 \usepackage{wrapfig}
 \usepackage{multicol, multicol, array}
@@ -16,7 +13,6 @@
 \usepackage{cleveref}
 
 \DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
-\renewcommand*\familydefault{\sfdefault}
 \definecolor{darkish-blue}{RGB}{25,103,185}
 
 \hypersetup{
@@ -35,6 +31,7 @@
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{ex}[theorem]{Example}
+\newtheorem*{ex*}{Example}
 \newtheorem{defn}{Definition}
 
 \crefname{ex}{Example}{Example}
@@ -172,6 +169,124 @@ void thread_yield(void);
 
 \newpage
 \section{Virtual Memory}
+\subsection{Physical Memory and Addresses}
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.65]{pictures/phys_mem.png}
+  \caption{An example physical memory, $P = 18$}
+  \label{fig:phys_mem}
+\end{figure}
+If physical addresses have $P$ \emph{bits}, the maximum amount of addressable physical memory is $2^{P}$ \emph{bytes} (assuming a byte-addressable machine).
+\begin{itemize}
+  \item Sys/161 MIPS processor uses 32 bit physical addresses ($P = 32$) $\Rightarrow$ maximum physical memory size of $2^32$ bytes, or 4GB
+  \item Larger values of $P$ are common on modern processors, e.g., $P = 48$, which allows 256TB of physical memory to be addressed
+\end{itemize}
+
+The actual amount of physical memory on a machine may be less than the maximum amount that can be addressed.
+
+\subsection{Virtual Memory and Addresses}
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.65]{pictures/v_mem.png}
+  \caption{An example of virtual memory, $V = 16$}
+  \label{fig:v_mem}
+\end{figure}
+The kernel provides a separate, private \emph{virtual} memory for each process. \\
+The virtual memory of a process holds the code, data, and stack for the program that is running in that process. \\
+If virtual addresses are $V$ bits, the \emph{maximum} size of a virtual memory is $2^{V}$ bytes.
+\begin{itemize}
+  \item For the MIPS, $V = 32$
+\end{itemize}
+Running applications see only virtual addresses, e.g.,
+\begin{itemize}
+  \item program counter and stack pointer hold \emph{virtual addresses} of the next instruction and the stack
+  \item pointers to variables are \emph{virtual addresses}
+  \item jumps/branches refer to \emph{virtual addresses}
+\end{itemize}
+Each process is isolated in its virtual memory, and cannot access other process' virtual memories.
+
+\subsection{Address Translation}
+Each virtual memory is mapped to a different part of physical memory. \\
+Since virtual memory is not real, when an process tries to access (load or store) a virtual address, the virtual address is \emph{translated} (mapped) to its corresponding physical address, and the load or store is performed in physical memory. \\
+Address translation is performed in hardware, using information provided by the kernel.
+
+\subsection{Address Translation for Dynamic Relocation}
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.6]{pictures/dyn_reloc.png}
+  \caption{Example of dynamic relocation}
+  \label{fig:figure1}
+\end{figure}
+CPU includes a \emph{memory management unit} (MMU), with a \emph{relocation register} and a \emph{limit register}.
+\begin{itemize}
+  \item relocation register holds the physical offset ($R$) for the running process' virtual memory
+  \item limit register holds the size $L$ of the running process' virtual memory
+\end{itemize}
+To translate a virtual address $v$ to a physical address $p$:
+\begin{align*}
+&\texttt{if } v \geq L \texttt{ then generate exception} \\
+&\texttt{else} \\
+&\qquad p \leftarrow v + R
+\end{align*}
+Translation is done in hardware by the MMU. \\
+The kernel maintains a separate $R$ and $L$ for each process, and changes the values in the MMU registers when there is a context switch between processes. \\
+
+\begin{ex*}
+$v = \texttt{0x102c} \qquad p = \texttt{0x102c} + \texttt{0x24000} = \texttt{0x2502c}$ \\
+$v = \texttt{0x8800} \qquad p = \texttt{exception}$ since $\texttt{0x8800} \geq \texttt{0x7000}$
+\end{ex*}
+
+\subsection{Properties of Dynamic Relocation}
+Each virtual address space corresponds to a \emph{contiguous range of physical addresses}. \\
+The kernel is responsible for deciding \emph{where} each virtual address space should map in physical memory.
+\begin{itemize}
+  \item the OS must track which part of physical memory are in use, and which parts are free
+  \item since different address spaces may have different sizes, the OS must allocate/deallocate variable-sized chunks of physical memory
+  \item hence creates potential for \emph{fragmentation} of physical memory
+\end{itemize}
+
+\subsection{Paging: Physical Memory}
+Physical memory is divided into fixed-size chunks called \emph{frames} or \emph{physical pages}.
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.7]{pictures/paging_phys_mem.png}
+  \caption{The frame size if $2^{12}$ bytes (4KB)}
+  \label{fig:p_phys_mem}
+\end{figure}
+
+\subsection{Paging: Virtual Memory}
+Virtual memories are divided into fixed-size chunks called \emph{pages}. \\
+Page size is equal to frame size.
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.8]{pictures/paging_v_mem.png}
+  \caption{Page size is 4KB here}
+  \label{fig:p_v_mem}
+\end{figure}
+
+\subsection{Paging: Address Translation}
+\begin{figure}[!h]
+  \centering
+  \includegraphics[scale=0.7]{pictures/p_translation.png}
+  \label{fig:figure1}
+\end{figure}
+Each page maps to a different frame.
+Any page can map to any frame.
+
+\subsection{Paging: Address Translation}
+The MMU includes a \emph{page table base register} which points to the page table for the current process. \\
+
+How the MMU translate a virtual address:
+\begin{enumerate}
+  \item[1.] determines the \emph{page number} and \emph{offset} of the virtual address
+  \begin{itemize}
+    \item page number is the virtual address divided by the page size
+    \item offset is the virtual address modulo the page size
+  \end{itemize}
+  \item[2.] looks up the page's entry (PTE) in the current process page table, using the page number
+  \item[3.] if the PTE is not valid, raise an exception
+  \item[4.] otherwise, combine page's frame number from the PTE with the offset to determine the physical address \\
+\end{enumerate}
 
 \newpage
 \section{Scheduling}
