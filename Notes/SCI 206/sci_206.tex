@@ -1150,14 +1150,551 @@ The electrostatic force on our charge depends on the charge's location in space 
 
 The electric field is a \defnterm{field}, a structure that associates a physical quantity with each point in space and time. \\
 The electric field is actually a \defnterm{vector field}, a structure that associates a \emph{vector} quantity with each point in space and time.
-At each point in the electric field, its magnitude is the amount of electrostatic force it exerts per unit of electric charge and its direction is the direction in which it pushes a positive charge.
+At each point in the electric field, its magnitude is the amount of electrostatic force it exerts per unit of electric charge and its direction is the direction in which it pushes a positive charge. \\
 
+So, the electrostatic force on a charge is exerted by the electric field itself, not by the source of the electric field.
+We can write the relationship as the following:
+$$\text{electrostatic force} = \text{charge} \cdot \text{electric field}$$
+\emph{Charged lint accelerates quickly in a region full of static electricity,} where the electrostatic force is in the direction of the electric field. \\
+Note that a particle carrying a negative amount of charge (an electron) experiences a force opposite the electric field. \\
+The SI unit of electric field is \emph{newton per coulomb} ($N/C$). \\
+
+The Xerographic copier employs a very strong electric field to ``break down'' the air so that it can operate its discharge.
+That field accelerates charges so rapidly that collision cascades occur and fill the air with free charges.
+
+\subsection{Conductors and Voltage Gradients}
+A copier's precharging system uses the gentle corona discharge that develops in the strong electric field just outside a fine high-voltage wire.
+This discharge ferries charges to the photoconductor surface and coats it uniformly. \\
+
+\textbf{Voltage and charge on a conduction object}:
+\emph{With its charges at equilibrium, a homogeneous conducting object has a single uniform voltage and the net charge anywhere in its interior is zero.} \\
+
+\textbf{Electric field in a conducting object}:
+\emph{With its charges at equilibrium, a homogeneous conducting object has zero electric field in its interior}. \\
+
+Although the voltage is uniform \emph{in} and \emph{on} the copier's fine conducting wire, it varies rapidly with position \emph{outside} that wire. \\
+Accompanying this large spatial variation in voltage is a strong electric field, called a \defnterm{voltage gradient}.
+A spatial variation in voltage can be thought as a ``slope'' in the voltage;
+positive charge accelerates swiftly down a large voltage gradient toward a lower voltage. \\
+
+Both electric fields and voltage gradients cause charges to accelerate, so voltage gradient is actually an electric field:
+$$\text{electric field} = \text{voltage gradient} = \frac{\text{voltage drop}}{\text{distance}}$$
+\emph{Charges rush down steep drops in voltage, much as bicycles rush down steep drops in hill height}, where the electric field points in the direction of the most rapid voltage decrease. \\
+The SI unit of electric field is also \emph{volt per meter} ($V/m$).
+
+\subsection{Fine Wires and High Voltages: Corona Discharges}
+Suppose on a dry winter day, you coat yourself with positive charges and raise your voltage to $30,000V$ by scuffing your rubber-soled shoes across an acrylic carpet. \\
+As you then approach a grounded door knob at $0V$, the voltage different between the doorknob and your hand will be $30,000V$.
+When your hand is about 1cm from the doorknob, the electric field will reach $30,000V$ per centimeter and the air will break down with a brilliant spark. \\
+Because your hand and the doorknob are similar in size and shape, the voltage changes smoothly between them.
+It varies steadily from $0V$ on the doorknob to $30,000V$ on your hand, so the voltage graident or electric field is nearly \emph{uniform}. \\
+
+However, when two objects differ significant in size, the \emph{larger} object dominates voltages in the space between them! \\
+Suppose you hold a long pin in your hand as you approach the doorknob, the doorknob will control the voltage most of the way to the pin and nearly all the increase in voltage will occur just outside the pin's point.
+Rather than being uniform, the voltage gradient or electric field will be strongest near that point. \\
+
+The copier makes good use of a nonuniform electric field. \\
+Its fine high-voltage wire is nearly surrounded by a much larger metal shroud.
+The wire is so thin that its influence fades just a hair's breadth from its surface and the grounded shroud dominates voltage almost all the way to the wire. \\
+
+The discharge that forms near the fine wire is a special, self-regulating one---a \defnterm{corona discharge}. \\
+While most discharges can't control how many free charges they produce, a corona discharge automatically maintains a steady production.
+Because free charges form only in the strong electric field near its thin conductor, their production rate is very sensitive to charges in that conductor's effective thickness.
+If there are too many free charges in the air near the conductor, their ability to conduct electricity effectively thickens the conductor, weakens the electric filed, and slows the production of free charges. \\
+The discharge is correcting its own mistake. \\
+
+Due to this stabilizing effect, the air in a corona discharge maintains a steady electrical conductivity that's ideal for charging a copier's photoconductor.
+
+\subsection{Getting Ready to Copy: Charging by Induction}
+A corona discharge does more than just turn air into a conductor;
+it also produces an outward spray of electric charges.
+Those charges are pushed outward by the electric field surrounding the corona wire. \\
+Since the copier's corona wire has a negative voltage, the surrounding electric field points toward that wire.
+Because negative charges accelerate opposite an electric field, the copier's corona produces a shower of outgoing negative charges.
+They spray onto the photoconducting surface as it moves steadily past the corona, and the photoconductor thus acquires a uniform coating of negative charges. \\
+
+As each negative charge lands, it draws a positive charge onto the grounded metal surface beneath the photoconductor and the attraction between those two opposite charges holds them firmly in place.
+While the photoconductor's open surface is acquiring its uniform negative charge, the metal layer underneath is acquiring an equivalent positive charge. \\
+This process, whereby a grounded conductor acquires a charge through the attraction of nearby opposite charge, is called ``charging by induction.'' \\
+
+The induced positive charge on the metal side of the photoconductor is important to the xerographic process for several reasons:
+\begin{enumerate}
+  \item[1.] it lowers the electrostatic potential energy of the negative charge so that the surface's negative voltage isn't as enormous
+  \item[2.] without that positive layer nearby, repulsion between like charges would tend to push negative charges on the open surface toward the edges of the photoconductor and distort the resulting images
+  \item[3.] the positive charge layer gives the negative charge layer somewhere to go when the photoconductor is exposed to light. \\
+  Whenever light from the original document turns a patch of the photoconductor into a conductor, the negative and positive charge layers rush together and cancel. \\
+  The resulting uncharged portion of the photoconductor subsequently attracts no toner and produces a white patch on the finished copy
+\end{enumerate}
+
+So the copier uses a corona discharge to coat a photoconducting surface with negative charge and then selectively erase portions of that charge layer with light from the original document. \\
+The remaining charged patches on the photoconductor attract positively charged black toner, which is then transferred permanently to the paper.
+
+\subsection{Capacitors}
+When it's in the dark, the copier's photoconductor system is an example of a \defnterm{capacitor}, a device that stores separated positive and negative charge. \\
+Most capacitors consist of two oppositely charged surfaces separated by a thin insulating layer.
+To make adding or removing charge easy, those surfaces are usually made of metals or other electrical conductors. \\
+However, the copier's capacitor has only one metal surface on its insulating photoconductor layer;
+the other surface is open and nonconducting.
+The copier uses its corona discharge to put charge on that open surface, and it uses light to remove that charge! \\
+
+The two conducting surfaces of an ordinary capacitor are called \emph{plates}.
+When one plate is positively charged and the other is negatively charged, the attraction of opposite charges on those plates offsets the repulsion of like charges on each plate (hence the capacitor remains neutral). \\
+
+A capacitor can be ``charged'' by transferring (positive) charge from its negative plate to its positive one.
+Since each charge you move experiences an electrostatic force in the opposite direction, you must do work on that charge as you push it from the negative plate to the positive plate.
+This work is stored in the capacitor as electrostatic potential energy, and that stored energy is released when you let the separated charge get back together. \\
+Since (positive) charge has more electrostatic energy on the positive plate than on the negative plate, the voltage of the positive plate is higher than the voltage on the negative one.
+This difference of voltage between plates is proportional to the separated charge on them;
+the more separated charge the capacitor is holding, the larger the voltage difference. \\
+
+The voltage different also depends on the physical structure of the capacitor. \\
+\emph{Increasing} the surface area of each plate \emph{decreases} the repulsion of its like charges. \\
+\emph{Thinning} the insulating layer between the plates \emph{increases} the attraction of their opposite charges. \\
+Both changes lower the separated charge's electrostatic potential energy and, thus, the voltage different difference between the plates.
+The bigger and closer the plates, the less energy it takes to store separated charge on them. \\
+
+Changes that allow the capacitor to store separated charge more easily increase its \defnterm{capacitance}, the amount of separated charge the capacitor holds divided by the voltage difference between its plates. \\
+The SI units for capacitance is \emph{coulomb per volt}, also called the \emph{farad} ($F$). \\
+A capacitor with a farad of capacitance stores an incredible amount of separated charge, even at a low voltage difference, but a capacitor with a billionth of a farad of capacitance is much more common. \\
+
+If a capacitor has separated charge, it will have a voltage difference between its two plates.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% E L E C T R I C I T Y %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \section{Electricity}
+\subsection{Electricity and the Flashlight's Electric Circuit}
+A basic flashlight has just three components---a battery,  a light-bulb, and a switch.
+When the switch is on, the strips transfer energy from the batteries to the bulb. ]]
+
+When the flashlight is turned on, electricity conveys energy from the batteries to the bulb. \\
+An \defnterm{electric current}, a current of electric charges, flows through these components, carrying the energy with it. \\
+As long as the flashlight is turned on, charges flow around these components in a loop;
+receiving energy from the batteries and delivering it to the bulb, over and over again.
+On route, the charges carry this energy mostly as electrostatic potential energy. \\
+The looping path taken by charges is called an \defnterm{electric circuit}. \\
+
+A circuit has no beginning or end, so charges cannot accumulate in one place, where their mutual repulsion would eventually stop them from flowing. \\
+Circuits explain the need at least two wires in the power cord of any home appliance: one wire carries charges to the appliance to deliver energy, and the other wire carries those charges back to the power company to receive some more. \\
+
+As part of one conducting path between the batteries and the bulb, the switch can make or break the flashlight's circuit. \\
+When the flashlight is on, the switch completes the loop so that charges can flow continuously around the \defnterm{closed circuit}. \\
+
+When the flashlight is turned off, the switch breaks the loop to form an \defnterm{open circuit}. \\
+The loop now has a gap in it (at the switch) and the circuit can no longer carry a continuous current. \\
+
+Another type of circuit is a \defnterm{short circuit}, it forms when the two separate paths connecting the batteries to the bulb accidentally touch one another. \\
+This unintended contact creates a new, shorter loop around which the charges can flow. \\
+Because the bulb is expected to extract energy from the charges, it's designed to impede their  ow and to convert their electrostatic potential energy into thermal energy and light. \\
+This opposition to the flow of electricity is called \defnterm{electrical resistance}. \\
+Since the shortened loop offers little resistance, most of the charges flow through it, bypassing the bulb. \\
+Since the bulb is the only part of the flashlight that's designed to consume electric energy, a short circuit leaves the charges without a safe place to get rid of their electrostatic potential energy.
+They deposit it dangerously in the batteries and the metal paths, making them hot.
+
+\subsection{The Electric Current in the Flashlight}
+Each of the tiny charged particles flowing through the flashlight's circuit carries with it just a single elementary unit of electric charge and a minuscule amount of electrostatic potential energy. \\
+however, those charges flow in astonishing numbers, so they convey a considerable amount of energy per second---the quantity we know as power and measured in \emph{watts} ($W$). \\
+
+There are too many elementary charges to count, so it's much better to measure the circuit's \defnterm{current}, that is, the amount of charge passing a particular point in the circuit per unit of time. \\
+The SI unit of current is \emph{coulomb per second} or more commonly known as \emph{ampere} ($A$);
+one ampere is 1 C per second. \\
+We can determine how much power is reaching the bulb by multiplying the current by its electrostatic energy per coulomb---voltage. \\
+
+Fictitiously, charge flows around the circuit clockwise, from the battery chain's positive terminal, through the bulb's filament through the switch, and into the battery chain's negative terminal. \\
+In reality, the electric current is carried by \emph{negatively} charged electrons heading in the opposite (counterclockwise) direction;
+so electrons come out from the negative terminal and goes back in at the positive terminal of the battery chain. \\
+
+This doesn't affect the wire as charges pass through actually. \\
+If negative charge flow in one direction, the side of its direction becomes negatively charged after while the other end is positively charged. \\
+If positive charge flow in the opposite direction, the side of its direction becomes positively charged after while the other end is negatively charged.
+
+\subsection{Batteries}
+Two ways to think about a battery:
+\begin{itemize}
+  \item[1.] a battery is a type of pump;
+  it ``pumps'' charge from low voltage to high voltage. \\
+  A battery increases a charge's electrostatic potential energy by pushing it up a voltage gradient.
+
+  \item[2.] a battery is a chemically powered machine;
+  it uses chemical forces to transfer charges from its negatively terminal to its positive terminal. \\
+  As positive charge accumulate on the battery's positive terminal, the voltage there rises, and as negative charges accumulate on the battery's negative terminal, the voltage there drop. \\
+  Since battery does work transferring charges from low voltage to high voltage, it is converting its chemical potential energy into electrostatic potential energy in these separated charges.
+\end{itemize}
+
+A battery's rated voltage reflects its chemistry, specifically the amount of chemical potential energy it has available for each charge transfer. \\
+As the voltage difference between its terminals increases, so does the energy required for each charge transfer. \\
+Eventually, the electrostatic forces opposing the next charge transfer exactly balance the chemical forces promoting it and the battery is then in \emph{equilibrium}. \\
+
+As the battery consumes its chemical potential energy, its ability to pump charges diminishes;
+i.e. the battery's increasing disorder reduces it voltage. \\
+
+The more batteries in a chain, the more energy a charge receives overall and the more the voltage will increase from the chain's negative terminal to its positive terminal. \\
+If a battery is reversed in a chain, the reversed battery will extract energy from any charge passing through it. \\
+While the chain may still pump charge from its negative terminal to its positive terminal, the overall voltage will be reduced. \\
+
+As the reversed battery extract energy from the charges passing through it, some of that extracted energy is \emph{converted into} chemical potential energy.
+Thus the reversed battery is recharging. \\
+Battery chargers push current backward through a battery to restore chemical potential energy in a rechargeable battery. \\
+Note: nonchargeable batteries may overhead and explode during recharging!
+
+\subsection{Bulbs and Metal Strips}
+A battery gives charges electrostatic potential energy by pushing them \emph{up} a voltage gradient, a bulb releases that electrostatic potential energy by letting charges slide \emph{down} another voltage gradient. \\
+
+While a conductor has a uniform voltage when its charges are in \emph{equilibrium}, the charges in the bulb are in equilibrium only when the flashlight is turned off. \\
+When it is turned on, there's a voltage difference between the two ends of the filament and the filament's charges immediately begin accelerating down the voltage gradient towards the lower voltage end. \\
+
+If the filament were a prefect conductor of electricity, each charge would accelerate steadily down the voltage gradient and convert its electrostatic potential energy into kinetic energy. \\
+However, the filament has a large electrical resistance (it impedes the flow of current). \\
+Each charge bounces its way down the voltage gradient, colliding frequently with the filament's tungsten atoms and giving up kinetic energy with each collision. \\
+
+Each metal strip in the flashlight has a small electrical resistance.
+So, the charges need a small voltage gradient to keep them moving forward, and they emerge from the strip at a slightly lower voltage than where they entered.
+The lost energy becomes thermal energy, slightly heating the metal strip.
+
+\subsection{Voltage, Current, and Power in Flashlights}
+A bulb consumes power because the current passing through it slides down the (voltage) gradient and hence a drop in voltage. \\
+This \defnterm{voltage drop} measures the electrostatic potential energy each unit of charge loses, calculated by
+$$\textbf{power consumed} = \text{voltage drop} \cdot \text{current}$$
+\emph{A large electric current dropping from high voltage to low voltage is like the torrent of water dropping from high to lower over Niagara Falls: both release a a lot of power}. \\
+
+A battery chain produces electric power because current passing through it is pushed up a voltage gradient and thus a rise in voltage. \\
+This \defnterm{voltage rise} measure the electrostatic potential energy each unit of charge gains, calculated by
+$$\text{power provided} = \text{voltage rise} \cdot \text{current}$$
+\emph{Raising a large current from low voltage to high voltage is like pumping a huge stream of water from low to high to fight a fire at the top of a skyscraper: both require a lot of power}.
+
+\subsection{Choosing the Bulb: Ohm's Law}
+The relationship between current and voltage drop is the result of collisions. \\
+Charges effectively stop each time they crash into metal atoms, so they need the push of an electric field to keep them moving forward.
+Doubling that electric field doubles each charge's average speed and, because the number of mobile charges in the filament is fixed, also doubles the overall current flowing through the filament. \\
+Since the electric field that propels this current is the filament's voltage gradient, doubling the voltage drop through filament doubles the current as well. \\
+
+\defnterm{Ohm's law} is the observation that current is proportional to the voltage drop and inversely proportional to electrical resistance:
+$$\text{current} = \frac{\text{voltage drop}}{\text{electrical resistance}}$$
+$$\text{voltage drop} = \text{current} \cdot \text{electrical resistance}$$
+\emph{Long, skinny jumper cables have large resistances. When you connect them to a battery to jumpstart your car, they'll carry a relatively small current and your current probably won't start}. \\
+The SI unit of electrical resistance is \emph{ohm} ($\Omega$). \\
+
+Ohm's law applies to nearly everything that is \defnterm{ohmic}---can be characterized by an electrical resistance. \\
+Ohm's law are common in modern technology, often as simple electronic components known as resistors.
+A \defnterm{resistor} carries a current equal to its voltage drop divided by its resistance, and it experiences a voltage drop equal to the current it carries times its resistance. \\
+
+An object's electrical resistance is usually dependent on temperature. \\
+So an object's resistance increases with temperature, because rising temperature increases the collision frequency.
+
+\subsection{LED Flashlights, Series and Parallel Circuits}
+LEDs are more energy efficient than bulbs and last much longer (almost forever). \\
+LEDs are semiconductors that are \emph{nonohmic} because they don't obey Ohm's law and cannot be characterized by resistance. \\
+An LED is often paired with a resistor because small changes in voltage drop dramatically change the current passing through it.
+The resistor conducts enough amount of current to power the LED properly. \\
+
+Current flows sequentially through a resistor and an LED before returning to the battery;
+this is a \defnterm{series circuit} since the same current flows sequentially through each component. \\
+Since the resistor and LED are in series, they must share that overall voltage drop. \\
+They also carry the same current, the resistor's ohmic behaviour limits the current passing through the entire circuit. \\
+Each component takes enough of the overall \emph{voltage} (drop) to allow it to conduct the \emph{same} current as the other component. \\
+
+If there are multiple LEDs, the current is divided from the batteries into parts and sending one part through each of the LEDs. \\
+The arrangement where the \emph{current} is divided into parts that flow \emph{simultaneously} through each component is known as a \defnterm{parallel circuit}. \\
+Even though each component carries a fraction of the overall current, all the components experience the same voltage!
+
+\subsection{Button-Shaped Refrigerator Magnets}
+Two types of \defnterm{magnetic poles} that exert \defnterm{magnetostatic forces} on one another.
+The word \emph{pole} is to  distinguish magnetism from electricity;
+\defnterm{poles} are magnetic, charges are electric. \\
+The two poles are \emph{north} and \emph{south}, and are opposite of one another. \\
+Both poles carry just one physical quantity: \defnterm{magnetic pole}.
+North poles carry \emph{positive} amount of magnetic pole, while south poles carry \emph{negative} amount. \\
+Like poles repel each other and opposite poles attract. \\
+The magnetostatic forces between two poles grow weaker as they move apart and are inversely proportional to the square of the distance between them. \\
+
+Subatomic particles that carry pure positive or negative electric charges are common.
+However, particles that carry pure north or south magnetic poles have never been found, called \defnterm{magnetic monopoles}.
+Without monopoles, there are no magnetic sparks. \\
+
+While isolated magnetic poles can't be found, we find pairs of poles that consist of \emph{equal} north and south poles, spatially separated from one another in an arrangement called a \defnterm{magnetic dipole}.
+The dipole has zero \defnterm{net magnetic pole}. \\
+
+\defnterm{Coulombs's Law for Magnetism}: \\
+The magnitudes of the magnetostatic forces between two magnetic poles are equal to the permeability of free space times the produce of the two poles divided by $4\pi$ times the square of the distance separating them. \\
+If the poles are like, then the forces are repulsive. \\
+If the poles are opposite, then the forces are attractive.
+$$\text{force} = \frac{\text{permeability of free space} \cdot \text{pole}_{1} \cdot \text{pole}_{2}}{4\pi \cdot (\text{distance between poles})^{2}}$$
+\emph{Don't hold two strong magnetic poles near one another unless you're prepared to be pushed around hard as they attract or repel each other}. \\
+The \defnterm{permeability of free space} is $4\pi \times 10^{-7} N/A^{2}$. \\
+The magnetic forces follow Newton's third law.
+
+\subsection{The Refrigerator: Iron and Steel}
+The steel on the refrigerator is composed of microscopic magnets, each with a matched north pole and soul pole.
+Those magnets are normally oriented semi-randomly so the refrigerator exhibits no overall magnetism. \\
+When a magnet comes near the fridge, its tiny magnets evolve in size, shape, and orientation. \\
+Opposite poles shift close to the magnet's pole and like poles shift farther from the magnet's pole. \\
+The steel develops a \defnterm{magnetic polarization} and consequently attracts the pole of the button magnet. \\
+
+The reason why steel can develop strong magnetic polarization is because it's a \defnterm{ferromagnetic} material---it is actively and unavoidably magnetic on the size scale of atoms. \\
+
+Subatomic particles---electrons, protons, and neutrons---have magnetic dipoles, particularly the electrons, and the atoms they form often display magnetism. \\
+While most atoms are intrinsically magnetic, most materials are not.
+Because another round of pairing and cancelling occurs when atoms assemble into materials. \\
+Few materials avoid this cancellation and remain magnetic at the atomic scale. \\
+The most important of theses are ferromagnets, a class of magnetic materials that include ordinary steel and iron. \\
+When examined, it is composed of many microscopic regions, or \defnterm{magnetic domains}, that are naturally magnetic and cannot be demagnetized. \\
+Within a single domain, all the atomic-scale magnetic dipoles are aligned and together they give the overall domain a substantial net magnetic dipole. \\
+
+In magnetic domains, magnetic interaction orient nearby domains so that their magnetic dipoles oppose one another and cancel.
+Those magnets balance one another so well so that the overall steel appears nonmagnetic. \\
+
+When a strong magnetic pole comes near the steel, the steel undergoes magnetization and becomes \defnterm{magnetized}. \\
+Note that the atoms don't move;
+the change is purely a reorientation of the atomic-scale magnetic dipoles.
+
+\subsection{Plastic Sheet Magnets and Credit Cards}
+When a magnet is removed from the fridge, it undergoes demagnetization and becomes (almost) \defnterm{demagnetized}. \\
+Chemical forces can make it difficult for domains to grow or shrink and the domains get stuck during the process. \\
+Adjacent domains are separated by \defnterm{domain walls}, boundary surfaces between one direction of magnetic orientation and another.
+Those domain walls must move if the domains are to change size, but impurities and flaws can interact with a domain wall to keep it from moving. \\
+Hence, the steel fails to demagnetize itself completely (can be removed typically with heat or mechanical shock). \\
+
+A \defnterm{soft magnetic material} is one that demagnetize itself easily when all nearby poles are removed, e.g. chemically pure iron. \\
+A \defnterm{hard magnetic material} is one that does not demagnetize itself easily and that tends to retain whatever domain structure is imposed on it by its most recent exposure to strong nearby poles. \\
+A \defnterm{permanent magnet} retains its present magnetization almost indefinitely. \\
+
+A hard magnetic material's ability to ``remember'' its magnetization can be useful for saving information. \\
+Once magnetized in a particular manner so as to represent a piece of information, the material will retain its magnetization and the associated information until something magnetizes it differently.
+
+\subsection{Compass}
+Earth itself has a magnetic dipole and that dipole affects the orientation of a compass needle. \\
+The Earth's \emph{north} geographic pole is a \emph{south} magnetic pole.
+Attraction from that south magnetic pole is what draws the compass' north magnetic pole toward the north. \\
+
+The full story of magnetic interaction between the Earth's poles and the compass, suppose the needle interacts with a \defnterm{magnetic field}, an attribute of space that exerts a magnetostatic force on a pole. \\
+So the needle responds to the local magnetic field, a field that's created by all the surrounding magnetic poles. \\
+Note that A magnetic field can be created by things other than pole. \\
+The magnetic field at a given location measures the magnetostatic force that a unit of pure north pole would experience if it were placed at that point
+$$\text{magnetostatic force} = \text{force} \cdot \text{magnetic field}$$
+\emph{If you place a strong magnet in a strong magnetic field, expect to be pushed around}, where the magnetosatic force is in the direction of the magnetic field. \\
+
+A compass needle aligns with the local magnetic field and Earth's magnetic field is uniform in the vicinity of the compass which balances the northward push and the southward push. \\
+When the needle is aligned with a nonuniform field---its north pole pointing in the same direction as the local field---the forces on its two opposite poles won't balance and it will experience a net force in the direction of increasing field. \\
+If aligned against, it will point in the direction of the decreasing field.
+
+\subsection{Iron Fillings and magnetic Flux Lines}
+With iron fillings sprinkle into the magnetic filed, the iron particles magnetize along the local field and then stick together, north pole to south pole, in long strands that delineate the magnetic field. \\
+The strands follow along the local magnetic field direction and have a density proportional to that local field, these lines are called \defnterm{magnetic flux lines}. \\
+
+A magnetic field tends to point away from the north poles and toward south poles. \\
+In permanent magnets, every magnetic flux line begins at a north pole and ends at a south pole. \\
+Also, flux lines never start at or end on anything other than a magnetic pole.
+So if you follow a magnetic flux line with a compass, you either reach a south pole or walk forever!
+
+\subsection{Electric Doorbells and Electromagnets}
+When you press the doorbell button, current flows through a coil of wire and the resulting magnetic field yanks an iron rod into the center of that coil. \\
+About the time the rod reaches the center, part of it hits the first chime. \\
+When you then open the switch, stopping the current and its magnetism, a spring pushes the iron rod back out of the coil and it hits the second chime. \\
+
+So, electric current can \emph{produce} magnetic forces! \\
+Moreover, electric currents \emph{are} magnetic! \\
+
+\textbf{First Connection Between Electricity and Magnetism}: \\
+Moving electric charge produces a magnetic field. \\
+
+Suppose we use iron powder to disclose the magnetic flux lines surrounding a lone, straight, current-carrying wire. \\
+Those flux lines circle the wire like concentric rings, growing more widely separated as the distance from the wire increases. \\
+The wire is an \defnterm{electromagnet}, a device that becomes magnetic when it carries an electric current (the field is strongest near the surface of the wire). \\
+Since an electromagnet has no true magnetic poles, the flux lines can't stretch from north pole to south pole.
+Instead, each flux line of an electromagnet is a closed loop. \\
+
+The magnetic field around a current-carrying wire is fairly weak, however, and a practical doorbell winds that wire into a coil to concentrate and strengthen its field. \\
+The field produced by a two-pole (button) magnet is almost identical to the magnetic field of the coil.
+It's as though the coil has a north pole at one end and a south pole at the other. \\
+Since there are no true poles, the flux lines don't end anywhere.
+Instead, they continue right through the middle of the coil and form complete loops. \\
+
+While current is flowing through the coil and the iron rod is inside it, the two objects act as a single powerful electromagnet. \\
+The magnetic field surrounding the pair is the sum of the coil's modest magnetic field and the magnetized iron's much strong field. \\
+In effect, the current in the coil magnetizes the iron and the iron then creates most of the surrounding magnetic field.
+
+\subsection{Direct Current Power Distribution}
+Batteries have limited uses and are expensive for larger power consumption. \\
+A most cost-effective source for electricity was coal- or oil-powered electric generators back in the days. \\
+
+\defnterm{Direction current} (DC) is current that always flow in one direction and the voltage difference is constant \\
+
+To deliver electricity to places/things farther away, thicker wires were required to allow them to carry current more easily (wires have resistance). \\
+We want to minimize the amount of power that are wasted as thermal energy (from collisions), this can be determined with Ohm's law:
+\begin{align*}
+\text{power consumed} &= \text{voltage drop} \cdot \text{current} \\
+&= (\text{current} \cdot \text{electrical resistance}) \cdot \text{current} \\
+&= \text{current}^{2} \cdot \text{electrical resistance}
+\end{align*}
+So delivering more current actually increases the wasted power! \\
+
+We can also decrease current while increasing voltage difference.
+So while less current flowed, the larger voltage drop left the delivered power unchanged. \\
+
+Materials that lose their electrical resistance at extremely low temperatures and become perfect electrical conductors, they are \defnterm{superconductors}.
+But these superconductors are too impractical for power distribution systems.
+
+\subsection{Introducing Alternating Current}
+A problem with distributing electrical power via direction current is that there is no easy way to transfer from one DC circuit to another.
+DC power distribution therefore wastes a lot of power in the wires connecting everything together since safety requires that the entire circuit use low voltages and large currents. \\
+
+An \defnterm{alternating current} (AC) is a current that periodically reverses direction---it alternates. \\
+AC makes it easy to transfer power from one AC circuit to another so that different paths of the AC power-distribution system can operate at different voltages with different currents. \\
+Also, the wires that carry the power long distance are part of a high-voltage, low-current circuit and therefore waste little power. \\
+
+This alternating current is caused by alternating voltage drop (like a wave), a voltage drop that periodically reverses direction. \\
+
+In the states, an AC outlet offers three connections: \emph{hot, neutral, \emph{and} ground}. \\
+The absolute voltage of \emph{neutral} remains near 0 V, while the absolute voltage of \emph{hot} alternates above and below 0 V.
+\emph{Ground}, which is an optional safety connection, also remains near 0 V absolute. \\
+So current flows from \emph{hot} to \emph{neutral} when \emph{hot} has a positive voltage.
+And from \emph{neutral} to \emph{hot} when \emph{hot} has a negative voltage. \\
+
+The \emph{hot} voltage varies sinusoidally---the trig sine function with respect to time.
+In the states, AC voltage reverse every 120th of a second, yielding 60 full cycles of reversal (back and forth) each second -> 60 Hz. \\
+In Europe, the reversals occur every 100th of a second, so AC voltage completes 50 full cycles of reversal each second -> 50 Hz. \\
+
+Power consumption in simple ohmic devices is used to define an effective voltage for AC electric power.
+An outlet's nominal AC voltage---technically, its \defnterm{root mean square voltage} (RMS)---is defined to be equal to the DC voltage that would cause the same average power consumption in an ohmic device. \\
+So, 120-V AC power delivers the same average power as 120-V DC power. \\
+
+The reversal of AC powers aren't without consequence:
+\begin{enumerate}
+  \item[1.] some electrical and most electronic devices are sensitive to the direction of current flow and must handle the reversals carefully
+  \item[2.] the power available from an ordinary AC outlet rises and falls with each voltage reversal and is momentarily zero at the reversal itself
+\end{enumerate}
+
+\subsection{Magnetic Induction}
+An advantage in alternating current was that its power could be transformed---it could be passed via electromagnetic action from one circuit to another by a transformer. \\
+A \defnterm{transformer} is a deice that uses two important connections between electricity and magnetism to convey power from one AC circuit to another:
+\begin{enumerate}
+  \item[1.] moving electric charge creates magnetic fields
+  \item[2.] magnetic fields that change with time create electric fields;
+  this allows magnetism to produce electricity! \\
+  This is the \textbf{second connection between electricity and magnetism}.
+\end{enumerate}
+
+The process, whereby a time-changing magnetic field initiates or influences an electric current, is called \defnterm{magnetic induction}. \\
+
+So a transformer uses electricity to produce magnetism to produce electricity. \\
+However, the transformer moves that power from the current in one coil of wire through a magnetic field to the current in a second coil of wire.
+
+\subsection{Alternating Current and a Coil of Wire}
+Because currents are magnetic, the coil becomes an electromagnet. \\
+Since the current passing through the coil reverses periodically, so does its magnetic field. \\
+Moreover, because a magnetic field that changes with time produces an electric field, the coil's alternating magnetic field produces an alternating electric field. \\
+As the coil's current increases, the induced electric field pushes that current backward and thereby opposes its increase. \\
+As the coil's current decreases, the induced electric pushes that current forward and thereby opposes its decrease. \\
+
+\textbf{Lenz's Law}: \\
+When a changing magnetic field induces a current in a conductor, the magnetic field from that current opposes the change that induced it. \\
+
+A wire coil's natural opposition to current change makes it useful in electrical equipment and electronics, where it's called an \defnterm{inductor}. \\
+
+The coil's induced electric field do positive or negative work on the current and thereby shift that current from one voltage to another. \\
+The coil's overall voltage shift, from one end of the coil to the other, is known as its \defnterm{induced emf} (electromagnetic force);
+so current enters the coil at one voltage and exits at another voltage. \\
+
+Current flows through the coil from higher voltage to lower voltage only half the time. \\
+The other half, current flows from lower voltage to higher voltage. \\
+
+When current flows toward lower voltage, the induced emf removes electrostatic potential energy from the current. \\
+When current flows toward higher voltage, the induced emf returns electrostatic potential energy to the current. \\
+When it's not in the current, it ``missing'' energy is in the coil's magnetic field. \\
+Magnetic fields contain energy:
+$$\text{energy} = \frac{\text{magnetic field}^{2} \cdot \text{volume}}{2 \cdot \text{permeability of free space}}$$
+\emph{Strong permanent magnets store so much magnetic energy that they can be dangerous if you break them. The pieces will flip around violently and you may get pinched}. \\
+
+The coil in the transformer stores it briefly in the magnetic field and then return it to the current. \\
+Storing energy when magnitude of current increases---the field strengthens and the current loses voltage. \\
+The coil returns energy while the magnitude of the current decreases---the field weakens and the current gains voltage. \\
+Because the coil's self-induced emf is responsible for bouncing the energy back to the current, it's frequently called a \defnterm{back emf}.
+
+\subsection{Two Coils Together: A Transformer}
+A single coil experiences only self-inductance.
+Any energy removed from the coil's current by its induced emf must eventually returned to that \emph{same} current;
+it has nowhere else to go. \\
+When two coils share the same electromagnetic environment, they experience mutual inductance and can exchange energy via magnetic induction.
+Energy removed from one coil's current by its induced emf can be given to the other coil's current by its induced emf. \\
+
+So the transformer transfer electric power from one circuit to another.
+It consists of two coils, primary and secondary, wrapped around a magnetizable core that enhances magnetic induction and allows them to share the same electromagnetic environment \\
+When AC flows through the primary, it produces an induced electric field that affects both coils and both coils develop induced emfs.
+The induced emf in the primary coil removes energy from its AC while the induced emf in the secondary coil gives that energy to its AC. \\
+
+
+
+
+%%%%%%%%%%%%%%%%%%%
+%% R O C K E T S %%
+%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Rockets - Special Lecture} \lecture{Mon. Oct. 17, 2016}
+\textbf{Chris A. Hadfield} --- Colonel, Astronaut \\
+A rocket goes forward by transfer of momentum.
+The combustion chamber (contains fuel and oxygen) generates momentum and it transfer to the rocket itself to move itself forward. \\
+This is due to Newton's Third Law of Motion. \\
+Note: it is \emph{wrong} to think that rocket push against anything to go forward. \\
+
+In 1957, a rocket was launched that had enough speed to go into space and stay in orbit. \\
+
+Hypergolic fuel is used in small rockets because the its components cause an explosion (i.e. ignites) as soon as they come into contact with each other. \\
+This allows reliable thrust from the rockets. \\
+
+Space is \emph{arbitrarily} decided to be 100km above ground. \\
+
+\subsection{Components of a Rocket}
+The basic components are
+\begin{enumerate}
+  \item[1.] A payload (i.e. thing you carry)
+
+  \item[2.] A rocket
+
+  \item[3.] Where the stuff comes out
+
+  \item[4.] Steering
+\end{enumerate}
+
+For the space shuttle, we have multiple rockets and the payload is the shuttle itself.
+
+\subsection{Accelerating a Rocket}
+The fuel and oxygen that we need to shoot out the nozzle (where we shoot mass out) needs to come out at such a momentum such that a rocket can be taken into space. \\
+Remember, a rocket is \emph{very} heavy! The fuel and oxygen we carry also adds to that mass! \\
+
+For a space shuttle, the two side rockets only burn about two minutes to push the shuttle above the air. \\
+Then the side rockets are detached and the orange (big) rocket and the shuttle's internal rockets do the rest of the job! \\
+
+Stages of \textbf{Saturn V}:
+\begin{itemize}
+    \item First Stage \\
+    \textbf{Power}: Five F-1 engines with combined thrust of 7.5 million pounds \\
+    \textbf{Propellants}: RP-1 kerosene, 214,2000 gallons. Liquid oxygen, 346,400 gallons. \\
+    Fueled weight of stage, 5,028,000 pounds
+
+    \item Second Stage \\
+    \textbf{Power}: Five J-2 engines with a combined thrust of 1,000,000 pounds \\
+    \textbf{Propellants}: Liquid hydrogen, 267,700 gallons. Liquid oxygen, 87,400 gallons. \\
+    Fueled weight of stage,
+
+    \item Third Stage \\
+    \textbf{Power}:  \\
+    \textbf{Propellants}:  \\
+    Fueled weight of stage,
+
+    \item Instrument Unit
+
+    \item Apollo Spacecraft
+\end{itemize}
+
+\subsection{Coming Back}
+The usual design uses (air) friction to slow down as we re-enter orbit. \\
+The shuttle can land like a plane with little engines on board to control the shuttle. \\
+Other rockets come in akin to a meteorite and opens up a parachute as it gets closer to the ground.
+
+\subsection{Future Rockets}
+The speed of a rocket is limited by how fast the mass can come out from the chemical reactions (burning fuel). \\
+An idea is to use electromagnets to use charged particles to accelerate the rate that rockets can go at, i.e. using ions to boost rockets.
 
 \clearpage
 \printindex
