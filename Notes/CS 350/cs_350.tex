@@ -1,0 +1,194 @@
+\documentclass[12pt]{article}
+\usepackage[margin = 1.5in]{geometry}
+\setlength{\parindent}{0in}
+\usepackage{amsfonts, amssymb, amsthm, mathtools, tikz, qtree, float}
+\usepackage{algpseudocode, algorithm, algorithmicx}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{DejaVuSans}
+\usepackage{ae, aecompl, color}
+\usepackage{wrapfig}
+\usepackage{multicol, multicol, array}
+\usepackage{imakeidx}
+\makeindex[columns=2, title=Indices, intoc]
+
+\usepackage[pdftex, pdfauthor={Charles Shen}, pdftitle={CS 350: Operating Systems}, pdfsubject={Lecture notes from CS 350: at the University of Waterloo}, pdfkeywords={course notes, notes, Waterloo, University of Waterloo}, pdfproducer={LaTeX}, pdfcreator={pdflatex}]{hyperref}
+\usepackage{cleveref}
+
+\DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
+\renewcommand*\familydefault{\sfdefault}
+\definecolor{darkish-blue}{RGB}{25,103,185}
+
+\hypersetup{
+  colorlinks,
+  citecolor=darkish-blue,
+  filecolor=darkish-blue,
+  linkcolor=darkish-blue,
+  urlcolor=darkish-blue
+}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[subsection]
+
+\theoremstyle{definition}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{ex}[theorem]{Example}
+\newtheorem{defn}{Definition}
+
+\crefname{ex}{Example}{Example}
+
+\setlength{\marginparwidth}{1.5in}
+\newcommand{\lecture}[1]{
+  \marginpar{{
+    \footnotesize $\leftarrow$ \underline{#1}}
+  }
+}
+
+\newcommand{\defnterm}[1]{\textbf{\textcolor{teal}{#1}}\index{#1}}
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\allowdisplaybreaks
+
+\makeatletter
+\def\blfootnote{\gdef\@thefnmark{}\@footnotetext}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%
+%% D O C U M E N T %%
+%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\let\ref\Cref
+\pagenumbering{roman}
+
+\title{\bf{CS 350: Operating Systems}}
+\date{Fall 2016, University of Waterloo \\ \center Notes written from Gregor Richards's lectures.}
+\author{Charles Shen}
+
+\blfootnote{Feel free to email feedback to me at
+\href{mailto:ccshen902@gmail.com}{ccshen902@gmail.com}.}
+
+\maketitle
+\thispagestyle{empty}
+\newpage
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
+
+%%%%%%%%%%%%%%%%%%
+%% INTRODUCTION %%
+%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+There are three views of an operating system:
+\begin{enumerate}
+  \item[1.] \defnterm{Application View} (\ref{app_view_OS}): what service does it provide?
+  \item[2.] \defnterm{System View} (\ref{sys_view_OS}): what problems does it solve?
+  \item[3.] \defnterm{Implementation View} (\ref{impl_view_OS}): how is it built?
+\end{enumerate}
+\emph{An operating system is part cop, part facilitator}. \\
+
+\defnterm{kernel}: The operating system kernel is the part of the operating system that responds to system calls, interrupts and exception. \\
+
+\defnterm{operating system} (OS): The operating system as a whole includes the kernel, and may include other related programs that provide services for application such as utility programs, command interpreters, and programming libraries.
+
+\subsection{Application View of an Operating System}\label{app_view_OS}
+The OS provides an execution environment for running programs.
+\begin{itemize}
+  \item The execution environment provides a program with the processor time and memory space that it needs to run.
+  \item The execution environment provides interfaces through which a program can use networks, storage, I/O devices, and other system hardware components. \\
+  Interfaces provide a simplified, abstract view of hardware to application programs.
+  \item The execution environment isolates running programs from one another and prevents undesirable interactions among them.
+\end{itemize}
+
+\subsection{System View of an Operating System}\label{sys_view_OS}
+The OS manages the hardware resources of a computer system.
+\begin{itemize}
+  \item Resources include processors, memory, disks and other storage devices, network interfaces, I/O devices such as keyboards, mice and monitors, and so on.
+  \item The operating system allocates resources among running programs. \\
+  It controls the sharing of resources among programs.
+  \item The OS itself also uses resources, which it must share with application programs.
+\end{itemize}
+
+\subsection{Implementation View of an Operating System}\label{impl_view_OS}
+The OS is a concurrent, real-time program.
+\begin{itemize}
+  \item Concurrency arises naturally in an OS when it supports concurrent applications, and because it must interact directly with the hardware.
+  \item Hardware interactions also impose timing constraints.
+\end{itemize}
+
+\subsection{Operating System Abstractions}
+The execution environment provided by the OS includes a variety of abstract entities that can be manipulated by a running program. \\
+Examples:
+\begin{itemize}
+  \item \textbf{files and file systems}: abstract view of secondary storage
+  \item \textbf{address spaces}: abstract view of primary memory
+  \item \textbf{processes, threads}: abstract view of program execution
+  \item \textbf{sockets, pipes}: abstract view of network or other message channels
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% THREADS AND CONCURRENCY %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Threads and Concurrency}
+Threads provide a way for programmers to express \emph{concurrency} in a program. \\
+A normal \emph{sequential program} consists of a single thread of execution. \\
+In threaded concurrent programs, there are multiple threads of executions that are all occurring at the same time.
+
+\subsection{OS/161's Thread Interface}
+Create a new thread:
+\begin{verbatim}
+int thread_fork(
+  const char *name,             // name of new thread
+  struct proc *proc,            // thread's process
+  void (*func)                  // new thread's function
+    (void *, unsigned long),
+  void *datat1,                 // function's first param
+  unsigned long data2           // function's second param
+);
+\end{verbatim}
+
+Terminating the calling thread: \\
+\begin{verbatim}
+void thread_exit(void);
+\end{verbatim}
+
+Voluntarily yield execution: \\
+\begin{verbatim}
+void thread_yield(void);
+\end{verbatim}
+
+
+\newpage
+\section{Processes and System Calls}
+
+\newpage
+\section{Assignment 2A Review}
+
+\newpage
+\section{Virtual Memory}
+
+\newpage
+\section{Scheduling}
+
+\newpage
+\section{Devices and Device Management}
+
+\newpage
+\section{File Systems}
+
+\newpage
+\section{Interprocess Communications and Networking}
+
+\clearpage
+\printindex
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%
+%% D O C U M E N T %%
+%%%%%%%%%%%%%%%%%%%%%
