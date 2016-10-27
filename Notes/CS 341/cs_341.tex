@@ -1,0 +1,229 @@
+\documentclass[12pt]{article}
+\usepackage[margin = 1.5in]{geometry}
+\setlength{\parindent}{0in}
+\usepackage{amsfonts, amssymb, amsthm, mathtools, tikz, qtree, float}
+\usepackage{algpseudocode, algorithm, algorithmicx}
+\usepackage{ae, aecompl, color}
+\usepackage{wrapfig}
+\usepackage{multicol, multicol, array}
+\usepackage{imakeidx}
+\makeindex[columns=2, title=Indices, intoc]
+
+\usepackage[pdftex, pdfauthor={Charles Shen}, pdftitle={CS 341: Algorithms}, pdfsubject={Lecture notes from CS 341: at the University of Waterloo}, pdfkeywords={course notes, notes, Waterloo, University of Waterloo}, pdfproducer={LaTeX}, pdfcreator={pdflatex}]{hyperref}
+\usepackage{cleveref}
+
+\DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
+\definecolor{darkish-blue}{RGB}{25,103,185}
+
+\hypersetup{
+  colorlinks,
+  citecolor=darkish-blue,
+  filecolor=darkish-blue,
+  linkcolor=darkish-blue,
+  urlcolor=darkish-blue
+}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[subsection]
+
+\theoremstyle{definition}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{ex}[theorem]{Example}
+\newtheorem{defn}{Definition}
+
+\crefname{ex}{Example}{Example}
+
+\setlength{\marginparwidth}{1.5in}
+\newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
+
+\newcommand{\defnterm}[1]{\textbf{\textcolor{teal}{#1}}\index{#1}}
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\allowdisplaybreaks
+
+\makeatletter
+\def\blfootnote{\gdef\@thefnmark{}\@footnotetext}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%
+%% D O C U M E N T %%
+%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\let\ref\Cref
+\pagenumbering{roman}
+
+\title{\bf{CS 341: Algorithms}}
+\date{Fall 2016, University of Waterloo \\ \center Notes written from Jeffrey Shallit's lectures.}
+\author{Charles Shen}
+
+\blfootnote{Feel free to email feedback to me at
+\href{mailto:ccshen902@gmail.com}{ccshen902@gmail.com}.}
+
+\maketitle
+\thispagestyle{empty}
+\newpage
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
+
+\section{Selection in deterministic linear time}
+\lecture{October 25, 2016}
+
+\section{Lower bounds}
+
+\section{Adversary Strategy}
+\subsection{Adversary Arguments in General}
+More generally, we can think of a lower bound proof as a game between the algorithm and an "adversary". \\
+The algorithm is "asking questions" (for example, comparing two elements of an array), while the adversary is answering them (providing the results of the comparison). \\
+
+The adversary should be thought of as a very powerful, clever being that is answering in such a way as to make your algorithm run as slowly as possible. \\
+The adversary cannot "read the algorithm's mind", but it can be prepared for anything the algorithm might do. \\
+Finally, the adversary is not allowed to "cheat";
+that is, the adversary cannot answer questions inconsistently.
+The adversary does not not need to have a particular input in mind at all times when it answers the questions, but when the algorithm is completed, there must be at least one input that matches the answers the adversary gave (otherwise it would have cheated). \\
+
+The algorithm is trying to run as quickly as possible. \\
+The adversary is trying (through its cleverness) to \emph{force} the algorithm to run slowly. \\
+This interaction proves that the lower-bound obtained by this type of argument applies to \emph{any possible} algorithm from the class under consideration. \\
+
+\begin{theorem}
+Every comparison-based algorithm for determining the minimum of a set of $n$ elements must use at least $\frac{n}{2}$ comparisons.
+\end{theorem}
+\begin{proof}
+Every element must participate in at least one comparison;
+if not, the not compared element can be chosen (by an adversary) to be the minimum. \\
+Each comparison compares 2 elements. \\
+Hence, at least $\frac{n}{2}$ comparisons must be made.
+\end{proof}
+
+\begin{theorem}
+Every comparison-based algorithm for determining the minimum of a set of $n$ elements must use at least $n-1$ comparisons.
+\end{theorem}
+\begin{proof}
+TODO: Look at Lecture 13 for proof
+\end{proof}
+
+\subsection{Finding Both the Maximum and Minimum of a List of n Numbers}
+It is possible to compute both the maximum and minimum of a list of n numbers, using $\frac{3}{2}n - 2$ comparisons if n is even, and $\frac{3}{2}n - \frac{3}{2}$ comparisons if n is odd. \\
+It can be proven that \emph{no comparison-based method} can correctly determine both the max and min using fewer comparisons in the worst case. \\
+
+We do this by constructing an adversary argument. \\
+
+In order for the algorithm to correctly decide that $x$ is the minimum and $y$ is the maximum, it must know that
+\begin{enumerate}
+  \item every element other than $x$ has won at least one comparison (i.e. $x > y$ if $x$ wins a comparison with $y$),
+  \item every element other than $y$ has lost at least one comparison
+\end{enumerate}
+Calling a win $W$ and a loss $L$, the algorithm must assign $n-1$ $W$'s and $n-1$ $L$'s.
+That is, the algorithm must determine $2n-2$ "units of information" to always give the correct answer. \\
+
+We now construct an adversary strategy that will force the algorithm to learn its $2n-2$ "units of information" as slowly as possible. \\
+The adversary labels each element of the input as $N$, $W$, $L$, or $WL$.
+These labels may change over time. \\
+$N$ signifies that the element has never been compared to any other by the algorithm. \\
+$W$ signifies the element has won at least one comparison. \\
+$L$ signifies the element has lost at least one comparison. \\
+$WL$ signifies the element has won at least one and lost at least one comparison. \\
+
+\lecture{October 27, 2016}
+
+So the the adversary uses the following table
+\begin{table}[h]
+  \centering
+  \begin{tabular}{C{3cm}  C{3cm}  C{3cm}  C{3cm}}
+  \hline
+  labels when comparing elements $(x, y)$ & the adversary's response & the new label & unit of information given to the alg. \\ \hline
+  $(N, N)$ & $x > y$ & $(W, L)$ & 2 \\
+  $(W, N)$ or $(WL, N)$ & $x > y$ & $(W, L)$ or $(WL, L)$ & 1 \\
+  $(L, N)$ & $x < y$ & $(L, W)$ & 1 \\
+  $(W, W)$ & $x > y$ & $(W, WL)$ & 1 \\
+  $(L, L)$ & $x > y$ & $(WL, L)$ & 1 \\
+  $(W, L)$ or $(WL, L)$ or $(W, WL)$ & $x > y$ & no change & 0 \\
+  $(WL, WL)$ & consistent with assigned values & no change & 0 \\ \hline
+  \end{tabular}
+\end{table}
+The adversary also tentatively assigns values to the elements, which may change over time. \\
+However, they can only change in a fashion \emph{consistent} with previous answers.
+That is, an element labelled $L$ may only \emph{decrease} in value (since it lost all previous comparisons, if it is decreased, it will still lose all of them), and an element labelled $W$ may only increase in value. \\
+An element labelled $WL$ cannot change. \\
+
+For example, consider the following sequence of possible questions asked by the algorithm and the adversary's responses:
+\begin{verbatim}
+-----------------------------------------------------------
+Algorithm  |   Adversary's responses and worksheet
+compares   |   x1      x2      x3      x4      x5      x6
+-----------------------------------------------------------
+ (x1, x2)  |  W-20    L-10      N       N       N       N
+ (x4, x5)  |  W-20    L-10      N     W-30     L-15     N
+ (x1, x4)  |  W-40    L-10      N    WL-30     L-15     N     (*)
+ (x3, x6)  |  W-40    L-10    W-11   WL-30     L-15    L-2
+ (x2, x5)  |  W-40   WL-10    W-11   WL-30     L-7     L-2
+ (x3, x1)  | WL-40   WL-10    W-50   WL-30     L-7     L-2
+ (x2, x4)  | WL-40   WL-10    W-50   WL-30     L-7     L-2    (**)
+ (x5, x6)  | WL-40   WL-10    W-50   WL-30    WL-7     L-2
+-----------------------------------------------------------
+\end{verbatim}
+At this point the algorithm knows that $x_3$ is the maximum, since it is the only element that has never lost a comparison, and $x_6$ is the minimum, since it is the only element that has never won a comparison. \\
+Note that in step (*), the adversary was forced to reassign the value he had previously assigned to $x_1$, since $x_1$ had to win the comparison against $x_4 = 30$. \\
+This is permitted, since $x_1$ had won every previous comparison and so increasing its value ensures consistency with previous answers. \\
+Also note that step (**) is superfluous, as the algorithm didn't learn any new information.
+
+\begin{theorem}
+Every \emph{comparison-based} method for determining both the maximum and minimum of a set of $n$ numbers must use at least $\frac{3}{2}n - 2$ comparisons (if $n$ even), or $\frac{3}{2}n - \frac{3}{2}$ comparisons (if $n$ odd), in the worst case.
+\end{theorem}
+\begin{proof}
+Suppose that $n$ is even. \\
+As shown before, the alg. must learn $2n - 2$ units of information. \\
+The most it can learn in one comparison is 2 units;
+when both elements have never participated before in a comparison, labelled by $(N, N)$.
+This can happen at most $\frac{n}{2}$ times. \\
+To learn the remaining $n - 2$ units of info., the alg. must ask $n - 2$ questions. \\
+The total number of questions is therefore at least $\frac{n}{2} + n - 2 = \frac{3}{2}n - 2$. \\
+The same kind of argument works for $n$ odd.
+\end{proof}
+
+So we have a lower bound for the problem of finding both the maximum and minimum of a set of $n$ numbers. \\
+
+So the alg. is as followed: \\
+If $n$ is even, compare $x[1]$ with $x[2]$ (determining both the maximum and minimum with 1 comparison), $x[3]$ with $x[4]$, etc.
+We get $\frac{n}{2}$ maxima and $\frac{n}{2}$ minima. \\
+To find the maximum, use the usual method on the $\frac{n}{2}$ maxima, which uses $\frac{n}{2} - 1$ comparisons, and the same for the minima. \\
+The total cost is $\frac{n}{2} + \frac{n}{2} - 1 + \frac{n}{2} - 1 = \frac{3}{2}n - 2$.
+A similar method works when $n$ is odd. \\
+
+Notice that each comparison adds at most one $W$, and we need to get $n-1$ $W$'s before we know the remaining element must be the minimum. \\
+So we need at least $n-1$ comparisons. \\
+If the algorithm declares a minimum before getting $n-1$ $W$'s, then there are at least two elements without $W$, so if the algorithm declares one of the minimum, the adversary can truthfully produce the other as the minimum.
+
+\subsection{Remarks on Constructing an Adversary Strategy}
+Lower bound arguments are some of the most difficult and deepest areas in theoretical computer science. \\
+
+Tips for producing an adversary strategy: \\
+
+Recall that the lower bound argument can be viewed as a game between you (playing the role of an algorithm) and an adversary. \\
+You want the algorithm to run quickly (for example, by making a small number of queries to the input). \\
+The adversary wants the algorithm to run slowly. \\
+The adversary "wins" (and the lower bound of $f(n)$ is proved) if he/she can force the algorithm to execute $f(n)$ steps. \\
+
+A proof behaves something like: for all sequences of queries into the input made by the algorithm, there exists a sequence of replies by the adversary, such that the algorithm is forced to execute f(n) steps.
+So your adversary argument must apply to \emph{every} possible "move" the algorithm could make. \\
+
+In constructing its replies, the adversary can do as much or as little bookkeeping as necessary. \\
+There is no requirement that the adversary's computation be efficient or run in any particular time bound.
+
+\subsection{Finding the Second Largest}
+Problem: given a list of $n$ elements, find the 2nd largest. \\
+
+\clearpage
+\printindex
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%
+%% D O C U M E N T %%
+%%%%%%%%%%%%%%%%%%%%%
