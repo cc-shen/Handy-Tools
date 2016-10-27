@@ -160,13 +160,21 @@ Voluntarily yield execution: \\
 void thread_yield(void);
 \end{verbatim}
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% PROCESSES AND SYSTEM CALLS %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \section{Processes and System Calls}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ASSIGNMENT 2A REVIEW %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \section{Assignment 2A Review}
 
+%%%%%%%%%%%%%%%%%%%%
+%% VIRTUAL MEMORY %%
+%%%%%%%%%%%%%%%%%%%%
 \newpage
 \section{Virtual Memory}
 \subsection{Physical Memory and Addresses}
@@ -176,7 +184,7 @@ void thread_yield(void);
   \caption{An example physical memory, $P = 18$}
   \label{fig:phys_mem}
 \end{figure}
-If physical addresses have $P$ \emph{bits}, the maximum amount of addressable physical memory is $2^{P}$ \emph{bytes} (assuming a byte-addressable machine).
+If physical addresses have $P$ \defnterm{bits}, the maximum amount of addressable physical memory is $2^{P}$ \defnterm{bytes} (assuming a byte-addressable machine).
 \begin{itemize}
   \item Sys/161 MIPS processor uses 32 bit physical addresses ($P = 32$) $\Rightarrow$ maximum physical memory size of $2^32$ bytes, or 4GB
   \item Larger values of $P$ are common on modern processors, e.g., $P = 48$, which allows 256TB of physical memory to be addressed
@@ -215,9 +223,9 @@ Address translation is performed in hardware, using information provided by the 
   \centering
   \includegraphics[scale=0.6]{pictures/dyn_reloc.png}
   \caption{Example of dynamic relocation}
-  \label{fig:figure1}
+  \label{fig:dyn_reloc_ex}
 \end{figure}
-CPU includes a \emph{memory management unit} (MMU), with a \emph{relocation register} and a \emph{limit register}.
+CPU includes a \defnterm{memory management unit} (MMU), with a \defnterm{relocation register} and a \defnterm{limit register}.
 \begin{itemize}
   \item relocation register holds the physical offset ($R$) for the running process' virtual memory
   \item limit register holds the size $L$ of the running process' virtual memory
@@ -242,11 +250,11 @@ The kernel is responsible for deciding \emph{where} each virtual address space s
 \begin{itemize}
   \item the OS must track which part of physical memory are in use, and which parts are free
   \item since different address spaces may have different sizes, the OS must allocate/deallocate variable-sized chunks of physical memory
-  \item hence creates potential for \emph{fragmentation} of physical memory
+  \item hence creates potential for \defnterm{fragmentation} of physical memory
 \end{itemize}
 
 \subsection{Paging: Physical Memory}
-Physical memory is divided into fixed-size chunks called \emph{frames} or \emph{physical pages}.
+Physical memory is divided into fixed-size chunks called \defnterm{frames} or \defnterm{physical pages}.
 \begin{figure}[!h]
   \centering
   \includegraphics[scale=0.7]{pictures/paging_phys_mem.png}
@@ -255,7 +263,7 @@ Physical memory is divided into fixed-size chunks called \emph{frames} or \emph{
 \end{figure}
 
 \subsection{Paging: Virtual Memory}
-Virtual memories are divided into fixed-size chunks called \emph{pages}. \\
+Virtual memories are divided into fixed-size chunks called \defnterm{pages}. \\
 Page size is equal to frame size.
 \begin{figure}[!h]
   \centering
@@ -268,26 +276,181 @@ Page size is equal to frame size.
 \begin{figure}[!h]
   \centering
   \includegraphics[scale=0.7]{pictures/p_translation.png}
-  \label{fig:figure1}
+  \label{fig:p_trans}
 \end{figure}
 Each page maps to a different frame.
 Any page can map to any frame.
 
 \subsection{Paging: Address Translation}
-The MMU includes a \emph{page table base register} which points to the page table for the current process. \\
+The MMU includes a \defnterm{page table base register} which points to the page table for the current process. \\
 
 How the MMU translate a virtual address:
 \begin{enumerate}
-  \item[1.] determines the \emph{page number} and \emph{offset} of the virtual address
+  \item[1.] determines the \defnterm{page number} and \defnterm{offset} of the virtual address
   \begin{itemize}
     \item page number is the virtual address divided by the page size
     \item offset is the virtual address modulo the page size
   \end{itemize}
   \item[2.] looks up the page's entry (PTE) in the current process page table, using the page number
   \item[3.] if the PTE is not valid, raise an exception
-  \item[4.] otherwise, combine page's frame number from the PTE with the offset to determine the physical address \\
+  \item[4.] otherwise, combine page's frame number from the PTE with the offset to determine the physical address;
+  physical address is $(\text{frame number} \cdot \text{frame size}) + \text{offset}$ \\
 \end{enumerate}
 
+\subsection{Other Information Found in PTEs}
+PTEs may contain other fields, in addition to the frame number and valid bit. \\
+
+Example 1: write protection bit
+\begin{itemize}
+  \item can be set by the kernel to indicate that a page is read-only
+  \item if a write operation (e.g., MIPS \texttt{lw}) uses a virtual address on a read-only page, the MMU will raise an exception when it translate the virtual address
+\end{itemize}
+
+Example 2: bits to track page usage
+\begin{itemize}
+  \item reference (use) bit: has the process used this page recently?
+  \item dirty bit: have contents of this page been changed?
+  \item these bits are set by the MMU, and read by the kernel
+\end{itemize}
+
+\subsection{Page Tables: How Big?}
+A page table has one PTE for each page in the virtual memory
+\begin{itemize}
+  \item $\text{page table size} = \text{number of pages} \cdot \text{size of PTE}$
+  \item $\text{number of pages} = \frac{\text{virtual memory size}}{\text{page size}}$
+\end{itemize}
+The page table a 64KB virtual memory, with 4KB pages, is 64 bytes, assuming 32 \emph{bits} for each PTE. \\
+Page tables for larger virtual memories are larger.
+
+\subsection{Page Tables: Where?}
+Page tables are kernel data structures, i.e. page tables for all processes are in the kernel's stack.
+
+\subsection{Summary: Roles of the Kernel and the MMU}
+Kernel:
+\begin{itemize}
+  \item Manage MMU registers on address space switches (context switch from thread in one process to thread in a different process)
+  \item Create and manage page tables
+  \item Manage (allocate/deallocate) physical memory
+  \item Handle exceptions raised by the MMU
+\end{itemize}
+MMU (hardware):
+\begin{itemize}
+  \item Translate virtual addresses to physical addresses
+  \item Check for and raise exceptions when necessary
+\end{itemize}
+
+\subsection{TLBs}
+Execution of each machine instruction may involve one, two, or more memory operations
+\begin{itemize}
+  \item one to fetch instruction
+  \item one or more for instruction operands
+\end{itemize}
+Address translation through a page table adds one extra memory operation (for page table entry lookup) for each memory operation performed during instruction execution. \\
+This can be slow! \\
+
+Solution: include a \defnterm{Translation Lookaside Buffer} (TLB) in the MMU,
+\begin{itemize}
+  \item TLB is a small, fast, dedicated cache for address translation in the MMU
+  \item Each TLB entry stores a (page number $\Rightarrow frame number$) mapping
+\end{itemize}
+
+\subsection{TLB Use}
+What the MMU does to translate a virtual address on page $p$:
+\begin{verbatim}
+if there is an entry (p, f) in the TLB then
+  return f  /* TLB hit! */
+else
+  find p's frame number (f) from the page table
+  add (p, f) to the TLB, evicting another entry if full
+  return f  /* TLB miss */
+\end{verbatim}
+If the MMU cannot distinguish TLB entries from different address spaces, then the kernel must \emph{clear} or \emph{invalidate} the TLB on \emph{each} context switch from one process to another! \\
+
+This is a \defnterm{hardware-managed TLB},
+\begin{itemize}
+  \item the MMU handles TLB misses, including page table lookup and replacement of TLB entries
+  \item MMU must understand the kernel's page table format
+\end{itemize}
+
+\subsection{Software-Managed TLBs}
+The MIPS has a \defnterm{software-managed TLB}, which translates a virtual address on page $p$ like this:
+\begin{verbatim}
+if there is an entry (p,f) in the TLB then
+  return f        /* TLB hit! */
+else
+  raise exception /* TLB miss */
+\end{verbatim}
+In case of a TLB miss, the kernel must
+\begin{enumerate}
+  \item[1.] determine the frame number of $p$
+  \item[2.] add $(p, f)$ to the TLB, evicting another entry if necessary
+\end{enumerate}
+After the miss is handled, the instruction that caused the exception is re-tried.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.6]{pictures/mips_tlb.png}
+  \caption{The MIPS R3000 TLB}
+  \label{fig:mips_tlb}
+\end{figure}
+The MIPS TLB has room for 64 entries. Each entry is 64 bits (8 bytes) long. \\
+See \texttt{kern/arch/mips/include/tlb.h}
+
+\subsection{Large, Sparse Virtual Memories}
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.65]{pictures/real_v_mem.png}
+  \caption{A more realistic virtual memory; this is a layout of the virtual address space for \texttt{user/testbin/sort} in OS/161}
+  \label{fig:realistic_v_mem}
+\end{figure}
+Virtual memory may be large,
+\begin{itemize}
+  \item[MIPS:] $V = 32$, max virtual memory is $2^{32}$ bytes (4 GB)
+  \item[x86-64:] $V = 48$, max virtual memory is $2^{48}$ bytes (246 TB)
+\end{itemize}
+Much of the virtual memory may be unused (see \ref{fig:realistic_v_mem})! \\
+
+Application may use \emph{discontinuous segments} of the virtual memory. \\
+One reason is that we have to give room for the stack to grow in the virtual memory!
+
+\subsection{Limitations of Simple Address Translation Approaches}
+A kernel that used simple dynamic relocation would have to allocate 2 GB of contiguous physical memory for \texttt{testbin/sort}'s virtual memory, even though \texttt{sort} only uses about 1.2 MB. \\
+
+A kernel that used simple paging would require a page table with $2^{20}$ PTEs (assuming page size is 4 KB) to map \texttt{testbin/sort}'s address space,
+\begin{itemize}
+  \item this page table is actually larger than the virtual memory that \texttt{sort} needs to use
+  \item most of the PTEs are marked as invalid
+  \item this page table has to be contiguous in kernel memory
+\end{itemize}
+
+\subsection{Segmentation}
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.7]{pictures/seg_addr_space.png}
+  \caption{Example of segment address space}
+  \label{fig:seg_addr_space}
+\end{figure}
+Instead of mapping the entire virtual memory to physical, we can provide a separate mapping for each segment of the virtual memory that the application actually uses. \\
+
+Instead of a single offset and limit for the entire address space, the kernel maintains an offset and limit for each segment,
+\begin{itemize}
+  \item The MMU has multiple offset and limit registers, one pair for each segment
+\end{itemize}
+
+With segmentation, a virtual address can be thought of as having two parts: segment ID and offset within segment. \\
+
+With $K$ bits for the segment ID, we can have up to:
+\begin{itemize}
+  \item $2^{K}$ segments
+  \item $2^{V - K}$ bytes per segment
+\end{itemize}
+
+The kernel decides where each segment is placed in physical memory.
+Fragmentation of physical memory is possible! \\
+
+%%%%%%%%%%%%%%%%
+%% SCHEDULING %%
+%%%%%%%%%%%%%%%%
 \newpage
 \section{Scheduling}
 
