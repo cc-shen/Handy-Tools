@@ -83,15 +83,15 @@
 \section{Introduction}
 There are three views of an operating system:
 \begin{enumerate}
-  \item[1.] \defnterm{Application View} (\ref{app_view_OS}): what service does it provide?
-  \item[2.] \defnterm{System View} (\ref{sys_view_OS}): what problems does it solve?
-  \item[3.] \defnterm{Implementation View} (\ref{impl_view_OS}): how is it built?
+  \item[1.] \textbf{Application View} (\ref{app_view_OS}): what service does it provide?
+  \item[2.] \textbf{System View} (\ref{sys_view_OS}): what problems does it solve?
+  \item[3.] \textbf{Implementation View} (\ref{impl_view_OS}): how is it built?
 \end{enumerate}
 \emph{An operating system is part cop, part facilitator}. \\
 
-\defnterm{kernel}: The operating system kernel is the part of the operating system that responds to system calls, interrupts and exception. \\
+\textbf{kernel}: The operating system kernel is the part of the operating system that responds to system calls, interrupts and exception. \\
 
-\defnterm{operating system} (OS): The operating system as a whole includes the kernel, and may include other related programs that provide services for application such as utility programs, command interpreters, and programming libraries.
+\textbf{operating system} (OS): The operating system as a whole includes the kernel, and may include other related programs that provide services for application such as utility programs, command interpreters, and programming libraries.
 
 \subsection{Application View of an Operating System}\label{app_view_OS}
 The OS provides an execution environment for running programs.
@@ -150,15 +150,243 @@ int thread_fork(
 );
 \end{verbatim}
 
-Terminating the calling thread: \\
+Terminating the calling thread:
 \begin{verbatim}
 void thread_exit(void);
 \end{verbatim}
 
-Voluntarily yield execution: \\
+Voluntarily yield execution:
 \begin{verbatim}
 void thread_yield(void);
 \end{verbatim}
+
+See \texttt{kern/include/thread.h}
+
+\subsection{Why Threads?}
+\textbf{Reason 1}: parallelism exposed by threads enables parallel execution if the underlying hardware supports it. \\
+Programs can run faster! \\
+
+\textbf{Reason 2}: parallelism exposed by threads enable better processor utilization. \\
+If one thread has to \emph{block}, another may be able to run.
+
+\textbf{Concurrent Program Execution (Two Threads)} \\
+Conceptually, each thread executes sequentially using its private register contents and stack.
+
+\subsection{Some Reviews}
+\textbf{The Fetch/Execute Cycle}
+\begin{enumerate}
+  \item[1.] fetch instruction PC points to
+  \item[2.] decode and execute instruction
+  \item[3.] advance PC
+\end{enumerate}
+
+\begin{table}[h]
+  \caption{MIPS Registers}
+  \centering
+
+  \begin{tabular}{|c|c|l||c|c|l|}
+  \hline
+  num & name & use & num & name & use \\ \hline
+  0 & z0 & always zero & 24-25 & t8-t9 & temps (caller-save) \\ \hline
+  1 & at & assembler reserved & 26-27 & k0-k1 & kernel temps \\ \hline
+  2 & v0 & return val/syscall \# & 28 & gp & global pointer \\ \hline
+  3 & v1 & return value & 29 & sp & stack pointer \\ \hline
+  4-7 & a0-a3 & subroutine args & 30 & s8/fp & frame ptr (callee-save) \\ \hline
+  8-15 & t0-t7 & temps (caller-save) & 31 & ra & return addr (for jal) \\ \hline
+  16-23 & s0-s7 & saved (calle-save) & & &  \\ \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Implementing Concurrent Threads}
+\textbf{Option 1}: multiple processors, multiple cores, hardware multithreading per core
+\begin{itemize}
+  \item $P$ processors, $C$ cores per processor, $M$ multithreading degree per core $\Rightarrow$ $PCM$ threads can execute simultaneously
+  \item separate register set for each running thread, to hold its execution context
+\end{itemize}
+\textbf{Option 2}: \emph{timesharing}
+\begin{itemize}
+  \item multiple threads take turns on the same hardware
+  \item rapidly switch from thread to thread so that all make progress
+\end{itemize}
+
+In practice, both techniques can be combined!
+
+\subsection{Timesharing and Context Switches}
+When timesharing, the switch from one thread to another is called a \emph{context switch}. \\
+
+What happens during a context switch:
+\begin{enumerate}
+  \item[1.] decide which thread will run next (scheduling)
+  \item[2.] save register contents of current thread
+  \item[3.] load register contents of next thread
+\end{enumerate}
+
+Thread context must be saved/restored carefully, since thread execution continuously changes the context! \\
+
+\textbf{Context Switch on the MIPS}, see \texttt{kern/arch/mips/thread/switch.S}
+\begin{verbatim}
+switchframe_switch:
+  /* a0: address of switchframe pointer of old thread. */
+  /* a1: address of switchframe pointer of new thread. */
+  /* Allocate stack space for saving 10 registers. 10*4 = 40 */
+  addi sp, sp, -40
+
+  sw   ra, 36(sp)  /* Save the registers */
+  sw   gp, 32(sp)
+  sw   s8, 28(sp)
+  sw   s6, 24(sp)
+  sw   s5, 20(sp)
+  sw   s4, 16(sp)
+  sw   s3, 12(sp)
+  sw   s2, 8(sp)
+  sw   s1, 4(sp)
+  sw   s0, 0(sp)
+
+  /* Store the old stack pointer in the old thread */
+  sw   sp, 0(a0)
+
+  /* Get the new stack pointer from the new thread */
+  lw   sp, 0(a1)
+  nop             /* delay slot for load */
+
+  lw   s0, 0(sp)  /* Now, restore the registers */
+  lw   s1, 4(sp)
+  lw   s2, 8(sp)
+  lw   s3, 12(sp)
+  lw   s4, 16(sp)
+  lw   s5, 20(sp)
+  lw   s6, 24(sp)
+  lw   s8, 28(sp)
+  lw   gp, 32(sp)
+  lw   ra, 36(sp)
+  nop             /* delay slot for load */
+
+  /* and return. */
+  j ra
+  addi sp, sp, 40 /* in delay slot */
+  .end switchframe_switch
+\end{verbatim}
+
+\subsection{What Causes a Context Switch?}
+The running thread calls \texttt{thread\_yield}, running thread \emph{voluntarily} allows other threads to run. \\
+So we have the following stack (in growth order) after voluntary context switch:
+\begin{itemize}
+  \item thread\_yield() stack frame
+  \item thread\_switch() stack frame
+  \item saved thread context (switchframe)
+\end{itemize}
+
+The running thread calls \texttt{thread\_exit}, running thread is terminated. \\
+
+The running thread \emph{blocks}, via a call to \texttt{wchan\_sleep}. \\
+
+The running thread is \emph{preempted}, running thread \emph{involuntarily} stops running. \\
+So we have the following stack (in growth order) after preemption:
+\begin{itemize}
+  \item trap frame
+  \item interrupt handling stack frame(s)
+  \item thread\_yield() stack frame
+  \item thread\_switch() stack frame
+  \item saved thread context (switchframe)
+\end{itemize}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.8]{pictures/thread_states.png}
+  \caption{Thread States}
+\end{figure}
+
+\subsection{Preemption}
+Without preemption, a running thread could potentially run forever, without yielding, blocking, or exiting. \\
+\emph{Preemption} means forcing a running thread to stop running, so that another thread can have a chance. \\
+To implement preemption, the thread library must have a means of ``getting control'' (causing thread library code to be executed) even though the running thread has not called a thread library function. \\
+This is normally accomplished using \emph{interrupts}.
+
+\subsection{Review on Interrupts}
+An interrupt is an event that occurs during execution of a program. \\
+Interrupts are caused by system devices (hardware), e.g., a timer, a disk controller, a network interface. \\
+When an interrupt occurs, the hardware automatically transfer control to a fixed location in memory.
+At that memory location, the thread library places a procedure called an \emph{interrupt handler}. \\
+The interrupt handler normally:
+\begin{enumerate}
+  \item[1.] create a \emph{trap frame} to record thread context at the time of the interrupt
+  \item[2.] determines which device caused the interrupt and performs device-specific processing
+  \item[3.] restores the saved thread context from the trap frame and resumes executions of the thread
+\end{enumerate}
+
+\subsection{Preemptive Scheduling}
+A preemptive scheduler imposes a limit, called the \emph{scheduling quantum} on how long a thread can run before being preempted. \\
+The quantum is an \emph{upper bound} on the amount of time that a thread can run.
+It may block or yield before its quantum has expired. \\
+Periodic timer interrupts allow running time to be tracked. \\
+If a thread has run too long, the timer interrupt handler preempts the thread by calling \texttt{thread\_yield}. \\
+The preempted thread changes state from running to ready, and it is placed on the \emph{ready queue}. \\
+
+OS/161 threads use \emph{preemptive round-robin scheduling}.
+
+\subsection{Two-Thread Example}
+Thread 1 is running, thread two had previously yielded voluntarily. \\
+Thread 1: program stack frame(s). \\
+Thread 2: program stack frame(s), thread\_yield, thread\_switch, switch frame. \\
+
+A time interrupt occurs. Interrupt handler runs. \\
+Thread 1: program stack frame(s), trap frame, interrupt handler. \\
+Thread 2: program stack frame(s), thread\_yield, thread\_switch, switch frame. \\
+
+Interrupt handler decides THread 1 quantum has expired. \\
+Thread 1: program stack frame(s), trap frame, interrupt handler, thread\_yield. \\
+Thread 2: program stack frame(s), thread\_yield, thread\_switch, switch frame. \\
+
+Scheduler chooses Thread 2 to run. Context switch. \\
+Thread 1: program stack frame(s), trap frame, interrupt handler, thread\_yield, thread\_switch, switch frame. \\
+Thread 2: program stack frame(s), thread\_yield, thread\_switch, switch frame. \\
+
+Thread 2 context is restored. \\
+Thread 1: program stack frame(s), trap frame, interrupt handler, thread\_yield, thread\_switch, switch frame. \\
+Thread 2: program stack frame(s), thread\_yield. \\
+
+\texttt{thread\_yield} finishes, Thread 2 program resumes. \\
+Thread 1: program stack frame(s), trap frame, interrupt handler, thread\_yield, thread\_switch, switch frame. \\
+Thread 2: program stack frame(s). \\
+
+Later, Thread 2 yields again. Scheduler chooses Thread 1. \\
+Thread 1: program stack frame(s), trap frame, interrupt handler, thread\_yield, thread\_switch, switch frame. \\
+Thread 2: program stack frame(s), thread\_yield, thread\_switch, switch frame. \\
+
+Thread 1 context is restored, interrupt handler resumes. \\
+Thread 1: program stack frame(s), trap frame, interrupt handler. \\
+Thread 2: program stack frame(s), thread\_yield, thread\_switch, switch frame. \\
+
+Interrupt handler restores state from trap frame and returns. \\
+Thread 1: program stack frame(s). \\
+Thread 2: program stack frame(s), thread\_yield, thread\_switch, switch frame. \\
+
+
+%%%%%%%%%%%%%%%%%%%%%
+%% SYNCHRONIZATION %%
+%%%%%%%%%%%%%%%%%%%%%
+\section{Synchronization}
+\subsection{Thread Synchronization}
+All threads in a concurrent program \emph{share access} to the program's global variables and the heap. \\
+The part of a concurrent program in which a shared object is accessed is called a \emph{critical section}. \\
+
+\texttt{volatile} keyword:
+Without it, the compiler could optimize the code on the variable. \\
+\texttt{volatile} forces the compiler to load and store the value on every use.
+Otherwise, we may have a variable that is loaded before a loop and stored after the loop terminates which may not be what we want/expect.
+
+\subsection{Mutual Exclusion}
+To prevent race conditions, we can enforce \emph{mutual exclusion} on critical sections in the code. \\
+
+A \emph{race condition} is an undesirable situation that occurs when a device or system attempts to perform two or more operations at the same time, but because of the nature of the device or system, the operations must be done in the proper sequence to be done correctly. \\
+
+\subsubsection{Enforcing Mutual Exclusions With Locks}
+Acquire/Release must ensure that only one thread at a time can hold the lock, even if both attempt to Acquire at the same time. \\
+If a thread cannot Acquire the lock immediately, it must wait until the lock is available.
+
+\subsection{Hardware-Specific Synchronization Instructions}
+Used to implement synchronization primitives like locks.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% PROCESSES AND SYSTEM CALLS %%
@@ -184,7 +412,7 @@ void thread_yield(void);
   \caption{An example physical memory, $P = 18$}
   \label{fig:phys_mem}
 \end{figure}
-If physical addresses have $P$ \defnterm{bits}, the maximum amount of addressable physical memory is $2^{P}$ \defnterm{bytes} (assuming a byte-addressable machine).
+If physical addresses have $P$ \emph{bits}, the maximum amount of addressable physical memory is $2^{P}$ \emph{bytes} (assuming a byte-addressable machine).
 \begin{itemize}
   \item Sys/161 MIPS processor uses 32 bit physical addresses ($P = 32$) $\Rightarrow$ maximum physical memory size of $2^32$ bytes, or 4GB
   \item Larger values of $P$ are common on modern processors, e.g., $P = 48$, which allows 256TB of physical memory to be addressed
@@ -225,7 +453,7 @@ Address translation is performed in hardware, using information provided by the 
   \caption{Example of dynamic relocation}
   \label{fig:dyn_reloc_ex}
 \end{figure}
-CPU includes a \defnterm{memory management unit} (MMU), with a \defnterm{relocation register} and a \defnterm{limit register}.
+CPU includes a \emph{memory management unit} (MMU), with a \emph{relocation register} and a \emph{limit register}.
 \begin{itemize}
   \item relocation register holds the physical offset ($R$) for the running process' virtual memory
   \item limit register holds the size $L$ of the running process' virtual memory
@@ -250,11 +478,11 @@ The kernel is responsible for deciding \emph{where} each virtual address space s
 \begin{itemize}
   \item the OS must track which part of physical memory are in use, and which parts are free
   \item since different address spaces may have different sizes, the OS must allocate/deallocate variable-sized chunks of physical memory
-  \item hence creates potential for \defnterm{fragmentation} of physical memory
+  \item hence creates potential for \emph{fragmentation} of physical memory
 \end{itemize}
 
 \subsection{Paging: Physical Memory}
-Physical memory is divided into fixed-size chunks called \defnterm{frames} or \defnterm{physical pages}.
+Physical memory is divided into fixed-size chunks called \emph{frames} or \emph{physical pages}.
 \begin{figure}[!h]
   \centering
   \includegraphics[scale=0.7]{pictures/paging_phys_mem.png}
@@ -263,7 +491,7 @@ Physical memory is divided into fixed-size chunks called \defnterm{frames} or \d
 \end{figure}
 
 \subsection{Paging: Virtual Memory}
-Virtual memories are divided into fixed-size chunks called \defnterm{pages}. \\
+Virtual memories are divided into fixed-size chunks called \emph{pages}. \\
 Page size is equal to frame size.
 \begin{figure}[!h]
   \centering
@@ -282,11 +510,11 @@ Each page maps to a different frame.
 Any page can map to any frame.
 
 \subsection{Paging: Address Translation}
-The MMU includes a \defnterm{page table base register} which points to the page table for the current process. \\
+The MMU includes a \emph{page table base register} which points to the page table for the current process. \\
 
 How the MMU translate a virtual address:
 \begin{enumerate}
-  \item[1.] determines the \defnterm{page number} and \defnterm{offset} of the virtual address
+  \item[1.] determines the \emph{page number} and \emph{offset} of the virtual address
   \begin{itemize}
     \item page number is the virtual address divided by the page size
     \item offset is the virtual address modulo the page size
@@ -348,7 +576,7 @@ Execution of each machine instruction may involve one, two, or more memory opera
 Address translation through a page table adds one extra memory operation (for page table entry lookup) for each memory operation performed during instruction execution. \\
 This can be slow! \\
 
-Solution: include a \defnterm{Translation Lookaside Buffer} (TLB) in the MMU,
+Solution: include a \emph{Translation Lookaside Buffer} (TLB) in the MMU,
 \begin{itemize}
   \item TLB is a small, fast, dedicated cache for address translation in the MMU
   \item Each TLB entry stores a (page number $\Rightarrow frame number$) mapping
@@ -366,14 +594,14 @@ else
 \end{verbatim}
 If the MMU cannot distinguish TLB entries from different address spaces, then the kernel must \emph{clear} or \emph{invalidate} the TLB on \emph{each} context switch from one process to another! \\
 
-This is a \defnterm{hardware-managed TLB},
+This is a \emph{hardware-managed TLB},
 \begin{itemize}
   \item the MMU handles TLB misses, including page table lookup and replacement of TLB entries
   \item MMU must understand the kernel's page table format
 \end{itemize}
 
 \subsection{Software-Managed TLBs}
-The MIPS has a \defnterm{software-managed TLB}, which translates a virtual address on page $p$ like this:
+The MIPS has a \emph{software-managed TLB}, which translates a virtual address on page $p$ like this:
 \begin{verbatim}
 if there is an entry (p,f) in the TLB then
   return f        /* TLB hit! */
@@ -446,7 +674,141 @@ With $K$ bits for the segment ID, we can have up to:
 \end{itemize}
 
 The kernel decides where each segment is placed in physical memory.
-Fragmentation of physical memory is possible! \\
+Fragmentation of physical memory is possible!
+
+\subsection{Translating Segmented Virtual Addresses}
+The MMU needs a relocation register and a limit register for each segment,
+\begin{itemize}
+  \item let $R_{i}$ be the relocation offset for the $i$th segment
+  \item let $L_{i}$ be the limit of the $i$th segment
+\end{itemize}
+To translate virtual address $v$ to a physical address $p$:
+\begin{align*}
+&\texttt{split } p \texttt{ into segment number }(s)\texttt{ and address within segment }(a) \\
+&\texttt{if } a \geq L_{s} \texttt{ then generate exception} \\
+&\texttt{else} \\
+&\quad p \gets a + R_{i}
+\end{align*}
+As for dynamic relocation, the kernel maintains a separate set of relocation offsets and limits for each process, and changes the values in the MMU's registers when there is a context switch between processes.
+
+\subsection{Two-Level Paging}
+Instead of having a single page table to map an entire virtual memory, we can split the page table into smaller page tables, and add page table directory.
+\begin{itemize}
+  \item Instead of one larger, contiguous table, we have multiple smaller tables
+  \item If all PTEs in a small table are invalid, we can avoid creating that table entirely
+\end{itemize}
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.7]{pictures/single_double_paging.png}
+  \caption{Single vs. Two Level Paging}
+  \label{fig:s_t_paging}
+\end{figure}
+Each virtual address has three parts:
+\begin{enumerate}
+  \item[1.] Level one page number: used to index the directory
+  \item[2.] Level two page number: used to index a page table
+  \item[3.] Offset within the page
+\end{enumerate}
+
+\subsection{Address Translation with Two-Level Paging}
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.7]{pictures/two_level_paing_trans.png}
+  \caption{Example of two-level address translation}
+  \label{fig:figure1}
+\end{figure}
+The MMU's \emph{page table base register} points to the page table directory for the current process. \\
+Each virtual address $v$ has three parts: $(p_{1}, p_{2}, o)$ \\
+How the MMU translate a virtual address:
+\begin{enumerate}
+  \item[1.] Index into the page table directory using $p_{1}$ to get a pointer to a 2nd level page table
+  \item[2.] If the directory entry is not valid, raise an exception
+  \item[3.] Index into the 2nd level page table using $p_{2}$ to find the PTE for the page being accessed
+  \item[4.] If the PTE is not valid, raise an exception
+  \item[5.] Otherwise, combine the frame number from the PTE with $o$ to determine the physical address (as for single-level paging)
+\end{enumerate}
+
+\subsection{Limits of Two-Level Paging}
+A goal of two-level paging was to keep individual page tables small. \\
+Suppose we have 40 bit virtual addresses ($V = 40$) and that
+\begin{itemize}
+  \item the size of a PTE is 4 bytes
+  \item page size is 4KB ($2^{12}$ bytes)
+  \item we'd like to limit each page table's size to 4KB
+\end{itemize}
+Problem: for large address spaces, we may need a large page table directory!
+\begin{itemize}
+  \item There can be up to $2^{28}$ pages in a virtual memory
+  \item A single page table can hold $2^{10}$ PTEs
+  \item We may need up to $2^{18}$ page tables
+  \item Our page table directory will have to have $2^{18}$ entries
+  \item If a directory entry is 4 bytes, the directory will occupy 1MB
+\end{itemize}
+This is the problem we were trying to avoid by introducing a second level!
+
+\subsection{Multi-Level Paging}
+We can solve the large directory problem by introducing additional levels of directories. \\
+Example: 4-level paging in x86-64 architecture. \\
+Properties of Multi-Level Paging:
+\begin{itemize}
+  \item can map large virtual memories by adding more levels
+  \item individual page table/directories can remain small
+  \item can avoid allocating page tables and directories that are not needed for programs that use a small amount of virtual memory
+  \item TLB misses become \emph{more} expensive as the number of levels goes up, since more directories must be accessed to find the correct PTE
+\end{itemize}
+
+\subsection{Virtual Memory in OS/161 on MIPS: \texttt{dumbvm}}
+The MIPS uses 32-bit paged virtual and physical addresses. \\
+The MIPS has a software-managed TLB,
+\begin{itemize}
+  \item TLB raises an exception on every TLB miss
+  \item kernel is free to record page-to-frame mappings however it wants to
+\end{itemize}
+
+TLB exceptions are handled by a kernel function called \texttt{vm\_fault} \\
+\texttt{vm\_fault} uses information from an \texttt{addrspace} structure to determine a page-to-frame mapping to load into the TLB,
+\begin{itemize}
+  \item there is a separate \texttt{addrspace} structure for each process
+  \item each \texttt{addrspace} structure describes where its process's pages are stored in physical memory
+  \item an \texttt{addrspace} structure does the same job as a page table, but the \texttt{addrspace} structure is simpler because OS/161 places all pages of each segment \emph{contiguously} in physical memory
+\end{itemize}
+
+\subsubsection{The \texttt{addrspace} Structure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.7]{pictures/addrspace.png}
+  \caption{\texttt{addrspace} diagram}
+  \label{fig:addrspace}
+\end{figure}
+\begin{verbatim}
+struct addrspace {
+  vaddr_t as_vbase1;      /* base virtual address of code segment */
+  paddr_t as_pbase1;      /* base physical address of code segment */
+  size_t as_npages1;      /* size (in pages) of code segment */
+  vaddr_t as_vbase2;      /* base virtual address of data segment */
+  paddr_t as_pbase2;      /* base physical address of data segment */
+  size_t as_npages2;      /* size (in pages) of data segment */
+  paddr_t as_stackpbase;  /* base physical address of stack */
+};
+\end{verbatim}
+
+\subsubsection{Address Translation: OS/161 dumbvm Example}
+\textbf{Note}: in OS/161, the stack is 12 pages and the page size is 4 KB = 0x1000. \\
+\begin{table}
+  \centering
+  \begin{tabular}{|r|r|r|}
+  \hline
+  Variable/Field & Process 1 & Process 2 \\ \hline \hline
+  as\_vbase1 & 0x0040 0000 & 0x0040 0000 \\ \hline
+  as\_pbase1 & 0x0020 0000 & 0x0050 0000 \\ \hline
+  as\_bpages1 & 0x0000 0008 & 0x0000 0002 \\ \hline
+  as\_vbase2 & 0x1000 0000 & 0x1000 0000 \\ \hline
+  as\_pbase2 & 0x0080 0000 & 0x00A0 0000 \\ \hline
+  as\_npages & 0x0000 0010 & 0x0000 0008 \\ \hline
+  as\_stackpbase & 0x0010 0000 & 0x00B0 0000 \\ \hline
+  \end{tabular}
+\end{table}
+
 
 %%%%%%%%%%%%%%%%
 %% SCHEDULING %%
