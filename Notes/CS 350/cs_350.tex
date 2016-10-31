@@ -140,24 +140,24 @@ In threaded concurrent programs, there are multiple threads of executions that a
 \subsection{OS/161's Thread Interface}
 Create a new thread:
 \begin{verbatim}
-int thread_fork(
-  const char *name,             // name of new thread
-  struct proc *proc,            // thread's process
-  void (*func)                  // new thread's function
-    (void *, unsigned long),
-  void *datat1,                 // function's first param
-  unsigned long data2           // function's second param
-);
+  int thread_fork(
+    const char *name,             // name of new thread
+    struct proc *proc,            // thread's process
+    void (*func)                  // new thread's function
+      (void *, unsigned long),
+    void *datat1,                 // function's first param
+    unsigned long data2           // function's second param
+  );
 \end{verbatim}
 
 Terminating the calling thread:
 \begin{verbatim}
-void thread_exit(void);
+  void thread_exit(void);
 \end{verbatim}
 
 Voluntarily yield execution:
 \begin{verbatim}
-void thread_yield(void);
+  void thread_yield(void);
 \end{verbatim}
 
 See \texttt{kern/include/thread.h}
@@ -180,7 +180,7 @@ Conceptually, each thread executes sequentially using its private register conte
   \item[3.] advance PC
 \end{enumerate}
 
-\begin{table}[h]
+\begin{table}[ht]
   \caption{MIPS Registers}
   \centering
 
@@ -225,46 +225,46 @@ Thread context must be saved/restored carefully, since thread execution continuo
 
 \textbf{Context Switch on the MIPS}, see \texttt{kern/arch/mips/thread/switch.S}
 \begin{verbatim}
-switchframe_switch:
-  /* a0: address of switchframe pointer of old thread. */
-  /* a1: address of switchframe pointer of new thread. */
-  /* Allocate stack space for saving 10 registers. 10*4 = 40 */
-  addi sp, sp, -40
+  switchframe_switch:
+    /* a0: address of switchframe pointer of old thread. */
+    /* a1: address of switchframe pointer of new thread. */
+    /* Allocate stack space for saving 10 registers. 10*4 = 40 */
+    addi sp, sp, -40
 
-  sw   ra, 36(sp)  /* Save the registers */
-  sw   gp, 32(sp)
-  sw   s8, 28(sp)
-  sw   s6, 24(sp)
-  sw   s5, 20(sp)
-  sw   s4, 16(sp)
-  sw   s3, 12(sp)
-  sw   s2, 8(sp)
-  sw   s1, 4(sp)
-  sw   s0, 0(sp)
+    sw   ra, 36(sp)  /* Save the registers */
+    sw   gp, 32(sp)
+    sw   s8, 28(sp)
+    sw   s6, 24(sp)
+    sw   s5, 20(sp)
+    sw   s4, 16(sp)
+    sw   s3, 12(sp)
+    sw   s2, 8(sp)
+    sw   s1, 4(sp)
+    sw   s0, 0(sp)
 
-  /* Store the old stack pointer in the old thread */
-  sw   sp, 0(a0)
+    /* Store the old stack pointer in the old thread */
+    sw   sp, 0(a0)
 
-  /* Get the new stack pointer from the new thread */
-  lw   sp, 0(a1)
-  nop             /* delay slot for load */
+    /* Get the new stack pointer from the new thread */
+    lw   sp, 0(a1)
+    nop             /* delay slot for load */
 
-  lw   s0, 0(sp)  /* Now, restore the registers */
-  lw   s1, 4(sp)
-  lw   s2, 8(sp)
-  lw   s3, 12(sp)
-  lw   s4, 16(sp)
-  lw   s5, 20(sp)
-  lw   s6, 24(sp)
-  lw   s8, 28(sp)
-  lw   gp, 32(sp)
-  lw   ra, 36(sp)
-  nop             /* delay slot for load */
+    lw   s0, 0(sp)  /* Now, restore the registers */
+    lw   s1, 4(sp)
+    lw   s2, 8(sp)
+    lw   s3, 12(sp)
+    lw   s4, 16(sp)
+    lw   s5, 20(sp)
+    lw   s6, 24(sp)
+    lw   s8, 28(sp)
+    lw   gp, 32(sp)
+    lw   ra, 36(sp)
+    nop             /* delay slot for load */
 
-  /* and return. */
-  j ra
-  addi sp, sp, 40 /* in delay slot */
-  .end switchframe_switch
+    /* and return. */
+    j ra
+    addi sp, sp, 40 /* in delay slot */
+    .end switchframe_switch
 \end{verbatim}
 
 \subsection{What Causes a Context Switch?}
@@ -290,10 +290,11 @@ So we have the following stack (in growth order) after preemption:
   \item saved thread context (switchframe)
 \end{itemize}
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
-  \includegraphics[scale=0.8]{pictures/thread_states.png}
+  \includegraphics[scale=0.6]{pictures/thread_states.png}
   \caption{Thread States}
+  \label{fig:thread_states}
 \end{figure}
 
 \subsection{Preemption}
@@ -359,7 +360,7 @@ Thread 2: program stack frame(s), thread\_yield, thread\_switch, switch frame. \
 
 Interrupt handler restores state from trap frame and returns. \\
 Thread 1: program stack frame(s). \\
-Thread 2: program stack frame(s), thread\_yield, thread\_switch, switch frame. \\
+Thread 2: program stack frame(s), thread\_yield, thread\_switch, switch frame.
 
 
 %%%%%%%%%%%%%%%%%%%%%
@@ -378,14 +379,220 @@ Otherwise, we may have a variable that is loaded before a loop and stored after 
 \subsection{Mutual Exclusion}
 To prevent race conditions, we can enforce \emph{mutual exclusion} on critical sections in the code. \\
 
-A \emph{race condition} is an undesirable situation that occurs when a device or system attempts to perform two or more operations at the same time, but because of the nature of the device or system, the operations must be done in the proper sequence to be done correctly. \\
+A \emph{race condition} is an undesirable situation that occurs when a device or system attempts to perform two or more operations at the same time, but because of the nature of the device or system, the operations must be done in the proper sequence to be done correctly.
 
 \subsubsection{Enforcing Mutual Exclusions With Locks}
 Acquire/Release must ensure that only one thread at a time can hold the lock, even if both attempt to Acquire at the same time. \\
 If a thread cannot Acquire the lock immediately, it must wait until the lock is available.
 
 \subsection{Hardware-Specific Synchronization Instructions}
-Used to implement synchronization primitives like locks.
+Used to implement synchronization primitives like locks. \\
+Provide a way to \emph{test and set} a lock in a single \emph{atomic} (indivisible) operation. \\
+\begin{ex*}
+x86 \texttt{xchg} instruction:
+\begin{verbatim}
+  xchg  src, addr
+\end{verbatim}
+where \texttt{src} is typically a register, and \texttt{addr} is a memory address. \\
+Value in register \texttt{src} is written to memory at address \texttt{addr}, and the old value at \texttt{addr} is placed into \texttt{src}.
+\end{ex*}
+Logical behaviour of \texttt{xchg} can be thought of as an \emph{atomic} function that behaves like this:
+\begin{verbatim}
+  Xchg(value,addr) {
+    old = *addr;
+    *addr = value;
+    return(old);
+  }
+\end{verbatim}
+
+\subsubsection{Lock Acquire and Release with Xchg}
+\begin{verbatim}
+  Acquire(bool *lock) {
+    while (Xchg(true,lock) == true) ;
+  }
+  Release(book *lock) {
+    *lock = false; /* give up the lock */
+  }
+\end{verbatim}
+If \texttt{Xchg} returns \texttt{true}, the lock was already set, and we must continue to loop. \\
+If \texttt{Xchg} returns \texttt{false}, then the lock was free, and we have now acquired it. \\
+
+This construct is known as a \emph{spin lock}, since a thread busy-waits (loops) in Acquire until the lock is free!
+
+\subsubsection{Other Synchronization Instructions}
+SPARC \texttt{cas} instruction
+\begin{verbatim}
+  cas   addr, R1, R2
+\end{verbatim}
+if value at \texttt{addr} matches value in \texttt{R1} then swap contents of \texttt{addr} and \texttt{R2}. \\
+
+Compare-And-Swap \\
+\begin{verbatim}
+  CompareAndSwap(addr, expectedval, newval)
+    old = *addr;            // get old value at addr
+    if (old == expectedval)
+      *addr = newval;
+    return old;
+\end{verbatim}
+
+MIPS load-linked and store-conditional \\
+Load-linked returns the current value of a memory location, while a subsequent store-conditional to the same memory location will store a new value only if no updates have occurred to that location since the load-linked.
+
+\subsection{Spinlocks in OS/1616}
+\begin{verbatim}
+  struct spinlock {
+    volatile spinlock_data_t lk_lock;
+    struct cpu *lk_holder;
+  };
+  void spinlock_init(struct spinlock *lk);
+  void spinlock_acquire(struct spinlock *lk);
+  void spinlock_release(struct spinlock *lk);
+\end{verbatim}
+\texttt{spinlock\_acquire} calls \texttt{spinlock\_data\_testandset} in a loop until the lock is acquired. \\
+Using Load-Linked/Store-Conditional:
+\begin{verbatim}
+  /* return value 0 indicates lock was acquired */
+  spinlock_data_testandset(volatile spinlock_data_t *sd) {
+    spinlock_data_t x,y;
+    y = 1;
+    __asm volatile(
+      ".set push;"      /* save assembler mode */
+      ".set mips32;"    /* allow MIPS32 instructions */
+      ".set volatile;"  /* avoid unwanted optimization */
+      "ll %0, 0(%2);"   /* x = *sd */
+      "sc %1, 0(%2);"   /* *sd = y; y = success? */
+      ".set pop"        /* restore assembler mode */
+      : "=r" (x), "+r" (y) : "r" (sd));
+    if (y == 0) { return 1; }
+  return x; }
+\end{verbatim}
+
+\subsection{OS/161 Locks}
+In addition to spinlocks, OS/161 also has \emph{locks}. \\
+Like spinlocks, locks are used to enforce mutual exclusion.
+\begin{verbatim}
+  struct lock *mylock = lock_create("LockName");
+
+  lock_acquire(mylock);
+    critical section
+  lock_release(mylock);
+\end{verbatim}
+
+Spinlock \emph{spins}, locks \emph{blocks}:
+\begin{itemize}
+  \item a thread that calls \texttt{spinlock\_acquire} spins until the lock can be acquired
+  \item a thread that called \texttt{lock\_acquire} \emph{blocks} until the lock can be acquired
+\end{itemize}
+
+\subsection{Thread Blocking}
+Sometimes a thread will need to wait for something, e.g.:
+\begin{itemize}
+  \item wait for a lock to be released by another thread
+  \item wait for data from a (relatively) slow device
+  \item wait for input from a keyboard
+  \item wait for busy device to become idle
+\end{itemize}
+
+When a thread blocks, it stops running:
+\begin{enumerate}
+  \item[i.] the scheduler chooses a new thread to run
+  \item[ii.] a context switch from the blocking thread to the new thread occurs
+  \item[iii.] the blocking thread is queued in a \emph{wait queue} (not on the ready list)
+\end{enumerate}
+
+Eventually, a blocked thread is signalled and awakened by another thread.
+
+\subsection{Wait Channels in OS/161}
+Wait channels are used to implement thread blocking in OS/161.
+\begin{itemize}
+  \item \texttt{void wchan\_sleep (struct wchan *wc);} \\
+  blocks calling thread on wait channel \texttt{wc} \\
+  causes a context switch, like \texttt{thread\_yield}
+  \item \texttt{void wchan\_wakeall (struct wchan *wc);} \\
+  unblocks all threads sleeping on waiting channel \texttt{wc}
+  \item \texttt{void wchan\_wakeone (struct wchan *wc);} \\
+  unblocks one thread sleeping on waiting channel \texttt{wc}
+  \item \texttt{void wchan\_lock (struct wchan *wc);} \\
+  prevent operations on wait channel \texttt{wc}
+\end{itemize}
+There can be many different wait channels, holding threads that are blocked for different reasons.
+
+\subsection{Thread States, Revisited}
+Refer to \ref{fig:thread_states}. \\
+Ready threads are queued on the ready queue, blocked threads are queued on wait channels.
+
+\subsection{Semaphores}
+A semaphore is a synchronization primitive that can be used to enforce mutual exclusion requirements.
+It can also be used to solve other kinds of synchronization problems. \\
+
+A semaphore is an object that has an integer value, and that supports two operations (\emph{atomic} by definition):
+\begin{itemize}
+  \item[\textbf{P}:] if the semaphore value is greater than 0, decrement the value. \\
+  Otherwise, wait until the value is greater than 0 and then decrement it.
+  \item[\textbf{V}:] increment the value of the semaphore
+\end{itemize}
+
+\subsection{Condition Variables in OS/161}
+Each cv is purposed to work together along with a lock: cvs are used \emph{from within the critical section protected by the lock}. \\
+Supported operations:
+\begin{itemize}
+  \item[\textbf{wait}:] causes calling thread to block, and it releases the lock associated within the cv. \\
+  Once the thread is unblocked, it reacquires the lock.
+  \item[\textbf{signal}:] one of the threads blocked on the signalled cv is unblocked
+  \item[\textbf{broadcast}:] all threads blocked on the cv are unblocked
+\end{itemize}
+
+\subsubsection{Using Condition Variables}
+Cvs allow threads to wait for arbitrary conditions to become true inside of a critical section. \\
+By convention, each cv corresponds to a particular condition of interest to an application. \\
+When a condition is not true, a thread can \texttt{wait} on the corresponding cv until it becomes true. \\
+When a thread detects that a condition is true, it uses \texttt{signal} or \texttt{broadcast} to notify any threads that may be waiting. \\
+
+Note: signalling (or broadcasting to) a cv that has no waiting threads has \emph{no effect}.
+Signals \emph{do not} accumulate.
+
+\subsubsection{Waiting on Condition Variables}
+The OS/161 condition variables follows the Mesa-style condition variables. \\
+When a blocked thread is unblocked, it reacquires the lock before returning from the \texttt{wait} call. \\
+A thread is in the critical section when it calls \texttt{wait}, and it will be in the critical section when \texttt{wait} returns.
+In between the call and the return, while the caller is blocked, the caller is \emph{out} of the critical section, and other threads may enter! \\
+The thread that calls \texttt{signal} (or \texttt{broadcast}) to wake up the waiting thread will itself be in the critical section when it signals.
+The waiting threads need to wait until the signaller releases the lock before it unblocks and return from the \texttt{wait} call.
+
+\subsubsection{Example}
+\begin{verbatim}
+  int volatile count = 0;
+  struct lock *mutex;
+  struct cv *notfull, *notempty;
+  /* Initialization Note: the lock and cv’s must be created
+   * using lock_create() and cv_create() before Produce()
+   * and Consume() are called
+   */
+  Produce(itemType item) {            itemType Consume() {
+    lock acquire(mutex);                lock_acquire(mutex);
+    while (count == N) {                while (count == 0)
+      cv_wait(notfull, mutex);            cv_wait(nonempty, mutex);
+    }                                   remove item from buffer
+    add item to buffer                  count = count - 1;
+    count = count + 1;                  cv_signal(notfull, mutex);
+    cv_signal(notempty, mutex);         lock_release(mutex);
+    lock release(mutex);                return(item);
+  }                                   }
+\end{verbatim}
+
+\subsection{Deadlocks}
+Threads are \emph{deadlocked} when none of the threads can make progress (i.e. waiting on a lock indefinitely). \\
+Waiting does not resolve the deadlock. \\
+Those threads are permanently stuck.
+
+\subsubsection{Two Techniques for Deadlock Prevention}
+\textbf{No Hold and Wait}:
+prevent a thread from requesting resources if it currently has resources allocated to it. \\
+A thread may hold several resources, but to do so it must make a single request for all of them. \\
+
+\textbf{Resource Ordering}:
+Order the resource types, and require that each thread acquire resources in increasing resource type order. \\
+That is, a thread may make no request for resources of type less than or equal to $i$ if it is holding resources of type $i$.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -393,12 +600,299 @@ Used to implement synchronization primitives like locks.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \section{Processes and System Calls}
+\subsection{What is a Process?}
+A \emph{process} is an environment in which an application program runs. \\
+A process includes virtualized \emph{resources} that its program can use:
+\begin{itemize}
+  \item one (or more) threads
+  \item virtual memory, used for the program's code and data
+  \item other resources
+\end{itemize}
+Processes are created and managed by the \emph{kernel}. \\
+Each program's process \emph{isolates} it from other programs in other processes.
+
+\subsection{System Calls}
+System calls (syscalls) are the interface between processes and the kernel. \\
+A process uses syscalls to request operating system services.
+\begin{table}[ht]
+  \caption{Syscall examples}
+  \label{tab:ex_syscall}
+  \centering
+  \begin{tabular}{c|l}
+  Services & OS/161 Examples \\ \hline
+  create, destroy, manage processes & \texttt{fork, execv, waitpid, getpid} \\
+  create, destroy, read, write files & \texttt{open, close, remove, read, write} \\
+  manage file system and directories & \texttt{mkdir, rmdir, link, sync} \\
+  interprocess communication & \texttt{pipe, read, write} \\
+  manage virtual memory & \texttt{sbrk} \\
+  query, manage system & \texttt{reboot, \_time}
+  \end{tabular}
+\end{table}
+
+\subsection{Kernel Privilege}
+Kernel code runs at a higher level of \emph{execution privilege} than application code. \\
+Privilege levels are implemented by the CPU. \\
+
+The kernel's higher privilege level allows it to do things that the CPU prevents less-privileged (application) programs from doing, like
+\begin{itemize}
+  \item application programs cannot modify the page tables that the kernel uses to implement process virtual memories
+  \item application programs cannot halt the CPU
+\end{itemize}
+
+These restrictions allow the kernel to keep processes isolated from one another --- and from the kernel. \\
+
+\textbf{Note}: application programs cannot directly call kernel functions or access kernel data structures.
+
+\subsection{How System Calls Work}
+There are only \emph{two} things that make kernel code run! \\
+
+On the MIPS, the same mechanism handles exceptions and interrupts, and there is a single handler for both in the kernel.
+The handler uses these codes to determine what triggered it to run.
+
+\subsubsection{Interrupts}
+Interrupts are generated by devices. \\
+An interrupt means a device (hardware) needs attention. \\
+
+Recall that an interrupt causes the hardware to transfer control to a fixed location in
+memory, where an \emph{interrupt handler} is located. \\
+
+Interrupt handlers are part of the kernel. \\
+If an interrupt occurs while an application program is running, control will jump from the application to the kernel’s interrupt handler. \\
+
+When an interrupt occurs, the processor switches to privileged execution mode when it transfers control to the interrupt handler.
+This is how the kernel gets its execution privilege.
+
+\subsubsection{Exceptions}
+Exceptions are caused by instruction execution. \\
+An exception means that a running program needs attention. \\
+
+Exceptions are conditions that occur during the execution of a program instruction. \\
+Examples: arithmetic overflows, illegal instructions, or page faults. \\
+
+Exceptions are detected by the CPU during instruction execution. \\
+
+The CPU handles exceptions like it handles interrupts:
+\begin{itemize}
+  \item control is transferred to a fixed location, where an \emph{exception handler} is located
+  \item the processor is switched to privileged execution mode
+\end{itemize}
+The exception handler is part of the kernel \\
+
+\textbf{MIPS Exception Types}:
+\begin{verbatim}
+  EX_IRQ    0     /* Interrupt */
+  EX_MOD    1     /* TLB Modify (write to read-only page) */
+  EX_TLBL   2     /* TLB miss on load */
+  EX_TLBS   3     /* TLB miss on store */
+  EX_ADEL   4     /* Address error on load */
+  EX_ADES   5     /* Address error on store */
+  EX_IBE    6     /* Bus error on instruction fetch */
+  EX_DBE    7     /* Bus error on data load *or* store */
+  EX_SYS    8     /* Syscall */
+  EX_BP     9     /* Breakpoint */
+  EX_RI     10    /* Reserved (illegal) instruction */
+  EX_CPU    11    /* Coprocessor unusable */
+  EX_OVF    12    /* Arithmetic overflow */
+\end{verbatim}
+
+\subsubsection{Performing a Syscall}
+To perform a syscall, the application program needs to cause an exception to make the kernel execute! \\
+The kernel's exception handler checks the exception code (set by the CPU when the exception is generated) to distinguish syscall exceptions from other types of exceptions. \\
+
+On the MIPS, \texttt{EX\_SYS} is the syscall exception. \\
+To cause this exception on the MIPS, the application executes a special purpose instruction: \texttt{syscall}.
+Other processor instruction sets include similar instructions, e.g., \texttt{syscall} on x86.
+
+\subsubsection{System Call Timeline}
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[scale=0.39]{pictures/syscall_stack.png}
+  \caption{System call software stack}
+  \label{fig:syscall_stack}
+\end{figure}
+\begin{enumerate}
+  \item[1.] application calls library wrapper function for desired system call
+  \item[2.] library function performs \texttt{syscall} instruction
+  \item[3.] kernel exception handler runs
+  \begin{itemize}
+    \item creates a trap frame to save application program state
+    \item determines that this is a syscall exception
+    \item determines which syscall is being requested
+    \item does the work for the requested system call
+    \item restores the application program state from the trap frame
+    \item returns from the exception
+  \end{itemize}
+  \item[4.] library wrapper function finishes and returns from its call
+  \item[5.] application continues execution
+\end{enumerate}
+
+\subsubsection{Which Syscall?}
+The kernel uses system call codes to determine which syscall the application is requesting,
+\begin{itemize}
+  \item the kernel defines a code for each syscall it understands
+  \item the kernel expects the application to place a code in a specified location before executing the \texttt{syscall} instruction. \\
+  For OS/161 on the MIPS, the code goes in register \texttt{v2}
+  \item the kernel's exception handler checks this code to determine which system call has been requested
+  \item the codes and and code location are part of the \emph{kernel ABI} (Application Binary Interface)
+\end{itemize}
+
+\subsubsection{Syscall Parameters}
+The application places parameter values in kernel-specified locations before the \texttt{syscall}, and looks for return values in kernel-specified locations after the exception handler returns,
+\begin{itemize}
+  \item The locations are part of the kernel ABI
+  \item Parameter and return value placement is handled by the application system call library functions
+  \item On the MIPS
+  \begin{itemize}
+    \item parameters go in registers \texttt{a0, a1, a2, a3}
+    \item result success/fail code is in \texttt{a3} on return
+    \item return value or error code is in \texttt{v0} on return
+  \end{itemize}
+\end{itemize}
+
+\subsection{User and Kernel Stacks}
+Every OS/161 process thread has two stacks, although it only uses one at a time. \\
+
+\textbf{User (Application) Stack}: used while application code is executing,
+\begin{itemize}
+  \item this stack is located in the application's virtual memory
+  \item it holds activation records for application functions
+  \item the kernel creates this stack when it sets up the virtual address memory for the process
+\end{itemize}
+
+\textbf{Kernel Stack}: used while the thread is executing kernel code, after an exception or interrupt,
+\begin{itemize}
+  \item this stack is a kernel structure
+  \item in OS/161, the \texttt{t\_stack} field of the \texttt{thread} structure points to this stack
+  \item this stack holds activation records for kernel functions
+  \item this stack also holds \emph{trap frames} and \emph{switch frames} (because the kernel creates trap frames and switch frames)
+\end{itemize}
+
+\subsection{Exception Handling in OS/161}
+First to run is careful assembly code that
+\begin{itemize}
+  \item saves the application stack pointer
+  \item switches the stack pointer to point to the thread's kernel stack
+  \item carefully saves application state and the address of the instruction that was interrupted in a trap frame on the thread's kernel stack
+  \item calls \texttt{mips\_trap}, passing a pointer to the trap frame as a parameter
+\end{itemize}
+
+After \texttt{mips\_trap} is finished, the handler will
+\begin{itemize}
+  \item restore application state (including the application stack pointer) from the trap frame on the thread's kernel stack
+  \item jump back to the application instruction that was interrupted, and switch back to unprivileged execution mode
+\end{itemize}
+
+\subsubsection{mips\_trap}
+\texttt{mips\_trap} determines what type of exception this is by looking at the exception code. \\
+There is a separate handler in the kernel for each type of exception:
+\begin{itemize}
+  \item interrupt? call \texttt{mainbus\_interrupt}
+  \item address translation exception? call \texttt{vm\_fault}
+  \item system call? call \texttt{syscall} (kernel function), passing it the trap frame pointer
+\end{itemize}
+
+\subsection{Multiprocessing}
+Multiprocessing (or multitasking) means having multiple processes existing at the same time. \\
+
+All processes share the available hardware resources, with the sharing coordinated by the OS:
+\begin{itemize}
+  \item Each process' virtual memory is implemented using some of the available physical memory. \\
+  The OS decides how much memory each process gets.
+  \item Each process' threads are scheduled onto the available CPUs (or CPU cores) by the OS.
+  \item Processes share access to other resources (e.g., disks, network devices, I/O devices) by making syscalls. \\
+  The OS controls this sharing.
+\end{itemize}
+
+The OS ensures that processes are isolated from one another. \\
+Interprocess communication should be possible, but only at the explicit request of the processes involved.
+
+\begin{table}[h]
+  \caption{Syscalls for Process Management}
+  \label{tab:syscall_pmanage}
+  \centering
+
+  \begin{tabular}{|c||c|c|}
+  \hline
+  & Linux & OS/161 \\ \hline
+  Creation & \texttt{fork, execv} & \texttt{fork, execv} \\ \hline
+  Destruction & \texttt{\_exit, kill} & \texttt{\_exit} \\ \hline
+  Synchronization & \texttt{wait, waitpid, pause, ...} & \texttt{waitpid} \\ \hline
+  Attribute Mgmt & \texttt{getpid, getuid, nice, getrusage, ...} & \texttt{getpid} \\ \hline
+  \end{tabular}
+\end{table}
+
+\subsection{\texttt{fork}, \texttt{\_exit}, and \texttt{waitpid}}
+\texttt{fork} creates a new process (the \emph{child}) that is a clone of the original (the \emph{parent}),
+\begin{itemize}
+  \item after \texttt{fork}, both parent and child are executing copies of the same program
+  \item virtual memories of parent and child are identical at the time of the fork, but may diverge afterwards
+  \item \texttt{fork} is called by the parent, but returns in \emph{both} the parent and the child! \\
+  Parent and child see different return values from \texttt{fork}, parent gets child's pid and child gets 0.
+\end{itemize}
+
+\texttt{\_exit} terminates the process that calls it,
+\begin{itemize}
+  \item process can supply an exit status code when it exits
+  \item kernel records the exit status code in case another process asks for it (via \texttt{waitpid})
+\end{itemize}
+
+\texttt{waitpid} lets a process wait for another to terminate, and retrieve its exit status code.
+
+\subsection{The \texttt{execv} system call}
+\texttt{execv} changes the program that a process is running. \\
+The calling process's current virtual memory is destroyed. \\
+The process gets a new virtual memory, initialized with the code and data of the new program to run. \\
+After \texttt{execv}, the new program starts executing.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %% ASSIGNMENT 2A REVIEW %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \section{Assignment 2A Review}
+\subsection{\texttt{fork}}
+\begin{enumerate}
+  \item[i.] Create process structure for child process. \\
+  Use \texttt{proc\_create\_runprogram} to create the process structure, sets up the VFS and console.
+  \item[ii.] Create and copy address space (and data) from parent to child. \\
+  Child process must be identical to the parent process. \\
+  \texttt{as\_copy} creates a new address space, and copies the pages from the old address space to the new one. \\
+  Address space is not associated with the new process yet.
+  \item[iii.] Attach the newly created address space to the child process structure.
+  \item[iv.] Assign PID to child process and create the parent/child relationship. \\
+  PIDs should be unique (no two processes should have the same PID). \\
+  PIDs should be reusable.
+  \item[v.] Create thread for child process (need a safe way to pass the trapframe to the child thread). \\
+  Use \texttt{thread\_fork} to create a new thread. \\
+  Need to pass trapframe to the child thread.
+  \item[vi.] Child thread needs to put the trapframe onto the stack and modify it so that it returns the current value (and executes the next instruction)
+  \item[vii.] Call \texttt{mips\_usermode} in the child to go back to userspace
+\end{enumerate}
+
+\textbf{Note}: need to ensure that the new thread does not go to user mode until its address space and trap frame have been set up (requires synchronization)!
+In addition, the parent process must not return to user mode until its address space and trap frame have been copied.
+
+\subsection{\texttt{waitpid}}
+Only the parent can call \texttt{waitpid} on its children. \\
+If \texttt{waitpid} is called before the child process exits, then the parent must wait/block. \\
+If \texttt{waitpid} is called after the child process has exited, then the parent should immediately get the exit status and exit code. \\
+PID cleanup should not rely on \texttt{waitpid}.
+Parent process is not guaranteed to call \texttt{waitpid} when it exits.
+
+\subsection{\texttt{getpid}}
+Returns the PID of the current process. \\
+Need to perform process assignment even without/before any fork calls.
+The first user process might call \texttt{getpid} before creating any children.
+\texttt{getpid} needs to return a valid PID for this process.
+
+\subsection{\texttt{\_exit}}
+Causes the current process to exit. \\
+Exit code is passed to the parent process
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ASSIGNMENT 2B REVIEW %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Assignment 2B Review}
 
 %%%%%%%%%%%%%%%%%%%%
 %% VIRTUAL MEMORY %%
@@ -585,12 +1079,12 @@ Solution: include a \emph{Translation Lookaside Buffer} (TLB) in the MMU,
 \subsection{TLB Use}
 What the MMU does to translate a virtual address on page $p$:
 \begin{verbatim}
-if there is an entry (p, f) in the TLB then
-  return f  /* TLB hit! */
-else
-  find p's frame number (f) from the page table
-  add (p, f) to the TLB, evicting another entry if full
-  return f  /* TLB miss */
+  if there is an entry (p, f) in the TLB then
+    return f  /* TLB hit! */
+  else
+    find p's frame number (f) from the page table
+    add (p, f) to the TLB, evicting another entry if full
+    return f  /* TLB miss */
 \end{verbatim}
 If the MMU cannot distinguish TLB entries from different address spaces, then the kernel must \emph{clear} or \emph{invalidate} the TLB on \emph{each} context switch from one process to another! \\
 
@@ -603,10 +1097,10 @@ This is a \emph{hardware-managed TLB},
 \subsection{Software-Managed TLBs}
 The MIPS has a \emph{software-managed TLB}, which translates a virtual address on page $p$ like this:
 \begin{verbatim}
-if there is an entry (p,f) in the TLB then
-  return f        /* TLB hit! */
-else
-  raise exception /* TLB miss */
+  if there is an entry (p,f) in the TLB then
+    return f        /* TLB hit! */
+  else
+    raise exception /* TLB miss */
 \end{verbatim}
 In case of a TLB miss, the kernel must
 \begin{enumerate}
@@ -615,7 +1109,7 @@ In case of a TLB miss, the kernel must
 \end{enumerate}
 After the miss is handled, the instruction that caused the exception is re-tried.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[scale=0.6]{pictures/mips_tlb.png}
   \caption{The MIPS R3000 TLB}
@@ -625,7 +1119,7 @@ The MIPS TLB has room for 64 entries. Each entry is 64 bits (8 bytes) long. \\
 See \texttt{kern/arch/mips/include/tlb.h}
 
 \subsection{Large, Sparse Virtual Memories}
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[scale=0.65]{pictures/real_v_mem.png}
   \caption{A more realistic virtual memory; this is a layout of the virtual address space for \texttt{user/testbin/sort} in OS/161}
@@ -652,7 +1146,7 @@ A kernel that used simple paging would require a page table with $2^{20}$ PTEs (
 \end{itemize}
 
 \subsection{Segmentation}
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[scale=0.7]{pictures/seg_addr_space.png}
   \caption{Example of segment address space}
@@ -697,7 +1191,7 @@ Instead of having a single page table to map an entire virtual memory, we can sp
   \item Instead of one larger, contiguous table, we have multiple smaller tables
   \item If all PTEs in a small table are invalid, we can avoid creating that table entirely
 \end{itemize}
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[scale=0.7]{pictures/single_double_paging.png}
   \caption{Single vs. Two Level Paging}
@@ -711,11 +1205,11 @@ Each virtual address has three parts:
 \end{enumerate}
 
 \subsection{Address Translation with Two-Level Paging}
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[scale=0.7]{pictures/two_level_paing_trans.png}
   \caption{Example of two-level address translation}
-  \label{fig:figure1}
+  \label{fig:two_level_addr_translation}
 \end{figure}
 The MMU's \emph{page table base register} points to the page table directory for the current process. \\
 Each virtual address $v$ has three parts: $(p_{1}, p_{2}, o)$ \\
@@ -774,22 +1268,22 @@ TLB exceptions are handled by a kernel function called \texttt{vm\_fault} \\
 \end{itemize}
 
 \subsubsection{The \texttt{addrspace} Structure}
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[scale=0.7]{pictures/addrspace.png}
   \caption{\texttt{addrspace} diagram}
   \label{fig:addrspace}
 \end{figure}
 \begin{verbatim}
-struct addrspace {
-  vaddr_t as_vbase1;      /* base virtual address of code segment */
-  paddr_t as_pbase1;      /* base physical address of code segment */
-  size_t as_npages1;      /* size (in pages) of code segment */
-  vaddr_t as_vbase2;      /* base virtual address of data segment */
-  paddr_t as_pbase2;      /* base physical address of data segment */
-  size_t as_npages2;      /* size (in pages) of data segment */
-  paddr_t as_stackpbase;  /* base physical address of stack */
-};
+  struct addrspace {
+    vaddr_t as_vbase1;      /* base virtual address of code segment */
+    paddr_t as_pbase1;      /* base physical address of code segment */
+    size_t as_npages1;      /* size (in pages) of code segment */
+    vaddr_t as_vbase2;      /* base virtual address of data segment */
+    paddr_t as_pbase2;      /* base physical address of data segment */
+    size_t as_npages2;      /* size (in pages) of data segment */
+    paddr_t as_stackpbase;  /* base physical address of stack */
+  };
 \end{verbatim}
 
 \subsubsection{Address Translation: OS/161 dumbvm Example}
