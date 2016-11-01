@@ -31,6 +31,7 @@
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{ex}[theorem]{Example}
+\newtheorem*{ex*}{Example}
 \newtheorem{defn}{Definition}
 
 \crefname{ex}{Example}{Example}
@@ -39,6 +40,9 @@
 \newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
 
 \newcommand{\defnterm}[1]{\textbf{\textcolor{teal}{#1}}\index{#1}}
+
+\newcommand{\floor}[1]{\ensuremath{\left\lfloor #1 \right\rfloor}}
+\newcommand{\ceil}[1]{\ensuremath{\left\lceil #1 \right\rceil}}
 
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
@@ -74,8 +78,144 @@
 
 \section{Selection in deterministic linear time}
 \lecture{October 25, 2016}
+In the selection problem, the goal is to determine the $i$-th smallest element from an unsorted list of $n$ elements in linear time. \\
+``Deterministic'' here means that no random numbers are used. \\
+For simplicity, suppose that all elements are distinct, but this is not crucial as a small modification will make it work any list. \\
+
+We want to cleverly choose a pivot to partition the list for selection. \\
+So we have the ``medians-of-five'' algorithm by Blum, Floyd, Pratt, Rivest, and Tarjan (1973). \\
+
+Idea: \\
+Split the list into $\floor{\frac{n}{5}}$ groups of 5 elements, and one additional group of at most 4 elements. \\
+Then sort each group of 5 elements, and find the median of each group of 5.
+This can be done in constant time, so sorting each group of 5 costs $O(n)$. \\
+Note that that median is the 3rd (center) element in the group of 5.
+This gives a list of $\floor{\frac{n}{5}}$ medians. \\
+Now recursively determine the median of these $\floor{\frac{n}{5}}$ medians, which is the element we'll partition around. \\
+
+We arrive at the algorithm:
+\begin{algorithmic}
+\Function{select}{$A, i$}
+  \State $n \gets |A|$
+  \If{$n < 60$}
+    \State \Call{sort}{$A$}
+    \State \Return $i$-th smallest element
+  \Else
+    \State $m \gets \floor{\frac{n}{5}}$
+    \State divide A up to $m$ groups of 5 elements, with at most one remaining group of $\leq 4$ elements
+    \State sort each of the $m$ groups in ascending order
+    \State $M \gets$ array of medians of each group
+    \State $x \gets \Call{select}{M}{\ceil{m/2}}$
+    \Comment{median of all the medians}
+    \State $k \gets \Call{x-partition}{A, x}$
+    \Comment{partition array A into elements $\leq$ x and elements $>$ x; returns number of elements on ``low side'' of the partition}
+    \If{$i = k$}
+      \State \Return $x$
+    \ElsIf{$i < k$}
+      \State \Return \Call{select}{$A[1..k-1], i$}
+    \Else
+      \State \Return \Call{select}{$A[k+1..n], i - k$}
+    \EndIf
+  \EndIf
+\EndFunction
+\end{algorithmic}
+
+Let's obtain a lower bound on the number of elements $> x$, the median of medians. \\
+Here's a picture for $n = 37$:
+\begin{verbatim}
+smallest   S    S    S    S    *    *    *    *
+
+           S    S    S    S    *    *    *    *
+
+           S    S    S    m    L    L    L
+
+           *    *    *    L    L    L    L
+
+largest    *    *    *    L    L    L    L
+
+m = median of medians
+\end{verbatim}
+
+There are $\floor{\frac{n}{5}}$ total columns in which 5 elements appear. \\
+Of these, at least $\frac{1}{2}$ (more precisely, $\ceil{\floor{n/5}/2}$) contain an L.
+All of these columns, except the one where $x$ appears, contributes 3 to the count of L's; the one where $x$ appears contributes 2. \\
+
+The conclusion is that $\geq 3\ceil{\floor{n/5}/2} - 1$ elements are L's, that is, greater than $x$.
+Hence, at most $\leq n - (3\ceil{\floor{n/5}/2} - 1)$ elements are $\leq x$. \\
+
+Then, $n - (3\ceil{\floor{n/5}/2} - 1) \leq 7n/10 + 3$ for all $n \geq 1$.
+To prove this, see that
+$$\floor{n/5} \geq n/5 - 1$$
+so
+$$ceil{floor{n/5}/2} \geq n/10 - 1/2$$
+then
+$$3\ceil{\floor{n/5}/2} - 1 \geq 3n/10 - 5/2$$
+hence
+$$n - (3\ceil{\floor{n/5}/2} - 1) \leq 7n/10 + 3$$
+
+We can also claim that at most $(7n/10 + 3)$ elements are $\geq x$ using the same proof above. \\
+So whether we recurse in the smaller elements or larger elements, we can use this bound. \\
+
+It follows that the time $T(n)$ to select from a list of n elements satisfies the following inequality:
+$$T(n) \leq T(\floor{n/5}) + T(r) + dn$$
+where $r \leq 7n/10 + 3$, and the $dn$ term soaks up the time needed to do the sorting of 5-element groups, and the partitioning. \\
+
+Suppose that this recurrence obeys $T(n) \leq cn$ for some $c$,
+\begin{align*}
+T(n) &\leq T(\floor{n/5}) + T(r) + dn \\
+&\leq cn/5 + cr + dn \\
+&\leq cn/5 + c(7n/10 + 3) + dn \\
+&\leq 9cn/10 + 3c + dn
+\end{align*}
+and we want this to be less than $cn$. \\
+
+Now, $9cn/10 + 3c + dn \leq cn \iff (c/10 - d)n \geq 3c$ \\
+Now $n$ had better be bigger than 30 here, or else we are in a heap o' trouble.
+So let's assume $n \geq 60$. Then $(c/10 - d) n \geq (c/10 - d) 60$, and if this is to be $\geq 3c$, then we must have $6c - 60d \geq 3c$, and so $c \geq 20d$. \\
+If $n \geq 60$, and $c \geq 20d$, then the induction step indeed works. \\
+
+To complete the proof, it remains to see that $T(n) \leq cn$ for $n = 1, 2, 3, \dots, 59$. \\
+To do this, simply choose
+$$c = max(20d, T(1), T(2)/2, ..., T(59)/59)$$
+
+That looks like cheating, but it works. \\
+Now the basis (namely $1 \leq n \leq 59$) works out just fine, and so does the induction step.
+
+The presence of these large constants (such as $c = 20d$) suggests that this algorithm is of more theoretical than practical interest. \\
+However, with a bit more work, the number of comparisons can be reduced quite a lot, down to $(3+o(1))n = 3n + o(n)$. \label{sec:linear_select}
 
 \section{Lower bounds}
+Can we prove that an algorithm is best possible?
+Sometimes. \\
+
+We argued that any comparison-based algorithm for sorting must use $\Omega(n \lg n)$ time.
+And in reference to the convex hull algorithm, we argued that we couldn't do better than $\Omega(n \lg n)$, because we could use convex hull as a subroutine to create a sorting algorithm;
+if we could solve convex hull in $o(n \lg n)$ time, then we would end up being able to sort in $o(n \lg n)$ time, a contradiction. \\
+
+By ``lower bounds'', we mean a lower bound on the complexity of a \emph{problem}, not an algorithm.
+Basically we need to prove that \emph{no algorithm}, no matter how complicated or clever, can do better than our bound. \\
+We don't need each algorithm to be ``slow'' as $f(n)$ on the \emph{same} input, but we do need each algorithm to be ``slow'' as $f(n)$ on \emph{some} input. \\
+Also, a lower bound doesn't rule out the possibility that some algorithm might be very fast on \emph{some inputs} (but not all).
+
+What do we mean by complexity of a problem? \\
+We say that a function $f$ is a lower bound on the complexity of a problem $P$ if, for \emph{every algorithm} $A$ to solve $P$, and every positive integer $n$, there exists some input $I$ of size $n$ such that $A$ uses at least $f(n)$ steps on input $I$. \\
+
+The easiest kind of lower bound is the ``information-theoretic bound''. \\
+Idea: every algorithm that uses \emph{only} yes/no questions to decide among $k$ possible alternatives, \emph{must} ask at least $(\lg k)$ questions in the worst case.
+\begin{proof}
+Use an ``adversary argument''. \\
+The adversary doesn't decide on one of the alternatives ahead of time, but rather it answers the algorithm's questions by always choosing the alternative that maximizes the size of the solution space. \\
+Since the questions are yes/no, the solution space goes down in size by a factor of at most two with each question. \\
+The algorithm cannot answer correctly with certainty unless the solution space is of size 1. \\
+Thus at least $(\lg k)$ questions are needed.
+\end{proof}
+
+\begin{theorem}
+Any comparison-based sorting algorithm must use at least $\lg(n!) = \Omega(n log n)$ questions in the worst-case.
+\end{theorem}
+\begin{proof}
+Use the information-theoretic bound, and observe that the space of possible solutions includes the $n!$ different ways the input could be ordered.
+\end{proof}
 
 \section{Adversary Strategy}
 \subsection{Adversary Arguments in General}
@@ -93,24 +233,38 @@ The adversary is trying (through its cleverness) to \emph{force} the algorithm t
 This interaction proves that the lower-bound obtained by this type of argument applies to \emph{any possible} algorithm from the class under consideration. \\
 
 \begin{theorem}
-Every comparison-based algorithm for determining the minimum of a set of $n$ elements must use at least $\frac{n}{2}$ comparisons.
+Every comparison-based algorithm for determining the minimum of a set of $n$ elements must use at least $(\frac{n}{2})$ comparisons.
 \end{theorem}
 \begin{proof}
 Every element must participate in at least one comparison;
 if not, the not compared element can be chosen (by an adversary) to be the minimum. \\
 Each comparison compares 2 elements. \\
-Hence, at least $\frac{n}{2}$ comparisons must be made.
+Hence, at least $(\frac{n}{2})$ comparisons must be made.
 \end{proof}
 
 \begin{theorem}
-Every comparison-based algorithm for determining the minimum of a set of $n$ elements must use at least $n-1$ comparisons.
+Every comparison-based algorithm for determining the minimum of a set of $n$ elements must use at least $(n - 1)$ comparisons.
 \end{theorem}
 \begin{proof}
-TODO: Look at Lecture 13 for proof
+To say that a given element, $x$, is the minimum, implies that (1) every other element has won at least one comparison with another element (not necessarily $x$). (By "$x$ wins a comparison with $y$" we mean $x > y$.) \\
+Each comparison produces at most one winner. \\
+Hence at least $(n - 1)$ comparisons must be used. \\
+
+To convert this to an adversary strategy, do the following: for each element, record whether it has won a comparison ($W$) or not ($N$). \\
+Initially all elements are labelled with $N$. \\
+When we compare an $N$ to an $N$, select one arbitrarily to be the $W$. \\
+If no values assigned, choose them to make this so. \\
+If values are assigned, decrease the loser (if necessary) to make this so. \\
+When we compare $W$ to $N$, always make the $N$ the loser and set or adjust values to make sure this is the case. (You might need to decrease the loser's value to ensure this.) \\
+When we compare $W$ to $W$, use the values already assigned to decide who is the winner. \\
+
+Now each comparison increases the total number of items labelled $W$ by at most 1. \\
+In order to "know" the minimum, the algorithm must label $(n - 1)$ items $W$, so this proves at least $(n - 1)$ comparisons are required. \\
+The values the adversary assigned are the inputs that forced that algorithm to do the $(n - 1)$ comparisons.
 \end{proof}
 
 \subsection{Finding Both the Maximum and Minimum of a List of n Numbers}
-It is possible to compute both the maximum and minimum of a list of n numbers, using $\frac{3}{2}n - 2$ comparisons if n is even, and $\frac{3}{2}n - \frac{3}{2}$ comparisons if n is odd. \\
+It is possible to compute both the maximum and minimum of a list of n numbers, using $(\frac{3}{2}n - 2)$ comparisons if n is even, and $(\frac{3}{2}n - \frac{3}{2})$ comparisons if n is odd. \\
 It can be proven that \emph{no comparison-based method} can correctly determine both the max and min using fewer comparisons in the worst case. \\
 
 We do this by constructing an adversary argument. \\
@@ -120,10 +274,10 @@ In order for the algorithm to correctly decide that $x$ is the minimum and $y$ i
   \item every element other than $x$ has won at least one comparison (i.e. $x > y$ if $x$ wins a comparison with $y$),
   \item every element other than $y$ has lost at least one comparison
 \end{enumerate}
-Calling a win $W$ and a loss $L$, the algorithm must assign $n-1$ $W$'s and $n-1$ $L$'s.
-That is, the algorithm must determine $2n-2$ "units of information" to always give the correct answer. \\
+Calling a win $W$ and a loss $L$, the algorithm must assign $(n - 1)$ $W$'s and $(n - 1)$ $L$'s.
+That is, the algorithm must determine $(2n - 2)$ "units of information" to always give the correct answer. \\
 
-We now construct an adversary strategy that will force the algorithm to learn its $2n-2$ "units of information" as slowly as possible. \\
+We now construct an adversary strategy that will force the algorithm to learn its $(2n - 2)$ "units of information" as slowly as possible. \\
 The adversary labels each element of the input as $N$, $W$, $L$, or $WL$.
 These labels may change over time. \\
 $N$ signifies that the element has never been compared to any other by the algorithm. \\
@@ -133,19 +287,19 @@ $WL$ signifies the element has won at least one and lost at least one comparison
 
 \lecture{October 27, 2016}
 
-So the the adversary uses the following table
-\begin{table}[h]
+So the the adversary uses the following table. \\
+\begin{table}[H]
   \centering
   \begin{tabular}{C{3cm}  C{3cm}  C{3cm}  C{3cm}}
   \hline
-  labels when comparing elements $(x, y)$ & the adversary's response & the new label & unit of information given to the alg. \\ \hline
-  $(N, N)$ & $x > y$ & $(W, L)$ & 2 \\
-  $(W, N)$ or $(WL, N)$ & $x > y$ & $(W, L)$ or $(WL, L)$ & 1 \\
-  $(L, N)$ & $x < y$ & $(L, W)$ & 1 \\
-  $(W, W)$ & $x > y$ & $(W, WL)$ & 1 \\
-  $(L, L)$ & $x > y$ & $(WL, L)$ & 1 \\
-  $(W, L)$ or $(WL, L)$ or $(W, WL)$ & $x > y$ & no change & 0 \\
-  $(WL, WL)$ & consistent with assigned values & no change & 0 \\ \hline
+  labels when comparing elements $(x, y)$ & the adversary's response & the new label & unit of information given to the alg. \\ \hline \hline
+  $(N, N)$ & $x > y$ & $(W, L)$ & 2 \\ \hline
+  $(W, N)$ or $(WL, N)$ & $x > y$ & $(W, L)$ or $(WL, L)$ & 1 \\ \hline
+  $(L, N)$ & $x < y$ & $(L, W)$ & 1 \\ \hline
+  $(W, W)$ & $x > y$ & $(W, WL)$ & 1 \\ \hline
+  $(L, L)$ & $x > y$ & $(WL, L)$ & 1 \\ \hline
+  $(W, L)$ or $(WL, L)$ or $(W, WL)$ & $x > y$ & no change & 0 \\ \hline
+  $(WL, WL)$ & consistent with assigned values & no change & 0
   \end{tabular}
 \end{table}
 The adversary also tentatively assigns values to the elements, which may change over time. \\
@@ -153,7 +307,8 @@ However, they can only change in a fashion \emph{consistent} with previous answe
 That is, an element labelled $L$ may only \emph{decrease} in value (since it lost all previous comparisons, if it is decreased, it will still lose all of them), and an element labelled $W$ may only increase in value. \\
 An element labelled $WL$ cannot change. \\
 
-For example, consider the following sequence of possible questions asked by the algorithm and the adversary's responses:
+\begin{ex*}
+Consider the following sequence of possible questions asked by the algorithm and the adversary's responses:
 \begin{verbatim}
 -----------------------------------------------------------
 Algorithm  |   Adversary's responses and worksheet
@@ -173,38 +328,39 @@ At this point the algorithm knows that $x_3$ is the maximum, since it is the onl
 Note that in step (*), the adversary was forced to reassign the value he had previously assigned to $x_1$, since $x_1$ had to win the comparison against $x_4 = 30$. \\
 This is permitted, since $x_1$ had won every previous comparison and so increasing its value ensures consistency with previous answers. \\
 Also note that step (**) is superfluous, as the algorithm didn't learn any new information.
+\end{ex*}
 
 \begin{theorem}
-Every \emph{comparison-based} method for determining both the maximum and minimum of a set of $n$ numbers must use at least $\frac{3}{2}n - 2$ comparisons (if $n$ even), or $\frac{3}{2}n - \frac{3}{2}$ comparisons (if $n$ odd), in the worst case.
+Every \emph{comparison-based} method for determining both the maximum and minimum of a set of $n$ numbers must use at least $(\frac{3}{2}n - 2)$ comparisons (if $n$ even), or $(\frac{3}{2}n - \frac{3}{2})$ comparisons (if $n$ odd), in the worst case.
 \end{theorem}
 \begin{proof}
 Suppose that $n$ is even. \\
-As shown before, the alg. must learn $2n - 2$ units of information. \\
+As shown before, the algorithm must learn $(2n - 2)$ units of information. \\
 The most it can learn in one comparison is 2 units;
 when both elements have never participated before in a comparison, labelled by $(N, N)$.
-This can happen at most $\frac{n}{2}$ times. \\
-To learn the remaining $n - 2$ units of info., the alg. must ask $n - 2$ questions. \\
+This can happen at most $(\frac{n}{2})$ times. \\
+To learn the remaining $(n - 2)$ units of info., the algorithm must ask $(n - 2)$ questions. \\
 The total number of questions is therefore at least $\frac{n}{2} + n - 2 = \frac{3}{2}n - 2$. \\
 The same kind of argument works for $n$ odd.
 \end{proof}
 
 So we have a lower bound for the problem of finding both the maximum and minimum of a set of $n$ numbers. \\
 
-So the alg. is as followed: \\
+So the algorithm is as followed: \\
 If $n$ is even, compare $x[1]$ with $x[2]$ (determining both the maximum and minimum with 1 comparison), $x[3]$ with $x[4]$, etc.
-We get $\frac{n}{2}$ maxima and $\frac{n}{2}$ minima. \\
-To find the maximum, use the usual method on the $\frac{n}{2}$ maxima, which uses $\frac{n}{2} - 1$ comparisons, and the same for the minima. \\
+We get $(\frac{n}{2})$ maxima and $(\frac{n}{2})$ minima. \\
+To find the maximum, use the usual method on the $(\frac{n}{2})$ maxima, which uses $(\frac{n}{2} - 1)$ comparisons, and the same for the minima. \\
 The total cost is $\frac{n}{2} + \frac{n}{2} - 1 + \frac{n}{2} - 1 = \frac{3}{2}n - 2$.
 A similar method works when $n$ is odd. \\
 
-Notice that each comparison adds at most one $W$, and we need to get $n-1$ $W$'s before we know the remaining element must be the minimum. \\
-So we need at least $n-1$ comparisons. \\
-If the algorithm declares a minimum before getting $n-1$ $W$'s, then there are at least two elements without $W$, so if the algorithm declares one of the minimum, the adversary can truthfully produce the other as the minimum.
+Notice that each comparison adds at most one $W$, and we need to get $(n - 1)$ $W$'s before we know the remaining element must be the minimum. \\
+So we need at least $(n - 1)$ comparisons. \\
+If the algorithm declares a minimum before getting $(n - 1)$ $W$'s, then there are at least two elements without $W$, so if the algorithm declares one of the minimum, the adversary can truthfully produce the other as the minimum.
 
 \subsection{Remarks on Constructing an Adversary Strategy}
 Lower bound arguments are some of the most difficult and deepest areas in theoretical computer science. \\
 
-Tips for producing an adversary strategy: \\
+\textbf{Tips for producing an adversary strategy}: \\
 
 Recall that the lower bound argument can be viewed as a game between you (playing the role of an algorithm) and an adversary. \\
 You want the algorithm to run quickly (for example, by making a small number of queries to the input). \\
@@ -219,6 +375,57 @@ There is no requirement that the adversary's computation be efficient or run in 
 
 \subsection{Finding the Second Largest}
 Problem: given a list of $n$ elements, find the 2nd largest. \\
+
+The naive method (finding the largest, remove it, and then find the largest again) takes $2n - 3$ comparisons. \\
+Instead, we can do a ``tournament'' method. \\
+Have the elements in pairs, the larger one (winner) advances;
+then the 2nd largest (runner-up) is among those defeated by the winner!
+This is because any other element must have played two other elements superior to it. \\
+
+This algorithm uses $(n - 1)$ comparisons to determine the largest, plus $\ceil{\lg n} - 1$ comparisons to determine the runner-up (2nd largest). \\
+The total is $(n + \ceil{\lg n} - 2)$ comparisons. \\
+
+We can prove that the algorithm just given is \emph{optimal}, in the sense that no comparison-based algorithm uses fewer than $(n + \ceil{\lg n} - 2)$ comparisons in the worst case. \\
+
+\emph{Note}: see Lecture 14 for full proof! (\href{https://www.student.cs.uwaterloo.ca/~cs341/lecture14.html}{Click here.})
+
+\subsection{A lower bound for finding the median}
+The best algorithm known (in terms of number of comparisons used) uses $3n + o(n)$ comparisons in the worst case (see \ref{sec:linear_select}). \\
+The best \emph{lower bound} known for the median-finding problem is $2n + o(n)$ comparisons. \\
+
+We will prove a weaker lower bound: $\frac{3}{2}n + O(1)$, where $n$ odd for convenience. \\
+
+First, note that any comparison-based algorithm for finding the median must use at least $(n - 1)$ comparisons.
+That's because the algorithm \emph{must} establish the relationship of each element to the median---either by direct comparison, or by comparison with another element whose relationship to the median is known. \\
+The algorithm \emph{must} eventually gain enough knowledge equivalent to the following tree:
+\begin{verbatim}
+    *   *
+     \ /                  elements > median
+      *  *
+      | /
+------x--------------------median----------
+    / | \
+   *  *  *                elements < median
+      |
+      *
+\end{verbatim}
+
+Note that if there were an element that didn't participate in a comparison, we couldn't know the median. \\
+For an adversary could change the value of that element from, say, less than the median to greater than the median, changing the median to some other element. \\
+Similarly, if there is some element whose relationship to the median is not known (because, for example, it is greater than some element that is less than the median), we could simply move it from one side of the line above to the other, without changing comparisons.
+This would also change the median. \\
+
+Now there are n elements in the tree above, so there are $(n - 1)$ edges, and hence $(n - 1)$ comparisons. \\
+We now improve this to $\frac{3}{2}n + O(1)$. \\
+First, we call a comparison involving x crucial, say x against y, if it is the first comparison where
+\begin{enumerate}
+  \item $x < y$ and $y \leq$ median OR if
+  \item $x > y$ and $y \geq$ median
+\end{enumerate}
+So the algorithm must perform at least $(n - 1)$ crucial comparisons in order to determine the median. \\
+
+\lecture{November 1, 2016}
+
 
 \clearpage
 \printindex

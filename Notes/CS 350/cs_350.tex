@@ -37,11 +37,7 @@
 \crefname{ex}{Example}{Example}
 
 \setlength{\marginparwidth}{1.5in}
-\newcommand{\lecture}[1]{
-  \marginpar{{
-    \footnotesize $\leftarrow$ \underline{#1}}
-  }
-}
+\newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
 
 \newcommand{\defnterm}[1]{\textbf{\textcolor{teal}{#1}}\index{#1}}
 
@@ -180,7 +176,7 @@ Conceptually, each thread executes sequentially using its private register conte
   \item[3.] advance PC
 \end{enumerate}
 
-\begin{table}[ht]
+\begin{table}[H]
   \caption{MIPS Registers}
   \centering
 
@@ -290,7 +286,7 @@ So we have the following stack (in growth order) after preemption:
   \item saved thread context (switchframe)
 \end{itemize}
 
-\begin{figure}[ht]
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.6]{pictures/thread_states.png}
   \caption{Thread States}
@@ -564,7 +560,7 @@ The waiting threads need to wait until the signaller releases the lock before it
   int volatile count = 0;
   struct lock *mutex;
   struct cv *notfull, *notempty;
-  /* Initialization Note: the lock and cv’s must be created
+  /* Initialization Note: the lock and cv's must be created
    * using lock_create() and cv_create() before Produce()
    * and Consume() are called
    */
@@ -614,7 +610,7 @@ Each program's process \emph{isolates} it from other programs in other processes
 \subsection{System Calls}
 System calls (syscalls) are the interface between processes and the kernel. \\
 A process uses syscalls to request operating system services.
-\begin{table}[ht]
+\begin{table}[H]
   \caption{Syscall examples}
   \label{tab:ex_syscall}
   \centering
@@ -704,7 +700,7 @@ To cause this exception on the MIPS, the application executes a special purpose 
 Other processor instruction sets include similar instructions, e.g., \texttt{syscall} on x86.
 
 \subsubsection{System Call Timeline}
-\begin{figure}[!ht]
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.39]{pictures/syscall_stack.png}
   \caption{System call software stack}
@@ -806,7 +802,7 @@ All processes share the available hardware resources, with the sharing coordinat
 The OS ensures that processes are isolated from one another. \\
 Interprocess communication should be possible, but only at the explicit request of the processes involved.
 
-\begin{table}[h]
+\begin{table}[H]
   \caption{Syscalls for Process Management}
   \label{tab:syscall_pmanage}
   \centering
@@ -900,7 +896,7 @@ Exit code is passed to the parent process
 \newpage
 \section{Virtual Memory}
 \subsection{Physical Memory and Addresses}
-\begin{figure}[!h]
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.65]{pictures/phys_mem.png}
   \caption{An example physical memory, $P = 18$}
@@ -908,14 +904,14 @@ Exit code is passed to the parent process
 \end{figure}
 If physical addresses have $P$ \emph{bits}, the maximum amount of addressable physical memory is $2^{P}$ \emph{bytes} (assuming a byte-addressable machine).
 \begin{itemize}
-  \item Sys/161 MIPS processor uses 32 bit physical addresses ($P = 32$) $\Rightarrow$ maximum physical memory size of $2^32$ bytes, or 4GB
+  \item Sys/161 MIPS processor uses 32 bit physical addresses ($P = 32$) $\Rightarrow$ maximum physical memory size of $2^{32}$ bytes, or 4GB
   \item Larger values of $P$ are common on modern processors, e.g., $P = 48$, which allows 256TB of physical memory to be addressed
 \end{itemize}
 
 The actual amount of physical memory on a machine may be less than the maximum amount that can be addressed.
 
 \subsection{Virtual Memory and Addresses}
-\begin{figure}[!h]
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.65]{pictures/v_mem.png}
   \caption{An example of virtual memory, $V = 16$}
@@ -941,7 +937,7 @@ Since virtual memory is not real, when an process tries to access (load or store
 Address translation is performed in hardware, using information provided by the kernel.
 
 \subsection{Address Translation for Dynamic Relocation}
-\begin{figure}[!h]
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.6]{pictures/dyn_reloc.png}
   \caption{Example of dynamic relocation}
@@ -975,27 +971,28 @@ The kernel is responsible for deciding \emph{where} each virtual address space s
   \item hence creates potential for \emph{fragmentation} of physical memory
 \end{itemize}
 
-\subsection{Paging: Physical Memory}
+\subsection{Paging}
+\subsubsection{Paging: Physical Memory}
 Physical memory is divided into fixed-size chunks called \emph{frames} or \emph{physical pages}.
-\begin{figure}[!h]
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.7]{pictures/paging_phys_mem.png}
   \caption{The frame size if $2^{12}$ bytes (4KB)}
   \label{fig:p_phys_mem}
 \end{figure}
 
-\subsection{Paging: Virtual Memory}
+\subsubsection{Paging: Virtual Memory}
 Virtual memories are divided into fixed-size chunks called \emph{pages}. \\
 Page size is equal to frame size.
-\begin{figure}[!h]
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.8]{pictures/paging_v_mem.png}
   \caption{Page size is 4KB here}
   \label{fig:p_v_mem}
 \end{figure}
 
-\subsection{Paging: Address Translation}
-\begin{figure}[!h]
+\subsubsection{Paging: Address Translation}
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.7]{pictures/p_translation.png}
   \label{fig:p_trans}
@@ -1003,7 +1000,7 @@ Page size is equal to frame size.
 Each page maps to a different frame.
 Any page can map to any frame.
 
-\subsection{Paging: Address Translation}
+\subsubsection{Paging: Address Translation}
 The MMU includes a \emph{page table base register} which points to the page table for the current process. \\
 
 How the MMU translate a virtual address:
@@ -1019,7 +1016,7 @@ How the MMU translate a virtual address:
   physical address is $(\text{frame number} \cdot \text{frame size}) + \text{offset}$ \\
 \end{enumerate}
 
-\subsection{Other Information Found in PTEs}
+\subsubsection{Other Information Found in PTEs}
 PTEs may contain other fields, in addition to the frame number and valid bit. \\
 
 Example 1: write protection bit
@@ -1035,7 +1032,7 @@ Example 2: bits to track page usage
   \item these bits are set by the MMU, and read by the kernel
 \end{itemize}
 
-\subsection{Page Tables: How Big?}
+\subsubsection{Page Tables: How Big?}
 A page table has one PTE for each page in the virtual memory
 \begin{itemize}
   \item $\text{page table size} = \text{number of pages} \cdot \text{size of PTE}$
@@ -1044,18 +1041,18 @@ A page table has one PTE for each page in the virtual memory
 The page table a 64KB virtual memory, with 4KB pages, is 64 bytes, assuming 32 \emph{bits} for each PTE. \\
 Page tables for larger virtual memories are larger.
 
-\subsection{Page Tables: Where?}
+\subsubsection{Page Tables: Where?}
 Page tables are kernel data structures, i.e. page tables for all processes are in the kernel's stack.
 
 \subsection{Summary: Roles of the Kernel and the MMU}
 Kernel:
 \begin{itemize}
-  \item Manage MMU registers on address space switches (context switch from thread in one process to thread in a different process)
+  \item Manage MMU (memory management unit) registers on address space switches (context switch from thread in one process to thread in a different process)
   \item Create and manage page tables
   \item Manage (allocate/deallocate) physical memory
   \item Handle exceptions raised by the MMU
 \end{itemize}
-MMU (hardware):
+Memory Management Unit, MMU, (hardware):
 \begin{itemize}
   \item Translate virtual addresses to physical addresses
   \item Check for and raise exceptions when necessary
@@ -1076,7 +1073,7 @@ Solution: include a \emph{Translation Lookaside Buffer} (TLB) in the MMU,
   \item Each TLB entry stores a (page number $\Rightarrow frame number$) mapping
 \end{itemize}
 
-\subsection{TLB Use}
+\subsubsection{TLB Use}
 What the MMU does to translate a virtual address on page $p$:
 \begin{verbatim}
   if there is an entry (p, f) in the TLB then
@@ -1094,7 +1091,7 @@ This is a \emph{hardware-managed TLB},
   \item MMU must understand the kernel's page table format
 \end{itemize}
 
-\subsection{Software-Managed TLBs}
+\subsubsection{Software-Managed TLBs}
 The MIPS has a \emph{software-managed TLB}, which translates a virtual address on page $p$ like this:
 \begin{verbatim}
   if there is an entry (p,f) in the TLB then
@@ -1109,7 +1106,7 @@ In case of a TLB miss, the kernel must
 \end{enumerate}
 After the miss is handled, the instruction that caused the exception is re-tried.
 
-\begin{figure}[ht]
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.6]{pictures/mips_tlb.png}
   \caption{The MIPS R3000 TLB}
@@ -1119,7 +1116,7 @@ The MIPS TLB has room for 64 entries. Each entry is 64 bits (8 bytes) long. \\
 See \texttt{kern/arch/mips/include/tlb.h}
 
 \subsection{Large, Sparse Virtual Memories}
-\begin{figure}[ht]
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.65]{pictures/real_v_mem.png}
   \caption{A more realistic virtual memory; this is a layout of the virtual address space for \texttt{user/testbin/sort} in OS/161}
@@ -1146,7 +1143,7 @@ A kernel that used simple paging would require a page table with $2^{20}$ PTEs (
 \end{itemize}
 
 \subsection{Segmentation}
-\begin{figure}[ht]
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.7]{pictures/seg_addr_space.png}
   \caption{Example of segment address space}
@@ -1191,7 +1188,7 @@ Instead of having a single page table to map an entire virtual memory, we can sp
   \item Instead of one larger, contiguous table, we have multiple smaller tables
   \item If all PTEs in a small table are invalid, we can avoid creating that table entirely
 \end{itemize}
-\begin{figure}[ht]
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.7]{pictures/single_double_paging.png}
   \caption{Single vs. Two Level Paging}
@@ -1205,7 +1202,7 @@ Each virtual address has three parts:
 \end{enumerate}
 
 \subsection{Address Translation with Two-Level Paging}
-\begin{figure}[ht]
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.7]{pictures/two_level_paing_trans.png}
   \caption{Example of two-level address translation}
@@ -1268,7 +1265,7 @@ TLB exceptions are handled by a kernel function called \texttt{vm\_fault} \\
 \end{itemize}
 
 \subsubsection{The \texttt{addrspace} Structure}
-\begin{figure}[ht]
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.7]{pictures/addrspace.png}
   \caption{\texttt{addrspace} diagram}
