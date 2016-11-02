@@ -76,14 +76,16 @@
 \newpage
 \pagenumbering{arabic}
 
+\newpage
 \section{Selection in deterministic linear time}
 \lecture{October 25, 2016}
 In the selection problem, the goal is to determine the $i$-th smallest element from an unsorted list of $n$ elements in linear time. \\
 ``Deterministic'' here means that no random numbers are used. \\
 For simplicity, suppose that all elements are distinct, but this is not crucial as a small modification will make it work any list. \\
 
-We want to cleverly choose a pivot to partition the list for selection. \\
-So we have the ``medians-of-five'' algorithm by Blum, Floyd, Pratt, Rivest, and Tarjan (1973). \\
+One method to choose a pivot is via randomness. \\
+We want a deterministic method to clever choose a pivot to be used to partition a list. \\
+Thus we arrive at the ``medians-of-five'' algorithm by Blum, Floyd, Pratt, Rivest, and Tarjan (1973). \\
 
 Idea: \\
 Split the list into $\floor{\frac{n}{5}}$ groups of 5 elements, and one additional group of at most 4 elements. \\
@@ -123,17 +125,17 @@ We arrive at the algorithm:
 Let's obtain a lower bound on the number of elements $> x$, the median of medians. \\
 Here's a picture for $n = 37$:
 \begin{verbatim}
-smallest   S    S    S    S    *    *    *    *
+  smallest   S    S    S    S    *    *    *    *
 
-           S    S    S    S    *    *    *    *
+             S    S    S    S    *    *    *    *
 
-           S    S    S    m    L    L    L
+             S    S    S    m    L    L    L
 
-           *    *    *    L    L    L    L
+             *    *    *    L    L    L    L
 
-largest    *    *    *    L    L    L    L
+  largest    *    *    *    L    L    L    L
 
-m = median of medians
+  m = median of medians
 \end{verbatim}
 
 There are $\floor{\frac{n}{5}}$ total columns in which 5 elements appear. \\
@@ -184,6 +186,7 @@ Now the basis (namely $1 \leq n \leq 59$) works out just fine, and so does the i
 The presence of these large constants (such as $c = 20d$) suggests that this algorithm is of more theoretical than practical interest. \\
 However, with a bit more work, the number of comparisons can be reduced quite a lot, down to $(3+o(1))n = 3n + o(n)$. \label{sec:linear_select}
 
+\newpage
 \section{Lower bounds}
 Can we prove that an algorithm is best possible?
 Sometimes. \\
@@ -217,6 +220,7 @@ Any comparison-based sorting algorithm must use at least $\lg(n!) = \Omega(n log
 Use the information-theoretic bound, and observe that the space of possible solutions includes the $n!$ different ways the input could be ordered.
 \end{proof}
 
+\newpage
 \section{Adversary Strategy}
 \subsection{Adversary Arguments in General}
 More generally, we can think of a lower bound proof as a game between the algorithm and an "adversary". \\
@@ -310,19 +314,19 @@ An element labelled $WL$ cannot change. \\
 \begin{ex*}
 Consider the following sequence of possible questions asked by the algorithm and the adversary's responses:
 \begin{verbatim}
------------------------------------------------------------
-Algorithm  |   Adversary's responses and worksheet
-compares   |   x1      x2      x3      x4      x5      x6
------------------------------------------------------------
- (x1, x2)  |  W-20    L-10      N       N       N       N
- (x4, x5)  |  W-20    L-10      N     W-30     L-15     N
- (x1, x4)  |  W-40    L-10      N    WL-30     L-15     N     (*)
- (x3, x6)  |  W-40    L-10    W-11   WL-30     L-15    L-2
- (x2, x5)  |  W-40   WL-10    W-11   WL-30     L-7     L-2
- (x3, x1)  | WL-40   WL-10    W-50   WL-30     L-7     L-2
- (x2, x4)  | WL-40   WL-10    W-50   WL-30     L-7     L-2    (**)
- (x5, x6)  | WL-40   WL-10    W-50   WL-30    WL-7     L-2
------------------------------------------------------------
+  -----------------------------------------------------------
+  Algorithm  |   Adversary's responses and worksheet
+  compares   |   x1      x2      x3      x4      x5      x6
+  -----------------------------------------------------------
+   (x1, x2)  |  W-20    L-10      N       N       N       N
+   (x4, x5)  |  W-20    L-10      N     W-30     L-15     N
+   (x1, x4)  |  W-40    L-10      N    WL-30     L-15     N     (*)
+   (x3, x6)  |  W-40    L-10    W-11   WL-30     L-15    L-2
+   (x2, x5)  |  W-40   WL-10    W-11   WL-30     L-7     L-2
+   (x3, x1)  | WL-40   WL-10    W-50   WL-30     L-7     L-2
+   (x2, x4)  | WL-40   WL-10    W-50   WL-30     L-7     L-2    (**)
+   (x5, x6)  | WL-40   WL-10    W-50   WL-30    WL-7     L-2
+  -----------------------------------------------------------
 \end{verbatim}
 At this point the algorithm knows that $x_3$ is the maximum, since it is the only element that has never lost a comparison, and $x_6$ is the minimum, since it is the only element that has never won a comparison. \\
 Note that in step (*), the adversary was forced to reassign the value he had previously assigned to $x_1$, since $x_1$ had to win the comparison against $x_4 = 30$. \\
@@ -389,7 +393,7 @@ We can prove that the algorithm just given is \emph{optimal}, in the sense that 
 
 \emph{Note}: see Lecture 14 for full proof! (\href{https://www.student.cs.uwaterloo.ca/~cs341/lecture14.html}{Click here.})
 
-\subsection{A lower bound for finding the median}
+\subsection{A Lower Bound for Finding the Median}
 The best algorithm known (in terms of number of comparisons used) uses $3n + o(n)$ comparisons in the worst case (see \ref{sec:linear_select}). \\
 The best \emph{lower bound} known for the median-finding problem is $2n + o(n)$ comparisons. \\
 
@@ -399,15 +403,15 @@ First, note that any comparison-based algorithm for finding the median must use 
 That's because the algorithm \emph{must} establish the relationship of each element to the median---either by direct comparison, or by comparison with another element whose relationship to the median is known. \\
 The algorithm \emph{must} eventually gain enough knowledge equivalent to the following tree:
 \begin{verbatim}
-    *   *
-     \ /                  elements > median
-      *  *
-      | /
-------x--------------------median----------
-    / | \
-   *  *  *                elements < median
-      |
-      *
+      *   *
+       \ /                  elements > median
+        *  *
+        | /
+  ------x-------------------------median-----
+      / | \
+     *  *  *                elements < median
+        |
+        *
 \end{verbatim}
 
 Note that if there were an element that didn't participate in a comparison, we couldn't know the median. \\
@@ -425,6 +429,197 @@ First, we call a comparison involving x crucial, say x against y, if it is the f
 So the algorithm must perform at least $(n - 1)$ crucial comparisons in order to determine the median. \\
 
 \lecture{November 1, 2016}
+
+We now give an adversary strategy to \emph{force} the algorithm to perform $(n - 1)/2$ \emph{non-crucial} comparisons (since we've proved earlier that the algorithm requires $(n - 1)$ \emph{crucial} comparisons. \\
+
+Idea: \\
+First, the adversary picks some value (\emph{not} some element) to be the median. \\
+Then it assigns a label in $\{N, L, S\}$ to each element, and also values, as appropriate. \\
+Initially each element is assigned an $N$ (``Never participated in any comparison'').
+$L$ means Larger than the median and $S$ means Smaller than the median. \\
+The adversary follows the following strategy:
+\begin{table}[H]
+  \label{tab:ad_median_strat}
+  \centering
+  \begin{tabular}{L{4cm}|L{8cm}}
+  \hline
+  Algorithm compares & Adversary responds \\ \hline \hline
+  $(N, N)$ & assign one element to be larger than the median, one smaller; result is $(L, S)$ \\ \hline
+  $(S, N)$ or $(N, S)$ & assign the $N$-element to be larger than the median; result is $(S, L)$ or $(L, S)$ \\ \hline
+  $(L, N)$ or $(N, L)$ & assign the $N$-element to be smaller than the median; result is $(L, S)$ or $(S, L)$ \\ \hline
+  $(S, L)$ or $(L, S)$ or $(S, S)$ or $(L, L)$ & consistent with previously assigned values \\ \hline
+  \end{tabular}
+\end{table}
+\emph{Note 1}: this strategy continues until $((n - 1)/2)$ $S$'s (or $((n - 1)/2)$ $L$'s) have been assigned.
+If at some point $((n - 1)/2)$ $S$'s are assigned, then the adversary assigns the remaining elements to be greater than the median, except for one, which \emph{is} the median.
+A similar thing is done if $((n - 1)/2)$ L's have been assigned. \\
+
+\emph{Note 2}: the last element assigned is \emph{always} the median. \\
+
+I claim that this strategy will always force the algorithm to perform $((n - 1)/2)$ non-crucial comparisons. \\
+For any time an $N$-element is compared, a non-crucial comparison is done (except at the very end, when a crucial comparison may be done with the median itself). \\
+The least number of comparisons with $N$-elements that can be done is $((n - 1)/2)$. \\
+The \emph{total} number of comparisons is therefore $n - 1 + (n - 1)/2 = (3/2)(n - 1)$.
+
+\begin{ex*}
+The adversary strategy when $n = 7$.
+The adversary arbitrarily chooses the median to be 43.
+Then
+\begin{verbatim}
+  ---------------------------------------------------
+  Algorithm   Adversary's strategy (label:value)
+  compares    x1    x2    x3    x4    x5    x6    x7
+  ----------------------------------------------------
+              N     N     N     N     N     N     N
+  (x1, x3)   L:50   N    S:31   N     N     N     N
+  (x3, x4)   L:50   N    S:31  L:47   N     N     N
+  (x6, x7)   L:50   N    S:31  L:47   N    L:60  S:20
+
+  -------  at this point there are (7-1)/2 L's -------
+  -------  assigned, so adversary assigns the --------
+  -------  remaining elements to L and the median ----
+
+             L:50  43    S:31  L:47  S:15  L:60  S:20
+  (x2, x5)   a crucial comparison
+  (x2, x1)   a crucial comparison
+  (x2, x3)   a crucial comparison
+  (x2, x4)   a crucial comparison
+  (x2, x6)   a crucial comparison
+  (x2, x7)   a crucial comparison
+\end{verbatim}
+At this point the algorithm concludes that \texttt{x2} is the median. \\
+The first three comparisons were non-crucial; only the last six are crucial.
+\end{ex*}
+
+The best lower bound known for the median: Dor and Zwick, Median selection requires $(2 + \epsilon)n$ comparisons.
+
+\subsection{Lower Bound on Average-Case Sorting}
+\begin{theorem}
+Any comparison-based algorithm must use $\Omega(n \lg n)$ comparisons on \emph{average}.
+\end{theorem}
+
+\begin{lemma}
+In any binary tree $T$ where each node has 0 or 2 children,
+$$\sum_{\ell \text{ a leaf of } T} 2^{-\text{depth}(T, \ell)} = 1$$
+where depth($T, \ell$) is the length of the path from $\ell$ to the root.
+\end{lemma}
+\begin{proof}
+Prove by induction on the height of $T$. \\
+Easy to see the lemma holds when $T$ consists of a single node. \\
+Assume it holds for all tree of height $< k$;
+prove it for trees of height $k$. \\
+Then a tree of height $k$ consists of a root and two subtrees, $T'$ and $T''$. \\
+Then the lemma applies to each of these subtrees recursively, so we know that
+$$\sum_{\ell \text{ a leaf of } T'} 2^{-\text{depth}(T', \ell)} = 1$$
+and
+$$\sum_{\ell \text{ a leaf of } T''} 2^{-\text{depth}(T'', \ell)} = 1$$
+Then we have
+$$\sum_{\ell \text{ a leaf of } T'} 2^{-\text{depth}(T, \ell)} = \frac{1}{2}$$
+since the depth of a leaf in $T$ goes up by 1 when considered as a leaf of $T$. \\
+The same result holds for $T''$. \\
+Adding these together yields the result.
+\end{proof}
+
+\begin{lemma}
+Suppose $a, b \in \mathbb{R}$ and $a, b > 0$. \\
+If $a \neq b$, then we have
+$$\lg a - \lg b > 2\lg((a + b)/2)$$
+\end{lemma}
+\begin{proof}
+If $a \neq b$, then
+\begin{align*}
+(\sqrt{a} - \sqrt{b})^{2} &> 0 \\
+a - 2\sqrt{ab} + b &> 0 \\
+(a + b)/2 &> \sqrt{ab} \\
+\lg((a + b)/2) &> \frac{1}{2}\lg(ab) \\
+2\lg((a + b)/2) &> \lg{a} + \lg{b} \\
+-2\lg((a + b)/2) &< -\lg{a} - \lg{b}
+\end{align*}
+as required.
+\end{proof}
+
+\begin{lemma}
+Suppose $x_{1}, x_{2}, \dots, x_{k} \in \mathbb{R}$ and $x_{1}, x_{2}, \dots, x_{k} > 0$ such that $\sum_{1 \leq i \leq k}x_{i} = 1$.
+Then
+$$\sum_{1 \leq i \leq k}(-\lg x_{i}) \geq k\lg k $$
+\end{lemma}
+\begin{proof}
+If all the $x_{i} = \frac{1}{k}$, then the inequality clearly holds - actually then it is an equality! \\
+Suppose we claim this sum actually achieves its minimum at this point. \\
+For if the minimum occurred at some \emph{other} point, then two of the $x_{i}$ must be different, say $a$ and $b$. \\
+Then by Lemma 3.6.3, we could replace $(-\lg{a}) + (-\lg{b})$ with two copies of $-\lg((a + b)/2)$ and get a smaller sum, a contradiction.
+\end{proof}
+
+\begin{proof}
+Consider the comparison tree used by the algorithm. \\
+There are at least $k = n!$ leaves, since there are are $n!$ possible ways to order $n$ numbers. \\
+There are also at most this number of leaves, since otherwise two leaves would be labelled with the same ordering, and then, by tracing up to the lowest common ancestor, we would get to a node where there are two different answers, implying the orderings cannot be the same. \\
+So there are exactly $n!$ leaves. \\
+By Lemma 3.6.2,
+$$\sum_{\ell \text{ a leaf of } T}2^{-\text{depth}(\ell)} = 1$$
+Then by Lemma 3.6.4, with $x_{i} = 2^{-\text{depth}(\ell)}$, we get
+$$\sum_{\ell \text{ a leaf of } T}\text{depth}(\ell) \geq n! \lg(n!)$$
+It follows that
+$$\frac{1}{n!}\sum_{\ell \text{ a leaf of } T}\text{depth}(\ell) \geq \lg(n!)$$
+but the expression on the left is just the average depth of each leaf, i.e., the average number of comparisons used (averaged over all possible arrangements of the input). \\
+Hence the average number of comparisons used is $\Omega(n \lg{n})$.
+\end{proof}
+
+\newpage
+\section{Graphs and Graph Algorithms}
+A graph consists of a bunch of points, called vertices (or nodes), and a bunch of connections between pairs of points, called edges (or arcs). \\
+So $G = (V, E)$, where $V$ is a set of vertices and $E$ is a subset of $V \times V$. \\
+Where $|V|$ is the number of vertices and $|E|$ is the number of edges in $G$. \\
+
+Graphs can be directed or undirected;
+in a directed graph, edges have a direction, and you can only traverse the graph by going in that direction.
+In an undirected graph, edges can be traversed in any direction. \\
+
+Sometimes we allow graphs to have edges from a vertex to itself;
+such an edge is called a "loop" or a "self-loop" and the graph is no longer \emph{simple}. \\
+Most graphs in this course won't have such edges.
+We will rarely have two or more different edges between the same two vertices. \\
+
+\emph{Note}: in any graph, $|E| = O(|V|^{2})$, and if the graph is connected, $|E| = \Omega(|V|)$. \\
+
+A \emph{path} is a series of vertices where each consecutive vertex is connected by an edge to the previous vertex. \\
+An undirected graph is \emph{connected} if there is a path from every vertex to every other vertex. \\
+The \emph{length} of a path is the number of edges in the path. \\
+A path is a \emph{cycle} if the first vertex is the same as the last vertex.
+Usually in a path we demand that there are no repeated vertices (with the exception in a cycle). \\
+A \emph{walk} (resp., \emph{closed walk}) is a path (resp., cycle) where repeated vertices and edges are allowed. \\
+A graph is \emph{acyclic} if there are no cycles. \\
+
+A \emph{tree} is a connected acyclic graph. \\
+An undirected graph is a tree if every pair of vertices are connected by a \emph{unique} simple path. \\
+Trees can be rooted (have a distinguishable vertex called the root) or unrooted. \\
+
+Two ways to store a graph:
+\begin{itemize}
+  \item[1.] adjacency matrix \\
+  We represent a graph by a $|V| \times |V|$ matrix with a 1 in row $i$ and column $j$ is $(i, j)$ is an edge, and 0 otherwise. \\
+  \item[2.] adjacency list \\
+  We represent a graph by an array Adj of $|V|$ lists, one list for each vertex. \\
+  For each vertex Adj[u] contains all vertices (or pointers to the vertices) $v$ such that $(u, v)$ is an edge.
+\end{itemize}
+
+Advantages and disadvantages of each representation: \\
+\emph{Adjacency Matrix}:
+\begin{itemize}
+  \item easy to manipulate
+  \item can check if $(u, v)$ is an edge in $O(1)$ time
+  \item but storage is always $\Omega(|V|^{2})$---not good for sparse graphs
+\end{itemize}
+
+\emph{Adjacency List}:
+\begin{itemize}
+  \item harder to manipulate
+  \item checking if $(u, v)$ is an edge takes $O(|V|) time$
+  \item but storage is $O(|V| + |E|)$
+\end{itemize}
+
+\lecture{November 3, 2016}
+
 
 
 \clearpage
