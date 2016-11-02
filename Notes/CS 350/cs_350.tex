@@ -156,14 +156,12 @@ Voluntarily yield execution:
   void thread_yield(void);
 \end{verbatim}
 
-See \texttt{kern/include/thread.h}
-
 \subsection{Why Threads?}
-\textbf{Reason 1}: parallelism exposed by threads enables parallel execution if the underlying hardware supports it. \\
+\textbf{Reason 1}: parallelism exposed by threads enables parallel execution if the underlying hardware supports it.
 Programs can run faster! \\
 
 \textbf{Reason 2}: parallelism exposed by threads enable better processor utilization. \\
-If one thread has to \emph{block}, another may be able to run.
+If one thread has to \emph{block}, another may be able to run. \\
 
 \textbf{Concurrent Program Execution (Two Threads)} \\
 Conceptually, each thread executes sequentially using its private register contents and stack.
@@ -196,7 +194,7 @@ Conceptually, each thread executes sequentially using its private register conte
 \subsection{Implementing Concurrent Threads}
 \textbf{Option 1}: multiple processors, multiple cores, hardware multithreading per core
 \begin{itemize}
-  \item $P$ processors, $C$ cores per processor, $M$ multithreading degree per core $\Rightarrow$ $PCM$ threads can execute simultaneously
+  \item $P$ processors, $C$ cores per processor, $M$ multithreading degree per core $\Rightarrow$ $P \cdot C \cdot M$ threads can execute simultaneously
   \item separate register set for each running thread, to hold its execution context
 \end{itemize}
 \textbf{Option 2}: \emph{timesharing}
@@ -882,15 +880,81 @@ The first user process might call \texttt{getpid} before creating any children.
 
 \subsection{\texttt{\_exit}}
 Causes the current process to exit. \\
-Exit code is passed to the parent process
+Exit code is passed to the parent process.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %% ASSIGNMENT 2B REVIEW %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \section{Assignment 2B Review}
+\texttt{int execv (const char* program, char** args);} \\
 
-%%%%%%%%%%%%%%%%%%%%
+Replaces currently executing program with a newly loaded program image. \\
+Process id remains unchanged. \\
+Path of the program is passed in as \texttt{program}. \\
+Arguments to the program (\texttt{args}) is an array of \texttt{NULL} terminated strings. \\
+The array is terminated by a \texttt{NULL} pointer. \\
+In the new user program, \texttt{argv[argc]} should \texttt{== NULL}.
+
+\subsection{\texttt{runprogram}}
+\texttt{execv} is very similar to \texttt{runprogram} \\
+\texttt{runprogram} is used to load and execute the first program from the \texttt{menu},
+\begin{enumerate}
+  \item[1.] Opens the program file using \texttt{vfs\_open(progname, ...)}
+  \item[2.] Creates a new address space (\texttt{as\_create}), switches the process to that address space (\texttt{curproc\_setas}) and then activate it (\texttt{as\_activate})
+  \item[3.] Using the opened program file, load the program image using \texttt{load\_elf}
+  \item[4.] Define the user stack using \texttt{as\_define\_stack}
+  \item[5.] Call \texttt{enter\_new\_process} with no parameters, the stack pointer (determined by \texttt{as\_define\_stack}) \emph{and} entry point for the executable (determined by \texttt{load\_elf})
+\end{enumerate}
+
+\subsection{\texttt{execv}}
+\begin{itemize}
+  \item Count the number of arguments and copy them into the kernel
+  \item Copy the program path into the kernel
+  \item \textcolor{gray}{Open the program file using \texttt{vfs\_open(progname, ...)}}
+  \item \textcolor{gray}{Create new address space, set process to the new address space, and activate it}
+  \item \textcolor{gray}{Using the opened program file, load the program image using \texttt{load\_elf}}
+  \item Need to copy the arguments into the new address space. \\
+  Consider copying the arguments (both the array and the strings) onto the user stack as part of \texttt{as\_define\_stack}
+  \item Delete old address space
+  \item Call \texttt{enter\_new\_process} with address to the arguments on the stack, the stack pointer (from \texttt{as\_define\_stack}), and the program entry point (from \texttt{vfs\_open})
+\end{itemize}
+
+\subsection{Argument Passing}
+When copying from/to userspace:
+\begin{itemize}
+  \item Use \texttt{copyin}/\texttt{copyout} for fixed size variables (integers, arrays, etc.)
+  \item Use \texttt{copyinstr}/\texttt{copyoutstr} when copying \texttt{NULL} terminated strings
+\end{itemize}
+
+Useful defines/macros:
+\begin{itemize}
+  \item \texttt{USERSTACK} (base address of the stack)
+  \item \texttt{ROUNDUP} (useful for memory alignment)
+\end{itemize}
+
+Common mistakes:
+\begin{itemize}
+  \item Remember that \texttt{strlen} does not count the \texttt{NULL} terminator. \\
+  Make sure to include space for the \texttt{NULL} terminator
+  \item User pointers should be of the type \texttt{userptr\_t}
+  \item Make sure to pass a pointer to the top of the stack to \texttt{enter\_new\_process}
+\end{itemize}
+
+\subsection{Alignment}
+\begin{wrapfigure}{r}{0.3\textwidth}
+  \vspace{-50pt}
+  \begin{center}
+    \includegraphics[scale=0.3]{pictures/2b_alignment.png}
+  \end{center}
+\end{wrapfigure}
+When storing items on the stack, pad each item such that they are 8-byte aligned. \\
+e.g., \texttt{args\_size = ROUNDUP(args\_size, 8);} \\
+
+Strings don't have to be 4 or 8-byte aligned. However, pointers to strings need to be 4-byte aligned.
+
+
+%%%%%%%%%%%%%%%%%%%n
 %% VIRTUAL MEMORY %%
 %%%%%%%%%%%%%%%%%%%%
 \newpage
@@ -1038,7 +1102,7 @@ A page table has one PTE for each page in the virtual memory
   \item $\text{page table size} = \text{number of pages} \cdot \text{size of PTE}$
   \item $\text{number of pages} = \frac{\text{virtual memory size}}{\text{page size}}$
 \end{itemize}
-The page table a 64KB virtual memory, with 4KB pages, is 64 bytes, assuming 32 \emph{bits} for each PTE. \\
+The page table of a 64KB virtual memory, with 4KB pages, is 64 bytes, assuming 32 \emph{bits} for each PTE. \\
 Page tables for larger virtual memories are larger.
 
 \subsubsection{Page Tables: Where?}
@@ -1145,7 +1209,7 @@ A kernel that used simple paging would require a page table with $2^{20}$ PTEs (
 \subsection{Segmentation}
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.7]{pictures/seg_addr_space.png}
+  \includegraphics[scale=0.65]{pictures/seg_addr_space.png}
   \caption{Example of segment address space}
   \label{fig:seg_addr_space}
 \end{figure}
@@ -1285,7 +1349,8 @@ TLB exceptions are handled by a kernel function called \texttt{vm\_fault} \\
 
 \subsubsection{Address Translation: OS/161 dumbvm Example}
 \textbf{Note}: in OS/161, the stack is 12 pages and the page size is 4 KB = 0x1000. \\
-\begin{table}
+\begin{table}[H]
+  \vspace{-20pt}
   \centering
   \begin{tabular}{|r|r|r|}
   \hline
@@ -1299,6 +1364,256 @@ TLB exceptions are handled by a kernel function called \texttt{vm\_fault} \\
   as\_stackpbase & 0x0010 0000 & 0x00B0 0000 \\ \hline
   \end{tabular}
 \end{table}
+
+\subsection{Initializing an Address Space}
+When the kernel creates a process to run a particular program, it must create an address space for the process, and load the program's code and data into that address space. \\
+OS/161 \emph{pre-loads} the address space before the program runs.
+Many other OS load pages on \emph{demand}. \\
+
+A program's code and data is described in an \emph{executable file}, which is created when the program is compiled and linked. \\
+
+OS/161 (and some other operating systems) expect executable files to be in ELF (\textbf{E}xecutable and \textbf{L}inking \textbf{F}ormat) format. \\
+
+The OS/161 execv system call re-initializes the address space of a process
+\begin{verbatim}
+  int execv (const char* program, char** args)
+\end{verbatim}
+
+The \texttt{program} parameter of the \texttt{execv} system call should be the name of the ELF executable file for the program that is to be loaded into the address space.
+
+\subsection{ELF Files}
+ELF files contain address space segment descriptions, which are useful to the kernel when it is loading a new address space. \\
+
+The ELF file identifies the (virtual) address of the program's first instruction. \\
+
+The ELF file also contains lots of other information (e.g., section descriptors, symbol tables) that is useful to compilers, linkers, debuggers, loaders, and other tools used to build programs.
+
+\subsubsection{Address Space Segments in ELF Files}
+The ELF file contains a header describing the segments and segment \emph{images}. \\
+
+Each ELF segment describes a contiguous region of the virtual address space. \\
+
+The header includes an entry for each segment which describes:
+\begin{itemize}
+  \item the virtual address of the start of the segment
+  \item length of the segment in the virtual address space
+  \item location of the start of the segment image in the ELF file (if present)
+  \item the length of the segment image in the LEF file (if present)
+\end{itemize}
+
+The image is an exact copy of the binary data that should be loaded into specified portion of the virtual address space. \\
+
+The image may be smaller than the address space segment, in which case the rest of the address space segment is expected to be zero-filled. \\
+
+In OS/161, the kernel copies segment images from the ELF file to the specified portions of the virtual address space.
+
+\subsubsection{ELF Files and OS/161}
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.39]{pictures/elf_diagram.png}
+  \caption{ELF File Diagram}
+  \label{fig:elf}
+\end{figure}
+OS/161's \texttt{dumbvm} implementation assumes that an LEF file contains two segments:
+\begin{itemize}
+  \item a \emph{text segment}, containing the program code and any read-only data
+  \item a \emph{data segment}, containing any other global program data
+\end{itemize}
+
+The ELF file does \emph{not} describe the stack. \\
+
+\texttt{dumbvm} creates a \emph{stack segment} for each process.
+It is 12 pages long, ending at virtual address \texttt{0x7fffffff}.
+
+
+\subsection{Virtual Memory for the Kernel}
+We would like the kernel to live in virtual memory, but there are some challenges:
+\begin{itemize}
+  \item[\textbf{Bootstrapping}:] since the kernel helps to implement virtual memory, how can the kernel run in virtual memory when it is just starting?
+  \item[\textbf{Sharing}:] sometimes data need to be copied between the kernel and application programs?
+  How can this happen if they are in different virtual address spaces?
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.55]{pictures/kernel_v_mem.png}
+  \caption{The Kernel in Process' Address Spaces}
+  \label{fig:kernel_v_mem}
+\end{figure}
+
+The sharing problem can be addressed by making the kernel's virtual memory \emph{overlap} with process' virtual memories. \\
+Attempts to access kernel code/data is user mode results in memory protection exceptions, not invalid address exception. \\
+
+Solutions to the bootstrapping problem are architecture-specific.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{pictures/user_kernel_space_mips.png}
+  \caption{User Space and Kernel Space on the MIPS R3000}
+  \label{fig:mips_space}
+\end{figure}
+
+In OS/161, user programs live in kuseg, kernel code and data structures live in kseg0, devices are accessed through kseg1, and kseg2 is not used.
+
+\subsection{Exploiting Secondary Storage}
+\textbf{Goals}:
+\begin{itemize}
+  \item Allow virtual address spaces that are larger than the physical address space
+  \item Allow greater multiprogramming levels by using less of the available (primary) memory for each process
+\end{itemize}
+
+\textbf{Method}:
+\begin{itemize}
+  \item Allow pages from virtual memories to be stored in secondary storage, i.e., on disks or SSDs
+  \item Swap pages (or segments) between secondary storage and primary storage so that they are in primary memory when needed
+\end{itemize}
+
+\subsection{Resident Sets and Present Bits}
+When swapping is used, some pages of each virtual memory will be in memory, and others will not be in memory.
+\begin{itemize}
+  \item The set of virtual pages present in physical memory is called the \emph{resident set} of a process.
+  \item A process's resident set will change over time as pages are swapped in and out of physical memory
+\end{itemize}
+
+To track which pages are in physical memory, each PTE needs to contain an extra bit, called the present bit:
+\begin{itemize}
+  \item valid = 1, present = 1: page is valid and in memory
+  \item valid = 1, present = 0: page is valid, but not in memory
+  \item value = 0, present - $x$: invalid page
+\end{itemize}
+
+\subsection{Page Faults}
+When a process tries to access a page that is not in memory, the problem is detected because the page's \emph{present} bit is zero:
+\begin{itemize}
+  \item on a machine with a hardware-managed TLB, the MMU detects this when it checks the page's PTE, and generates an exception, which the kernel must handle
+  \item on a machine with a software-managed TLB, the kernel detects the problem when it checks the page's PTE after a TLB miss
+\end{itemize}
+
+This event (attempting to access a non-resident page) is called a \emph{page fault}. \\
+
+When a page fault happens, it is the kernel's job to:
+\begin{enumerate}
+  \item[1.] swap the page into memory from secondary storage, evicting another page from memory if necessary
+  \item[2.] update the PTE (set the \emph{present} bit)
+  \item[3.] return from the exception so that the application can retry the virtual memory access that caused the page fault
+\end{enumerate}
+
+\subsection{Secondary Storage is Slow}
+Access times for disks are measured in \emph{milli}seconds, SSD read latencies are 10’s-100’s of \emph{micro}seconds. \\
+
+Both of these are much higher than memory access times (100’s of \emph{nano}seconds) \\
+
+Suppose that secondary storage access is 1000 times slower than memory access.
+Then:
+\begin{itemize}
+  \item if there is one page fault every 10 memory accesses (on average), the average memory access time with swapping will be about 100 times larger than it would be without swapping
+  \item if there is one page fault every 100 memory accesses (on average), the average memory access time with swapping will be about 10 times larger than it would be without swapping
+  \item if there is one page fault every 1000 memory accesses (on average), the average memory access time with swapping will be about 2 times larger than it would be without swapping.
+\end{itemize}
+
+\subsection{Performance with Swapping}
+To provide good performance for virtual memory accesses, the kernel should try to ensure that page faults are rare. \\
+
+Some techniques the kernel can use to improve performance:
+\begin{itemize}
+  \item limit the number of processes, so that there is enough physical memory per process
+  \item try to be smart about \emph{which} pages are kept in physical memory, and which are evicted
+  \item hide latencies, e.g., by \emph{prefetching} pages before a process needs them
+\end{itemize}
+
+\subsubsection{A Simple Replacement Policy: FIFO}
+Replace the page that has been in memory the longest.
+\begin{table}[H]
+  \vspace{-20pt}
+  \caption{Three-frame example}
+  \centering
+  \begin{tabular}{|r|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  Num & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\ \hline
+  Refs & a & b & c & d & a & b & e & a & b & c & d & e \\ \hline
+  \hline
+  Frame 1 & a & a & a & d & d & d & e & e & e & e & e & e \\ \hline
+  Frame 2 &  & b & b & b & a & a & a & a & a & c & c & c \\ \hline
+  Frame 3 &  &  & c & c & c & b & b & b & b & b & d & d \\ \hline
+  Fault ? & x & x & x & x & x & x & x &  &  & x & x &  \\ \hline
+  \end{tabular}
+\end{table}
+
+\subsubsection{Optimal Page Replacement}
+MIN: replace the page that will not be referenced for the longest time. \\
+MIN requires knowledge of the future.
+
+\begin{table}[H]
+  \vspace{-20pt}
+  \caption{Three-frame example}
+  \centering
+  \begin{tabular}{|r|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  Num & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\ \hline
+  Refs & a & b & c & d & a & b & e & a & b & c & d & e \\ \hline
+  \hline
+  Frame 1 & a & a & a & a & a & a & a & a & a & c & c & c \\ \hline
+  Frame 2 &  & b & b & b & b & b & b & b & b & b & d & d \\ \hline
+  Frame 3 &  &  & c & d & d & d & e & e & e & e & e & e \\ \hline
+  Fault ? & x & x & x & x &  &  & x &  &  & x & x &  \\ \hline
+  \end{tabular}
+\end{table}
+
+\subsubsection{Least Recently Used (LRU) Page Replacement}
+\begin{table}[H]
+  \vspace{-20pt}
+  \caption{Three-frame example}
+  \centering
+  \begin{tabular}{|r|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  Num & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\ \hline
+  Refs & a & b & c & d & a & b & e & a & b & c & d & e \\ \hline
+  \hline
+  Frame 1 & a & a & a & d & d & d & e & e & e & c & c & c \\ \hline
+  Frame 2 &  & b & b & b & a & a & a & a & a & a & d & d \\ \hline
+  Frame 3 &  &  & c & c & c & b & b & b & b & b & b & e \\ \hline
+  Fault ? & x & x & x & x & x & x & x &  &  & x & x & x \\ \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Locality}
+Real programs do not access their virtual memories randomly. \\
+Instead, they exhibit \emph{locality}:
+\begin{itemize}
+  \item \textbf{temporal locality}: programs are more likely to access pages that they have accessed recently than pages that they have not accessed recently
+  \item \textbf{spatial locality}: programs are likely to access parts of memory that are close to parts of memory they have accessed recently
+\end{itemize}
+
+Locality helps the kernel keep page fault rates low.
+
+\subsection{Measuring Memory Accesses}
+The kernel is not aware which pages a program is using unless there is an exception. \\
+This makes it difficult for the kernel to exploit locality by implementing a replace policy like LRU. \\
+
+The MMU can help solve this program by tracking page accesses in hardware. \\
+Simple scheme: add a \emph{use bit} (or \emph{reference bit}) to each PTE.
+This bit:
+\begin{itemize}
+  \item is set by the MMU each time the page is used, i.e., each time the MMU translates a virtual address on that page
+  \item can be read and cleared by the kernel
+\end{itemize}
+
+The use bit provides a small amount of memory usage information that can be exploited by the kernel.
+
+\subsection{The Clock Replacement Algorithm}
+The clock algorithm (also known as ``second chance'') is one of the simplest algorithms that exploits the use bit. \\
+
+Clock is identical to FIFO, except that a page is ``skipped'' if its use bit is set. \\
+
+The clock algorithm can be visualized as a victim pointer that cycles through the page frames. \\
+The pointer moves whenever a replacement is necessary:
+\begin{verbatim}
+  while use bit of victim is set
+    clear use bit of victim
+    victim = (victim + 1) % num_frames
+  choose victim for replacement
+  victim = (victim + 1) % num_frames
+\end{verbatim}
 
 
 %%%%%%%%%%%%%%%%
