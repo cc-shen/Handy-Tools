@@ -577,7 +577,7 @@ In an undirected graph, edges can be traversed in any direction. \\
 
 Sometimes we allow graphs to have edges from a vertex to itself;
 such an edge is called a "loop" or a "self-loop" and the graph is no longer \emph{simple}. \\
-Most graphs in this course won't have such edges.
+Most graphs in this course won't have such edges, we will allow self-loops for directed graphs and only sometimes for undirected graphs.
 We will rarely have two or more different edges between the same two vertices. \\
 
 \emph{Note}: in any graph, $|E| = O(|V|^{2})$, and if the graph is connected, $|E| = \Omega(|V|)$. \\
@@ -596,30 +596,158 @@ Trees can be rooted (have a distinguishable vertex called the root) or unrooted.
 
 Two ways to store a graph:
 \begin{itemize}
-  \item[1.] adjacency matrix \\
-  We represent a graph by a $|V| \times |V|$ matrix with a 1 in row $i$ and column $j$ is $(i, j)$ is an edge, and 0 otherwise. \\
-  \item[2.] adjacency list \\
+  \item[1.] \textbf{Adjacency Matrix} \\
+  We represent a graph by a $|V| \times |V|$ matrix with a 1 in row $i$ and column $j$ is $(i, j)$ is an edge, and 0 otherwise.
+  \item[2.] \textbf{Adjacency List} \\
   We represent a graph by an array Adj of $|V|$ lists, one list for each vertex. \\
-  For each vertex Adj[u] contains all vertices (or pointers to the vertices) $v$ such that $(u, v)$ is an edge.
+  For each vertex Adj[u] contains all vertices (or pointers to the vertices) $v$ such that $uv$ is an edge.
 \end{itemize}
 
 Advantages and disadvantages of each representation: \\
 \emph{Adjacency Matrix}:
 \begin{itemize}
   \item easy to manipulate
-  \item can check if $(u, v)$ is an edge in $O(1)$ time
+  \item can check if $uv$ is an edge in $O(1)$ time
   \item but storage is always $\Omega(|V|^{2})$---not good for sparse graphs
+  \item time to add an edge:
+  \begin{itemize}
+    \item existing vertex and new edge: $O(1)$ time
+    \item existing vertex and existing edge: $O(1)$ time, can check in $O(1)$ time
+    \item new vertex and new edge: $O(|V|^{2})$ time, create a new, bigger matrix
+  \end{itemize}
 \end{itemize}
 
 \emph{Adjacency List}:
 \begin{itemize}
   \item harder to manipulate
-  \item checking if $(u, v)$ is an edge takes $O(|V|) time$
+  \item checking if $uv$ is an edge takes $O(|V|) time$
   \item but storage is $O(|V| + |E|)$
+  \item time to add an edge:
+  \begin{itemize}
+    \item existing vertex and new edge: $O(|V|)$ time
+    \item existing vertex and existing edge: $O(|V|)$ time
+    \item new vertex and new edge: $O(|V|)$ time
+  \end{itemize}
 \end{itemize}
 
 \lecture{November 3, 2016}
 
+Algorithms for \emph{minimum spanning tree}:
+\begin{itemize}
+  \item[\textbf{Kruskal}:] many different trees that are eventually joined up to form one tree
+  \item[\textbf{Prim}:] one tree that grows by sequentially adding edges
+\end{itemize}
+
+\emph{Neither} Kruskal nor Prim work for directed graphs. \\
+That problem is called the ``minimum cost arborescence'' problem;
+it can be solved in $min(n^{2}, m\lg{n})$ time.
+
+\subsection{Kruskal's Algorithm for Minimum Spanning Tree}
+We consider each edge in turn, starting with the lowest-weight edge and continuing in ascending order by weight.
+We only add the edge if it doesn't create a cycle. \\
+
+To implement Kruskal's algorithm, we need to consider the edges in turn, ordered in ascending order by weight;
+which we can do by sorting the edges. \\
+Then when we pick an edge $uv$ to consider, we have to decide if they are in different trees, or the same tree.
+This is not so easy!
+But it is an example of the "disjoint-set data structure problem." \\
+
+In the disjoint-set data structure problem, we have three operations:
+\begin{itemize}
+  \item[\texttt{MAKE-SET}:] create a set containing a single vertex
+  \item[\texttt{FIND}:] given a vertex, find the ``name'' of the set it is in (sets are disjoint so only one name is possible for each vertex)
+  \item[\texttt{UNION}:] union together two sets, possibly giving the resulting set a new name (destructive)
+\end{itemize}
+
+Due to the two main operations, this is also called the ``union-find'' problem. \\
+
+It is possible to do $m$ \texttt{MAKE-SET}, \texttt{UNION} and \texttt{FIND} operations,$n$ of which are \texttt{MAKE-SET}, in $O(m~\alpha(n))$ time. \\
+$\alpha(n)$ is an extremely slow-growing function called the ``inverse Ackerman'' function;
+the function grows so slowly that $\alpha(n) \leq 4$ for all values of $n$ that one would ever encounter in real life. \\
+
+How Kruskal's algorithm may be implemented:
+\begin{algorithmic}
+\Function{kruskal}{$G, w$}
+  \Comment{$G = (V, E)$ and $w$ is the weight function}
+  \State $A \gets$ empty set
+  \For{each $v$ in $V$}
+    \State \Call{make-set}{$v$}
+  \EndFor
+  \State sort $E$ into increasing order of weight
+  \For{each edge $uv$ in $E$, in increasing order}
+    \If{\Call{find}{$u$} $\neq$ \Call{find}{v}}
+      \State $A \gets A \cup \{uv\}$
+      \State \Call{union}{$u$, $v$}
+    \EndIf
+  \EndFor
+  \State \Return{$A$}
+\EndFunction
+\end{algorithmic}
+
+\texttt{MAKE-SET(v)} creates a new set whose only element is $v$. \\
+\texttt{FIND(u)} returns the name of the set that $u$ is contained in. \\
+\texttt{UNION(u,v)} unions together the trees containing $u$ and $v$ and gives the result a name (which can be found with \texttt{FIND}). \\
+
+Sets are stored as linked lists of vertices. \\
+Each element in the list has a pointer to its next element, and a pointer to the head of the list. \\
+There is also a tail pointer to the end of the list, and the list maintains how many elements it contains. \\
+The "name" is the first vertex in the list. \\
+
+To do \texttt{MAKE-SET}, we create a linked list of a single element, and the \texttt{num} field set to 1.
+This costs $O(1)$. \\
+
+To do a \texttt{FIND}, we follow the pointer to the head of the list and return the element there.
+This costs $O(1)$. \\
+
+To do a \texttt{UNION(u,v)}, we follow the pointer of $u$ to its head, and the pointer of $v$ to its head. \\
+There we find the number of elements in each list. \\
+We can do this via ``weighted-union heuristic.'' \\
+If (say) $u$ is in the smaller list, we link that list to the end of the bigger list ($v$'s list). \\
+Then traverse $u$'s list, moving each head pointer to point to the head of $v$'s list. \\
+Finally, we update the \texttt{num} field of $v$'s list. \\
+This costs $O(t)$, where $t$ is the number of vertices of the smaller list. \\
+
+Because we always update the head pointers of the elements of the smaller list, each \texttt{UNION} at least doubles the size of the smaller list. \\
+So an element's name gets updated at most $O(log n)$ times. \\
+Thus, over the course of the entire algorithm, we see that (all) $n$ \texttt{UNION}s take at most $O(n\lg{n})$ time.
+
+\begin{theorem}
+Kruskal's algoirthm takes $O(|E|\lg{|E|}) = O(|E|\lg{|V|})$ time.
+\end{theorem}
+\begin{proof}
+First, note that the algorithm does indeed produce a spanning tree. \\
+The output cannot have a cycle, because if it did, the edge added that forms the cycle would join together two vertices in the same tree. \\
+The output must be connected, for if it weren't, when we considered the edge that connected two components, we would have added it. \\
+
+Next, we need to argue that the spanning tree $T$ produced by Kruskal's algorithm is a minimum spanning tree. \\
+Assume it isn't.
+Among all minimum spanning trees for $G$, the input, let $T'$ be the one with the largest number of edges in $T$. \\
+If $T' = T$, we're done. \\
+Otherwise, among all the edges in $T - T'$, let $e$ be the one that is added earliest by Kruskal's algorithm when we run it on $G$.
+
+Because $T'$ is a spanning tree, $T' \cup \{e\}$ has a cycle $C$. \\
+$T$ cannot contain all the edges of this cycle (otherwise it would not be a tree) so $C$ contains an edge $f$ that is not in $T$. \\
+Now consider $T'' = (T' \cup \{e\}) - \{f\}$. T'' is also a spanning tree;
+since T' was minimum, $weight(e) \geq weight(f)$. \\
+
+If $weight(f) < weight(e)$, then the algorithm would have considered the edge $f$ before it would have considered the edge $e$. \\
+Adding $f$ wouldn't create a cycle ($e$ was the first edge not in T'), so it would have been added. \\
+But it wasn't;
+$e$ was. \\
+So $weight(f) \geq weight(e)$. \\
+Thus $weight(e) = weight(f)$. \\
+
+So $T''$ is also a minimum spanning tree. \\
+But $T''$ has one more edge in common with $T$ than $T'$ does, contradicting the choice of $T'$.
+\end{proof}
+
+\subsection{Prim's Algorithm}
+It is a greedy algorithm where, at each step, we choose a previously unconnected vertex that becomes connected by a lowest-weight edge. \\
+
+We choose an initial vertex arbitrarily and put it in a set $V'$. \\
+We also have a set $E'$ of edges which initially empty. \\
+At every step, we choose an edge $uv$ of minimal weight with $u$ in $V'$ and $v$ not in $V'$ (break ties arbitrarily). \\
+We then add $v$ to $V'$ and $uv$ to $E'$. \\
 
 
 \clearpage
