@@ -175,6 +175,7 @@ Conceptually, each thread executes sequentially using its private register conte
 \end{enumerate}
 
 \begin{table}[H]
+  \vspace{-20pt}
   \caption{MIPS Registers}
   \centering
 
@@ -217,7 +218,7 @@ What happens during a context switch:
 
 Thread context must be saved/restored carefully, since thread execution continuously changes the context! \\
 
-\textbf{Context Switch on the MIPS}, see \texttt{kern/arch/mips/thread/switch.S}
+\textbf{Context Switch on the MIPS}
 \begin{verbatim}
   switchframe_switch:
     /* a0: address of switchframe pointer of old thread. */
@@ -291,12 +292,6 @@ So we have the following stack (in growth order) after preemption:
   \label{fig:thread_states}
 \end{figure}
 
-\subsection{Preemption}
-Without preemption, a running thread could potentially run forever, without yielding, blocking, or exiting. \\
-\emph{Preemption} means forcing a running thread to stop running, so that another thread can have a chance. \\
-To implement preemption, the thread library must have a means of ``getting control'' (causing thread library code to be executed) even though the running thread has not called a thread library function. \\
-This is normally accomplished using \emph{interrupts}.
-
 \subsection{Review on Interrupts}
 An interrupt is an event that occurs during execution of a program. \\
 Interrupts are caused by system devices (hardware), e.g., a timer, a disk controller, a network interface. \\
@@ -309,7 +304,13 @@ The interrupt handler normally:
   \item[3.] restores the saved thread context from the trap frame and resumes executions of the thread
 \end{enumerate}
 
-\subsection{Preemptive Scheduling}
+\subsection{Preemption}
+Without preemption, a running thread could potentially run forever, without yielding, blocking, or exiting. \\
+\emph{Preemption} means forcing a running thread to stop running, so that another thread can have a chance. \\
+To implement preemption, the thread library must have a means of ``getting control'' (causing thread library code to be executed) even though the running thread has not called a thread library function. \\
+This is normally accomplished using \emph{interrupts}.
+
+\subsubsection{Preemptive Scheduling}
 A preemptive scheduler imposes a limit, called the \emph{scheduling quantum} on how long a thread can run before being preempted. \\
 The quantum is an \emph{upper bound} on the amount of time that a thread can run.
 It may block or yield before its quantum has expired. \\
@@ -319,7 +320,7 @@ The preempted thread changes state from running to ready, and it is placed on th
 
 OS/161 threads use \emph{preemptive round-robin scheduling}.
 
-\subsection{Two-Thread Example}
+\subsubsection{Two-Thread Example}
 Thread 1 is running, thread two had previously yielded voluntarily. \\
 Thread 1: program stack frame(s). \\
 Thread 2: program stack frame(s), thread\_yield, thread\_switch, switch frame. \\
@@ -360,6 +361,7 @@ Thread 2: program stack frame(s), thread\_yield, thread\_switch, switch frame.
 %%%%%%%%%%%%%%%%%%%%%
 %% SYNCHRONIZATION %%
 %%%%%%%%%%%%%%%%%%%%%
+\newpage
 \section{Synchronization}
 \subsection{Thread Synchronization}
 All threads in a concurrent program \emph{share access} to the program's global variables and the heap. \\
@@ -381,7 +383,7 @@ If a thread cannot Acquire the lock immediately, it must wait until the lock is 
 
 \subsection{Hardware-Specific Synchronization Instructions}
 Used to implement synchronization primitives like locks. \\
-Provide a way to \emph{test and set} a lock in a single \emph{atomic} (indivisible) operation. \\
+Provide a way to \emph{test and set} a lock in a single \emph{atomic} (indivisible) operation.
 \begin{ex*}
 x86 \texttt{xchg} instruction:
 \begin{verbatim}
@@ -420,7 +422,7 @@ SPARC \texttt{cas} instruction
 \end{verbatim}
 if value at \texttt{addr} matches value in \texttt{R1} then swap contents of \texttt{addr} and \texttt{R2}. \\
 
-Compare-And-Swap \\
+Compare-And-Swap
 \begin{verbatim}
   CompareAndSwap(addr, expectedval, newval)
     old = *addr;            // get old value at addr
@@ -458,7 +460,8 @@ Using Load-Linked/Store-Conditional:
       ".set pop"        /* restore assembler mode */
       : "=r" (x), "+r" (y) : "r" (sd));
     if (y == 0) { return 1; }
-  return x; }
+    return x;
+  }
 \end{verbatim}
 
 \subsection{OS/161 Locks}
@@ -509,11 +512,9 @@ Wait channels are used to implement thread blocking in OS/161.
   \item \texttt{void wchan\_lock (struct wchan *wc);} \\
   prevent operations on wait channel \texttt{wc}
 \end{itemize}
-There can be many different wait channels, holding threads that are blocked for different reasons.
+There can be many different wait channels, holding threads that are blocked for different reasons. \\
 
-\subsection{Thread States, Revisited}
-Refer to \ref{fig:thread_states}. \\
-Ready threads are queued on the ready queue, blocked threads are queued on wait channels.
+Ready threads are queued on the ready queue, blocked threads are queued on wait channels (refer to \ref{fig:thread_states}).
 
 \subsection{Semaphores}
 A semaphore is a synchronization primitive that can be used to enforce mutual exclusion requirements.
@@ -609,6 +610,7 @@ Each program's process \emph{isolates} it from other programs in other processes
 System calls (syscalls) are the interface between processes and the kernel. \\
 A process uses syscalls to request operating system services.
 \begin{table}[H]
+  \vspace{-20pt}
   \caption{Syscall examples}
   \label{tab:ex_syscall}
   \centering
@@ -651,7 +653,7 @@ Recall that an interrupt causes the hardware to transfer control to a fixed loca
 memory, where an \emph{interrupt handler} is located. \\
 
 Interrupt handlers are part of the kernel. \\
-If an interrupt occurs while an application program is running, control will jump from the application to the kernel’s interrupt handler. \\
+If an interrupt occurs while an application program is running, control will jump from the application to the kernel's interrupt handler. \\
 
 When an interrupt occurs, the processor switches to privileged execution mode when it transfers control to the interrupt handler.
 This is how the kernel gets its execution privilege.
@@ -801,6 +803,7 @@ The OS ensures that processes are isolated from one another. \\
 Interprocess communication should be possible, but only at the explicit request of the processes involved.
 
 \begin{table}[H]
+  \vspace{-15pt}
   \caption{Syscalls for Process Management}
   \label{tab:syscall_pmanage}
   \centering
@@ -1134,7 +1137,7 @@ This can be slow! \\
 Solution: include a \emph{Translation Lookaside Buffer} (TLB) in the MMU,
 \begin{itemize}
   \item TLB is a small, fast, dedicated cache for address translation in the MMU
-  \item Each TLB entry stores a (page number $\Rightarrow frame number$) mapping
+  \item Each TLB entry stores a (page number $\Rightarrow$ frame number) mapping
 \end{itemize}
 
 \subsubsection{TLB Use}
@@ -1176,8 +1179,7 @@ After the miss is handled, the instruction that caused the exception is re-tried
   \caption{The MIPS R3000 TLB}
   \label{fig:mips_tlb}
 \end{figure}
-The MIPS TLB has room for 64 entries. Each entry is 64 bits (8 bytes) long. \\
-See \texttt{kern/arch/mips/include/tlb.h}
+The MIPS TLB has room for 64 entries. Each entry is 64 bits (8 bytes) long.
 
 \subsection{Large, Sparse Virtual Memories}
 \begin{figure}[H]
@@ -1189,7 +1191,7 @@ See \texttt{kern/arch/mips/include/tlb.h}
 Virtual memory may be large,
 \begin{itemize}
   \item[MIPS:] $V = 32$, max virtual memory is $2^{32}$ bytes (4 GB)
-  \item[x86-64:] $V = 48$, max virtual memory is $2^{48}$ bytes (246 TB)
+  \item[x86-64:] $V = 48$, max virtual memory is $2^{48}$ bytes (256 TB)
 \end{itemize}
 Much of the virtual memory may be unused (see \ref{fig:realistic_v_mem})! \\
 
@@ -1242,7 +1244,7 @@ To translate virtual address $v$ to a physical address $p$:
 &\texttt{split } p \texttt{ into segment number }(s)\texttt{ and address within segment }(a) \\
 &\texttt{if } a \geq L_{s} \texttt{ then generate exception} \\
 &\texttt{else} \\
-&\quad p \gets a + R_{i}
+&\quad p \gets a + R_{s}
 \end{align*}
 As for dynamic relocation, the kernel maintains a separate set of relocation offsets and limits for each process, and changes the values in the MMU's registers when there is a context switch between processes.
 
