@@ -593,6 +593,7 @@ A graph is \emph{acyclic} if there are no cycles. \\
 A \emph{tree} is a connected acyclic graph. \\
 An undirected graph is a tree if every pair of vertices are connected by a \emph{unique} simple path. \\
 Trees can be rooted (have a distinguishable vertex called the root) or unrooted. \\
+A \emph{forest} is a vertex-disjoint collection of 1 or more trees. \\
 
 Two ways to store a graph:
 \begin{itemize}
@@ -630,6 +631,29 @@ Advantages and disadvantages of each representation: \\
   \end{itemize}
 \end{itemize}
 
+Sometimes there are weights on the edges. \\
+In this case we can represent a weighted graph by a $|V| \times |V|$ matrix with a number $x$ in row $i$ and column $j$ if the edge from $i$ to $j$ has weight $x$. \\
+If $i$ is not directly connected to $j$, then the weight is typically taken to be infinite. \\
+Or we can use the adjacency list representation, with weights given together with the vertices in a list. \\
+
+The \emph{weight of a path} is the sum of the weights of all the edges traversed along that path. \\
+
+\subsection{Minimum Spanning Tree}
+\emph{Note}: here we are working with undirected graphs. \\
+A spanning tree is an (unrooted) tree that connects all the vertices of a graph. \\
+Every connected graph has at least one spanning tree;
+typically, a graph can have many, many different spanning trees. \\
+If there are weights on the edges, a minimum spanning tree is one that minimizes the sum of the weights of the edges used. \\
+Note that edge weights need not be distances!
+They can even be 0 or negative. \\
+A graph can have more than one minimum spanning tree. \\
+
+If the graph is not connected, we sometimes talk about spanning \emph{forests} instead of spanning trees. \\
+
+Minimum spanning trees come up all the time in network problems. \\
+Here the nodes represent nodes of a network that need to be connected, and the weights represent distances (or perhaps, amounts of wire required) between the vertices. \\
+We want to hook up all the nodes in our network using the smallest total distance (or amount of wire). \\
+
 \lecture{November 3, 2016}
 
 Algorithms for \emph{minimum spanning tree}:
@@ -642,9 +666,10 @@ Algorithms for \emph{minimum spanning tree}:
 That problem is called the ``minimum cost arborescence'' problem;
 it can be solved in $min(n^{2}, m\lg{n})$ time.
 
-\subsection{Kruskal's Algorithm for Minimum Spanning Tree}
+\subsubsection{Kruskal's Algorithm}
 We consider each edge in turn, starting with the lowest-weight edge and continuing in ascending order by weight.
 We only add the edge if it doesn't create a cycle. \\
+It's a greedy algorithm where, at each step, we choose the minimum-weight edge that doesn't create a cycle. \\
 
 To implement Kruskal's algorithm, we need to consider the edges in turn, ordered in ascending order by weight;
 which we can do by sorting the edges. \\
@@ -712,7 +737,7 @@ So an element's name gets updated at most $O(log n)$ times. \\
 Thus, over the course of the entire algorithm, we see that (all) $n$ \texttt{UNION}s take at most $O(n\lg{n})$ time.
 
 \begin{theorem}
-Kruskal's algoirthm takes $O(|E|\lg{|E|}) = O(|E|\lg{|V|})$ time.
+Kruskal's algorithm takes $O(|E|\lg{|E|}) = O(|E|\lg{|V|})$ time.
 \end{theorem}
 \begin{proof}
 First, note that the algorithm does indeed produce a spanning tree. \\
@@ -741,13 +766,144 @@ So $T''$ is also a minimum spanning tree. \\
 But $T''$ has one more edge in common with $T$ than $T'$ does, contradicting the choice of $T'$.
 \end{proof}
 
-\subsection{Prim's Algorithm}
+\subsubsection{Prim's Algorithm}
+\lecture{November 8, 2016}
 It is a greedy algorithm where, at each step, we choose a previously unconnected vertex that becomes connected by a lowest-weight edge. \\
 
-We choose an initial vertex arbitrarily and put it in a set $V'$. \\
-We also have a set $E'$ of edges which initially empty. \\
-At every step, we choose an edge $uv$ of minimal weight with $u$ in $V'$ and $v$ not in $V'$ (break ties arbitrarily). \\
-We then add $v$ to $V'$ and $uv$ to $E'$. \\
+At every step, we need to pick an appropriate vertex that is not in the tree $T$, say $r$. \\
+The vertex $v$ that we want will have the minimum-cost edge connecting $v$ to some vertex already in $T$. \\
+So it makes sense to keep those vertices not in $T$ in a min-priority queue (min-heap). \\
+
+For each vertex $v$, $key[v]$ is the minimum weight of any edge connecting $v$ to a vertex in $T$;
+$key[v] = \infty$ if there is no such edge.
+Initially the keys of all vertices equal $\infty$. \\
+
+At every step we do an \texttt{EXTRACT-MIN} operation on the heap to get the vertex with the minimum edge weight associated with it. \\
+Once we get that vertex, we have to look at all edges adjacent to it, and find the minimum weight edge. \\
+We then update the key associated with each vertex, decreasing the key (via \texttt{DECRESE-KEY} if we find a lower-weight edge. \\
+
+We use an array $\pi[u]$, indexed by the vertices $u$ of $V$, such that $\pi[u]$ is the parent of $u$ in the minimum spanning tree. \\
+The actual tree itself will consist of the edges $(v, \pi[v])$ for all vertices $v$ in $V$ (except $r$, which has no parent). \\
+
+The key idea is that whenever a new vertex $v$ is added to the tree $T$, we look at all the new edges $(v, u)$ incident on $v$ and update our knowledge about the lowest-cost edge connecting $u$ to $T$. \\
+That way we examine all edges, but the priority queue only has to hold vertices, not edges. \\
+
+\begin{algorithmic}
+\Function{prim}{$G, w, r$}
+  \For{each $u \in V$}
+    \State \Comment{$key[u]$ is current estimate on cheapest edge $uv$ joining $u$ to vertices not yet considered}
+    \State $key[u] \gets \infty$
+    \State \Comment{$\pi[u]$ is the current predecessor of $u$ in minimum spanning tree created}
+    \State $\pi[u] = nil$
+  \EndFor
+  \State $key[r] = 0$
+  \State \Comment{Q is the priority queue, vertices that remain to be considered}
+  \State $Q = V$
+  \While{$Q \neq \varnothing$}
+    \State $u = \Call{extract-min}{Q}$
+    \For{each $v$ in $Adj[u]$}
+      \If{$v \in Q$ and $w(u, v) < key[v]$}
+        \State $\pi[v] = u$
+        \State $key[v] = w(u, v)$
+      \EndIf
+    \EndFor
+  \EndWhile
+\EndFunction
+\end{algorithmic}
+
+\emph{Note}: as each vertex is removed from the priority queue $Q$, its connection to the tree is established through the parent pointer.
+Before that time, the parent pointer of a vertex might point to a different vertex. \\
+
+How do we determine, in \texttt{PRIM}, whether $v \in Q$? \\
+One simple way is just to have every vertex have a flag, and when we do an \texttt{EXTRACT-MIN} and the vertex is removed, we set this flag. \\
+Alternatively we can assume the vertices are numbered 1 through $n$ and use a bit-vector (an array of size $n$) to record whether a vertex is in $Q$ or not;
+this would be updated over time. \\
+
+What is the running time? \\
+We can build the heap initially in $O(|V|)$ time. \\
+We call \texttt{EXTRACT-MIN} $|V|$ times, and each call costs $O(\lg{|V|})$.
+So this part is $O(|V|\lg{|V|})$. \\
+We have to traverse all the edges, so that is $O(|E|)$. \\
+For each edge, we potentially call \texttt{DECREASE-KEY}, which costs $O(\lg{|V|})$.
+So that costs $O(|E|\lg{|V|})$. \\
+The total is $O(|V|\lg{|V|} + |E|\lg{|V|}) = O(|E|\lg{|V|})$, which is the same time as Kruskal's algorithm. \\
+
+Its running time can be \emph{improved} to $O(|E| + |V|\lg{|V|})$ with a more sophisticated data structure --- Fibonacci heaps --- that supports \texttt{DECREASE-KEY} more efficiently. \\
+If the graph is dense (more than a linear number of edges), this time is asymptotically better than before. \\
+
+\subsection{Shortest Path Problems}
+The \emph{single-source} shortest path problem is the following: given a source vertex $s$, and a sink vertex $v$, we'd like to find the shortest path from $s$ to $v$. \\
+Here shortest path means a sequence of directed edges from $s$ to $v$ with the smallest total weight. \\
+Now it turns out that for most of the known algorithms, it is just as efficient to find the shortest paths from $s$ to all the other vertices of the graph. \\
+
+Applications of shortest paths include speech recognition, to try to figure out the meaning of sentences. \\
+Here we have to distinguish between different words that sound alike (homophones), such as ``to'', ``two'', and ``too''. \\
+To do this, construct a graph whose vertices are words and whose edges are words that follow the given words in a sentence. \\
+The edge between two words carries a weight measuring the likelihood of the transition;
+the lower the weight, the more reasonable the transition. \\
+So ``to school'' would have low weight, while ``two school'' would have a high weight. \\
+Then a shortest path gives the best interpretation of an uttered sentence. \\
+
+Other applications include network routing protocols such as ``IS-IS'' (Intermediate System to Intermediate System) and ``OSPF'' (Open Shortest Path First) use shortest paths algorithms. \\
+
+Another application is graph drawing. \\
+We'd like to ``center'' a graph on a page. \\
+But what's the center?
+It could be a vertex that minimizes the maximum distance to any other vertex in the graph. \\
+We could find this by finding the shortest path between all pairs of vertices. \\
+
+\subsubsection{Aspects of Shortest Paths}
+The definition of shortest paths involves some some subtleties. \\
+Maybe we really want a shortest walk, not shortest path? \\
+So should we allow \emph{negative edges}?
+Of course, there are no negative distances;
+nevertheless, there are actually some cases where negative edges make logical sense. \\
+But then there may not \emph{be} a shortest walk, because if there is a \emph{cycle} with negative weight, we could simply go around that cycle as many times as we want and reduce the cost of the path as much as we like. \\
+To avoid this, we might want to detect negative cycles.
+This can be done in the shortest-path algorithm itself. \\
+Non-negative cycles aren't helpful, either. \\
+Suppose our shortest walk contains a cycle of non-negative weight. \\
+Then by cutting it out we get a walk with the same weight or less, so we might as well cut it out. \\
+So we can assume our walks are actually paths.
+
+\subsection{Shortest Path Algorithms}
+Given a source vertex $s$, a shortest-path algorithm constructs:
+\begin{itemize}
+  \item a predecessor $\pi[v]$ for each vertex $v$;
+  this is the predecessor of $v$ in the shortest path from $s$ to $v$
+  \item $d[v]$, the current upper bound on the weight of the shortest path from $s$ to $v$ ("shortest-path estimate")
+\end{itemize}
+
+\begin{algorithmic}
+\Function{initialize}{$G, s$}
+  \For{each vertex $v \in V$}
+    \State $d[v] = \infty$
+    \State $\pi[v] = nil$
+  \EndFor
+  \State $d[s] = 0$
+\EndFunction
+\end{algorithmic}
+
+Main idea: ``relaxation'' of edges. \\
+Here we already have a shortest-path estimate to both $u$ and $v$. \\
+We consider an edge $(u,v)$ and then update our estimate on $v$, if $d[u] + w(u, v) < d[v]$.
+
+\begin{algorithmic}
+\Function{relax}{$u, v, w$}
+  \State $t = d[u] + w(u, v)$
+  \If{$d[v] > t$}
+    \State $d[v] = t$
+    \State $\pi[v] = u$
+  \EndIf
+\EndFunction
+\end{algorithmic}
+
+The Bellman-Ford algorithm: it computes the length of a shortest path $d[]$ originating from $s$ to all other vertices on the graph $G = (V,E)$, using the weight function $w$. \\
+Further, it returns either true or false, false iff the graph contains a reachable negative-weight cycle, true otherwise. \\
+It makes no assumptions at all about the weights on the edges; they can be negative. \\
+
+
+
 
 
 \clearpage
