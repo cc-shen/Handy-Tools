@@ -1623,9 +1623,178 @@ The pointer moves whenever a replacement is necessary:
 %%%%%%%%%%%%%%%%
 \newpage
 \section{Scheduling}
+\subsection{Simple Scheduling Model}
+We are given a set of \emph{jobs} to schedule. \\
+Only one job can run at a time. \\
+For each job, we are given
+\begin{itemize}
+  \item job arrival time ($a_{i}$)
+  \item job run time ($r_{i}$)
+\end{itemize}
+For each job, we define
+\begin{itemize}
+  \item \emph{response time}: time between the job's arrival and when the job starts to run
+  \item \emph{turnaround time}: time between the job's arrival and when the job finishes running
+\end{itemize}
+We must decide when each job should run, to achieve some goal, e.g., minimize average turnaround time, or minimize average response time.
 
+\subsection{Basic Non-Preemptive Schedulers: FCFS and SJF}
+\emph{FCFS}: run jobs in arrival time order.
+\begin{itemize}
+  \item simple, avoids starvation
+  \item pre-emptive variant: round-robin
+\end{itemize}
+
+\emph{SFJ}: shortest job first --- run jobs in increasing order of $r_{i}$
+\begin{itemize}
+  \item minimizes average \emph{turnaround} time
+  \item long jobs may starve
+  \item pre-emptive variant: SRTF (shortest remaining time first)
+\end{itemize}
+
+\subsection{CPU Scheduling}
+In CPU scheduling, the ``jobs'' to be scheduled are the threads. \\
+CPU scheduling typically differs from the simple scheduling model:
+\begin{itemize}
+  \item the run times of threads are normally not known
+  \item threads are sometimes not runnable: when they are blocked
+  \item threads may have different priorities
+\end{itemize}
+
+The objective of the scheduler is normally to achieve a balance between
+\begin{itemize}
+  \item responsiveness (ensure that threads get to run regularly)
+  \item fairness
+  \item efficiency
+\end{itemize}
+
+\subsection{Multi-level Feedback Queues}
+Objective: good responsiveness for \emph{interactive} threads, non-interactive threads make as much progress as possible. \\
+Key idea: interactive threads are frequently blocked. \\
+Approach: given higher priority to interactive threads, so that they run whenever they are ready. \\
+Problem: how to determine which threads are interactive and which are not? \\
+
+\textbf{Algorithm} \\
+Scheduler maintains $n$ round-robin ready queues $(Q_{1}, \dots, Q_{n})$. \\
+Scheduler always chooses a thread from $Q_{n}$, unless it is empty
+\begin{itemize}
+  \item if $Q_{n}$ is empty, choose a thread from $Q_{n - 1}$, unless it is empty too
+  \item and so on, choosing a thread from $Q_{1}$ only if all other queues are empty.
+\end{itemize}
+Threads in queue $Q_{i}$ uses quantum $q_{i}$, typically larger quanta for lower-priority threads ($q_{i} \geq q_{i + 1}$). \\
+If the running thread from $Q_{i}$ uses its entire quantum and gets preempted, demote it to queue $Q_{i - 1}$. \\
+If a thread blocks, put it into $Q_{n}$ when it wakes up. \\
+To prevent starvation, periodically move all threads to $Q_{n}$.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{pictures/3-level_queue.png}
+  \caption{3 Level Feedback Queue State Diagram}
+  \label{fig:3levelfeedback}
+\end{figure}
+
+\subsection{Linux Complexity Fair Scheduler (CFS) - Main Ideas}
+Each thread can be assigned a \emph{weight}. \\
+The goal of the scheduler is to ensure that each thread gets a ``share'' of the processor in proportion to its weight. \\
+
+Basic operation:
+\begin{itemize}
+  \item track the ``virtual'' run time of each run-able thread
+  \item always run the thread with the lowest virtual run time
+\end{itemize}
+
+Virtual run time is actual run time adjusted by the thread weights
+\begin{itemize}
+  \item suppose $w_{i}$ is the weight of the $i$th thread
+  \item actual run time of $i$th thread is multiplied by $\frac{\sum_{j}w_{j}}{w_{i}}$
+  \item virtual run time advances slowly for threads with high weights, quickly for threads with low weights
+\end{itemize}
+
+\subsection{Scheduling on Multi-Core Processors}
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{pictures/multicore_scheduling.png}
+\end{figure}
+
+\subsubsection{Scalability and Cache Affinity}
+Contention and Scalability
+\begin{itemize}
+  \item access to shared ready queue is a critical section, mutual exclusion needed
+  \item as number of cores grows, contention for ready queue becomes a problem
+  \item per core design \emph{scales} to a larger number of cores
+\end{itemize}
+
+CPU cache affinity
+\begin{itemize}
+  \item as thread runs, data it accesses is loaded into CPU cache(s)
+  \item moving the thread to another core means data must be reloaded into that core's caches
+  \item as thread runs, it acquires an \emph{affinity} for one core because of the cached data
+  \item per core design benefits from affinity by keeping threads on the same core
+  \item shared queue design does not
+\end{itemize}
+
+\subsubsection{Load Balancing}
+In per-core design, queues may have different lengths. \\
+This results in \emph{load imbalance} across the cores,
+\begin{itemize}
+  \item cores may be idle while others are busy
+  \item threads on lightly loaded cores get more CPU time than threads on heavily loaded cores
+\end{itemize}
+
+Not an issue in shared queue design. \\
+
+Per-core designs typically need some mechanism for \emph{thread migration} to address load imbalances,
+\begin{itemize}
+  \item migration means moving threads from heavily loaded cores to lightly loaded cores
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%
+%% DEVICES AND I/O %%
+%%%%%%%%%%%%%%%%%%%%%
 \newpage
-\section{Devices and Device Management}
+\section{Devices and I/O}
+\subsection{Sys/161 Device Examples}
+\begin{itemize}
+  \item timer/clock --- current time, timer, beep
+  \item disk drive --- persistent storage
+  \item serial console --- character input/output
+  \item text screen --- character-oriented graphics
+  \item network interface --- packet input/output
+\end{itemize}
+
+\begin{table}[H]
+  \vspace{-20pt}
+  \caption{Sys/161 timer/clock}
+  \label{tab:sys161_timer}
+  \centering
+
+  \begin{tabular}{|c|c|c|l|}
+  \hline
+  Offset & Size & Type & Description \\ \hline \hline
+  0 & 4 & status & current time (seconds) \\ \hline
+  4 & 4 & status & current time (nanoseconds) \\ \hline
+  8 & 4 & command & restart-on-expiry \\ \hline
+  12 & 4 & status and command & interrupt (reading clears) \\ \hline
+  16 & 4 & status and command & countdown time (microseconds) \\ \hline
+  20 & 4 & command & speaker (cause beeps) \\ \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \vspace{-20pt}
+  \caption{Serial Console}
+  \label{tab:serial_con}
+  \centering
+
+  \begin{tabular}{|c|c|c|l|}
+  \hline
+  Offset & Size & Type & Description \\ \hline \hline
+  0 & 4 & command and data & character buffer \\ \hline
+  4 & 4 & status & writeIRQ \\ \hline
+  8 & 4 & status & readIRQ \\ \hline
+  \end{tabular}
+\end{table}
 
 \newpage
 \section{File Systems}
