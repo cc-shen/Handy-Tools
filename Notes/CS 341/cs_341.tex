@@ -636,7 +636,7 @@ In this case we can represent a weighted graph by a $|V| \times |V|$ matrix with
 If $i$ is not directly connected to $j$, then the weight is typically taken to be infinite. \\
 Or we can use the adjacency list representation, with weights given together with the vertices in a list. \\
 
-The \emph{weight of a path} is the sum of the weights of all the edges traversed along that path. \\
+The \emph{weight of a path} is the sum of the weights of all the edges traversed along that path.
 
 \subsection{Minimum Spanning Tree}
 \emph{Note}: here we are working with undirected graphs. \\
@@ -786,7 +786,7 @@ We use an array $\pi[u]$, indexed by the vertices $u$ of $V$, such that $\pi[u]$
 The actual tree itself will consist of the edges $(v, \pi[v])$ for all vertices $v$ in $V$ (except $r$, which has no parent). \\
 
 The key idea is that whenever a new vertex $v$ is added to the tree $T$, we look at all the new edges $(v, u)$ incident on $v$ and update our knowledge about the lowest-cost edge connecting $u$ to $T$. \\
-That way we examine all edges, but the priority queue only has to hold vertices, not edges. \\
+That way we examine all edges, but the priority queue only has to hold vertices, not edges.
 
 \begin{algorithmic}
 \Function{prim}{$G, w, r$}
@@ -829,7 +829,7 @@ So that costs $O(|E|\lg{|V|})$. \\
 The total is $O(|V|\lg{|V|} + |E|\lg{|V|}) = O(|E|\lg{|V|})$, which is the same time as Kruskal's algorithm. \\
 
 Its running time can be \emph{improved} to $O(|E| + |V|\lg{|V|})$ with a more sophisticated data structure --- Fibonacci heaps --- that supports \texttt{DECREASE-KEY} more efficiently. \\
-If the graph is dense (more than a linear number of edges), this time is asymptotically better than before. \\
+If the graph is dense (more than a linear number of edges), this time is asymptotically better than before.
 
 \subsection{Shortest Path Problems}
 The \emph{single-source} shortest path problem is the following: given a source vertex $s$, and a sink vertex $v$, we'd like to find the shortest path from $s$ to $v$. \\
@@ -850,7 +850,7 @@ Another application is graph drawing. \\
 We'd like to ``center'' a graph on a page. \\
 But what's the center?
 It could be a vertex that minimizes the maximum distance to any other vertex in the graph. \\
-We could find this by finding the shortest path between all pairs of vertices. \\
+We could find this by finding the shortest path between all pairs of vertices.
 
 \subsubsection{Aspects of Shortest Paths}
 The definition of shortest paths involves some some subtleties. \\
@@ -883,7 +883,7 @@ Given a source vertex $s$, a shortest-path algorithm constructs:
   \State $d[s] = 0$
 \EndFunction
 \end{algorithmic}
-
+\medskip
 Main idea: ``relaxation'' of edges. \\
 Here we already have a shortest-path estimate to both $u$ and $v$. \\
 We consider an edge $(u,v)$ and then update our estimate on $v$, if $d[u] + w(u, v) < d[v]$.
@@ -897,12 +897,142 @@ We consider an edge $(u,v)$ and then update our estimate on $v$, if $d[u] + w(u,
   \EndIf
 \EndFunction
 \end{algorithmic}
+\medskip
+The \emph{Bellman-Ford} algorithm: it computes the length of a shortest path $d[]$ originating from $s$ to all other vertices on the graph $G = (V,E)$, using the weight function $w$. \\
+Further, it returns either true or false, false iff. the graph contains a reachable negative-weight cycle, true otherwise. \\
+It makes no assumptions at all about the weights on the edges;
+they can be negative.
+\lecture{November 10, 2016}
+\begin{algorithmic}
+\Function{bellman-ford}{$G, w, s$}
+  \State \Call{initialize}{$G, s$}
+  \For{$i = 1$ to $|V| - 1$}
+    \For{each edge $uv$ in $E$}
+      \State \Call{relax}{$u, v, w$}
+    \EndFor
+  \EndFor
+  \For{each edge $uv$ in $E$}
+    \If{$d[v] > d[u] + w(u, v)$}
+      \State \Return false
+    \EndIf
+  \EndFor
+  \State \Return true
+\EndFunction
+\end{algorithmic}
 
-The Bellman-Ford algorithm: it computes the length of a shortest path $d[]$ originating from $s$ to all other vertices on the graph $G = (V,E)$, using the weight function $w$. \\
-Further, it returns either true or false, false iff the graph contains a reachable negative-weight cycle, true otherwise. \\
-It makes no assumptions at all about the weights on the edges; they can be negative. \\
+Let's prove that this method works. \\
+Intuitively, the idea is that each iteration for the first \texttt{for} loop increases the total number of edges in a path from $s$ by one. \\
+So after at most ($|V| - 1$) iterations, we will have considered all the paths (if there are no negative cycles). \\
+If there's a negative cycle, then we can go on improving our cost vertices within the loop, and this is detected by the second \texttt{for} loop.
 
+\begin{lemma}
+After $i$ repetitions of the \texttt{for} loop in \texttt{BELLMAN-FORD}, the following properties hold:
+\begin{itemize}
+  \item If $d[u] \neq \infty$, it is equal to the weight of some path from $s$ to $u$
+  \item If there is a path from $s$ to $u$ with at most $i$ edges, then $d[u] \leq$ weight of the shortest path from $s$ to $u$ having at most $i$ edges.
+\end{itemize}
+\end{lemma}
+\begin{proof}
+By induction on $i$. \\
 
+The base case is $i = 0$. \\
+Consider what happens before the first \texttt{for} loop is executed. \\
+Then $d[s] = 0$ for the source vertex $s$, which is correct. \\
+For all the other vertices $u$, $d[u] = \infty$, which is also correct because there is no path from $s$ to $u$ with 0 edges. \\
+
+For the induction step, consider when a vertex's estimated distance is updated by $d[v] = d[u] + w(u, v)$. \\
+By out inductive hypothesis, $d[u]$ is the weight of some path $p$ from $s$ to $u$. \\
+Then $(d[u] + w(u, v))$ is the weight of the path that follows $p$ from $s$ to $u$ and then goes to $v$. \\
+So the first property holds. \\
+
+For the second property, consider the shortest path from $s$ to $u$ with at most $i$ edges. \\
+Let $v$ be the last vertex before $u$ on this path. \\
+Then the part of the path from $s$ to $v$ is the shortest path from $s$ to $v$ with at most $(i - 1)$ edges. \\
+By the inductive hypothesis, $d[v]$ after $(i - 1)$ executions of the first \texttt{for} loop is at most the weight of this path. \\
+Therefore, $(d[v] + w(u, v))$ is at most the weight of the path from $s$ to $u$. \\
+In the $i$-th iteration of the first \texttt{for} loop, $d[u]$ gets compared with $(d[v] + w(u, v))$, and is set to equal to it if $(d[v] + w(u, v))$ is smaller. \\
+
+Therefore, after $i$ iterations of the first \texttt{for} loop, $d[u]$ is at most the weight of the shortest path from $s$ to $u$ that uses at most $i$ edges. \\
+So the second property holds. \\
+
+If there are no negative-weight cycles, then every shortest path visits each vertex at most once, so the second \texttt{for} loop does not detect any possible shorter paths. \\
+
+Conversely, suppose no shorter path is detected in the second \texttt{for} loop. \\
+Then for any cycle with vertices $v_{0}, \dots, v_{k - 1}$, we have
+\begin{align*}
+d[v_{1}] &\leq d[v_{0}] + w(v_{0}, v_{1}) \\
+d[v_{2}] &\leq d[v_{1}] + w(v_{1}, v_{2}) \\
+&\vdots \\
+d[v_{0}] &\leq d[v_{k - 1}] + w(v_{k - 1}, v_{0})
+\end{align*}
+If we now sum both sides, the $d[v_{i}]$ terms cancel, giving us
+$$w(v_{0}, v_{1}) + w(v_{1}, v_{2}) + \cdots + w(v_{k - 1}, v_{0}) \geq 0$$
+which does not have negative weight.
+\end{proof}
+
+\emph{Note}: \texttt{BELLMAN-FORD} actually creates a tree! \\
+
+What is the running time of \texttt{BELLMAN-FORD}?
+The \texttt{INITIALIZE} step costs $O(|V|)$.
+The first \texttt{for} loop runs $(|V| - 1)$ times, and inside the loop we do $|E|$ work.
+The second \texttt{for} loop costs $|E|$.
+So the total cost is $O(|V||E|)$.
+
+\subsection{Dijkstra's Algorithm}
+\emph{Dijkstra's algorithm} is another shortest-paths algorithm. \\
+If implemented carefully, it can run faster than \texttt{BELLMAN-FORD}, but it has the disadvantage that the edge weights \emph{must be non-negative}. \\
+In \texttt{BELLMAN-FORD}, every edge is relaxed $|V|$ times.
+In \texttt{DIJKSTRA}, we avoid this, at the cost of having (essentially) to do some sorting. \\
+
+Dijkstra's algorithm is quite similar to Prim's algorithm for the minimum spanning tree. \\
+The idea is to maintain a set of $S$ of vertices for which you already know the shortest path from the source. \\
+At every step you choose a vertex $u$ from $V - S$ with the minimum shortest-path estimate, add $u$ to $S$, and relax all the edges leaving $u$. \\
+This can be done by keeping the vertices in a priority queue.
+
+\begin{algorithmic}
+\Function{Dijkstra}{$G, w, s$}
+  \State \Call{initialize}{$G, s$}
+  \State $S \gets \varnothing$
+  \State $Q \gets$ a min-priority queue on the vertices $V$
+  \While{$Q \neq \varnothing$}
+    \State $u \gets \Call{extract-min}{Q}$
+    \State $S \gets S \cup \{u\}$
+    \For{each vertex $v$ in $Adj[u]$}
+      \State \Call{relax}{$u, v, w$}
+    \EndFor
+  \EndWhile
+\EndFunction
+\end{algorithmic}
+
+Informally, the correctness of the algorithm follows because we keep the vertices in three groups: the vertices already considered (those in $S$) for which we already know the shortest-path; the vertex currently being considered; and the remaining vertices. \\
+At each step we choose the unconsidered vertex for which our distance element is smallest and update our distance estimates. \\
+
+Let's figure out the running time. \\
+Each vertex $v$ is added $S$ exactly once, so each edge in $Adj[v]$ is examined exactly once. \\
+Since the total number of edges is $|E|$, there are $|E|$ iterations of the for loop, and so at most $|E|$ \texttt{DECREASE-KEY} operations (done in \texttt{RELAX}). \\
+The total cost is there for $O(|V| + |E|\lg{|V|})$. \\
+If all vertices are reachable from the source, then $|E| \geq |V| - 1$, so this is $O(|E|\lg{|V|})$. \\
+This can be improved to $O(|V|\lg{|V|} + |E|)$ with a fancy data structure, the Fibonacci heap. \\
+
+By the way, how does Google Maps find shortest paths? \\
+Because there are millions and millions of possible vertices in the database, Google doesn't run a shortest path algorithm on this giant database. \\
+Rather, it uses some heuristics. \\
+For example, to go from Kitchener to Winnipeg, it first routes you through Kitchener to some big road going in the right direction (using shortest paths on the much-smaller local database), then follows the big road to the vicinity of Winnipeg, then runs shortest-paths on that local area.
+
+\subsection{All-pairs Shortest Paths}
+In this variation, we are given a weighted directed graph, represented as a matrix. \\
+Our goal is to find the shortest path (i.e., the path of smallest total weight) from vertex $i$ to vertex $j$, \emph{for all pairs i, j}.
+(Before we wanted the shortest paths from a \emph{single vertex} to all other vertices.) \\
+
+\subsubsection{Path Algebra}
+With "path algebra" we can solve the following three problems on directed graphs, and many more:
+\begin{itemize}
+  \item Compute the total number of paths between all pairs of vertices in a directed acyclic graph
+  \item Solve the "all-pairs-shortest-paths" problem in a weighted directed graph with no negative cycles
+  \item Compute the "transitive" closure of a directed graph
+\end{itemize}
+
+The principal idea in path algebras is that matrix multiplication (and things like matrix multiplication) of adjacency matrices of directed graphs give important information about the graphs. \\
 
 
 
