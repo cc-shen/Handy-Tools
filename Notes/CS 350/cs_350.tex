@@ -1796,6 +1796,73 @@ Per-core designs typically need some mechanism for \emph{thread migration} to ad
   \end{tabular}
 \end{table}
 
+\subsection{Device Drivers}
+A device driver is a part of the kernel that interacts with a device.
+
+\begin{ex*}
+Write character to serial output device.
+\begin{verbatim}
+  // only one writer at a time
+  P(output device write semaphore)
+  // trigger the write operation
+  write character to device data register
+  repeat {
+    read writeIRQ register
+  } until status is "complete"
+  // make the device ready again
+  write writeIRQ register to acknowledge completion
+  V(output device write semaphore)
+\end{verbatim}
+This illustrates \emph{polling}: the kernel driver repeatedly checks device status
+\end{ex*}
+
+\subsubsection{Using Interrupts to Avoid Polling}
+\textbf{Device Driver Write Handler}:
+\begin{verbatim}
+  // only one writer at a time
+  P(output device write semaphore)
+  // trigger write operation
+  write character to device data register
+\end{verbatim}
+\medskip
+\textbf{Interrupt Handler for Serial Device}:
+\begin{verbatim}
+  // make the device ready again
+  write writeIRQ register to acknowledge completion
+  V(output device write semaphore)
+\end{verbatim}
+
+\subsubsection{Accessing Devices}
+\textbf{Option 1}: special I/O instructions
+\begin{itemize}
+  \item such as \texttt{in} and \texttt{out} instructions on x86
+  \item device registers are assigned ``port'' numbers
+  \item instructions transfer data between a specified port and a CPU register
+\end{itemize}
+\medskip
+\textbf{Option 2}: memory-mapped I/O
+\begin{itemize}
+  \item each device register has a physical memory address
+  \item device drivers can read from or write to device registers using normal load and store instructions, as though accessing memory
+\end{itemize}
+
+\subsection{MIPS/OS161 Physical Address Space}
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.55]{pictures/os161_addrspace.png}
+  \caption{Each device is assigned to one of 32 64KB device ``slots''. A device's registers and data buffers are memory-mapped into its assigned slot.}
+  \label{fig:os161_addrspace}
+\end{figure}
+
+\subsection{Logical View of a Disk Drive}
+Disk is an array of of numbered blocks (or sectors). \\
+Each block is the same size (e.g. 512 bytes). \\
+
+Blocks are the unit of transfer between the disk and memory. \\
+Typically, one or more contiguous blocks can be transferred in a single operation. \\
+
+Storage is \emph{non-volatile}, i.e., data persists even when the device is without power.
+
 \newpage
 \section{File Systems}
 
