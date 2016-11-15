@@ -1748,6 +1748,201 @@ Per-core designs typically need some mechanism for \emph{thread migration} to ad
   \item migration means moving threads from heavily loaded cores to lightly loaded cores
 \end{itemize}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ASSIGNMENT 3 REVIEW %%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Assignment 3 Review}
+\texttt{dumbvm} is a very limited virtual memory system,
+\begin{itemize}
+  \item A full TLB leads to a kernel panic
+  \item Text segment is not read-only
+  \item Uses fixed segmentation (external fragmentation)
+  \item Never reuses physical memory (required restarting the OS after each test)
+\end{itemize}
+
+\subsection{TLB Replacement}
+VM related exceptions are handled by \texttt{vm\_fault} \\
+
+\texttt{vm\_fault} performs address translation and loads the virtual address to physical address mapping into the TLB.
+\begin{itemize}
+  \item Iterates through the TLB to find an unused/invalid entry
+  \item Overwrites the unused entry with the virtual to physical address mapping required by the instruction that generated the TLB exception
+\end{itemize}
+
+If the TLB is full, call \texttt{tlb\_random} to write the entry into a random TLB slot,
+\begin{itemize}
+  \item that's it for TLB replacement!
+  \item make sure that virtual page fields in the TLB are unique.
+\end{itemize}
+
+\subsection{Read-Only Text Segment}
+Currently, TLB entries are loaded with \texttt{TLBLO\_DIRTY} on.
+\begin{itemize}
+  \item Pages are therefore read and writable.
+\end{itemize}
+
+Text segment should be read-only.
+\begin{itemize}
+  \item Load TLB entries for the text segment with \texttt{TLBLO\_DIRTY} off.
+  \item \texttt{elo \&= \textasciitilde TLBLO\_DIRTY;}
+\end{itemize}
+
+Determine the segment of the fault address by looking at the \texttt{vbase} and \texttt{vtop} addresses. \\
+
+Unfortunately, this will cause \texttt{load\_elf} to throw a \texttt{VM\_FAULT\_READONLY} exception.
+\begin{itemize}
+  \item It is trying to write to a memory location that is read-only.
+\end{itemize}
+
+We must instead load TLB entries with \texttt{TLBLO\_DIRTY} on until \texttt{load\_elf} has completed.
+\begin{itemize}
+  \item Consider adding a flag to \texttt{struct addrspace} to indicate whether or not \texttt{load\_elf} has completed.
+  \item When \texttt{load\_elf} completes, flush the TLB, and ensure that all future TLB entries for the text segment has \texttt{TLBLO\_DIRTY} off.
+\end{itemize}
+
+Writing to read-only memory address will lead to a \texttt{VM\_FAULT\_READONLY} exception. \\
+This will currently cause a kernel panic. \\
+
+Instead of panicking, your VM system should kill the process. \\
+Modify \texttt{kill\_curthread} to kill the current thread,
+\begin{itemize}
+  \item very similar to \texttt{sys\_\_exit}.
+  However, the exit code/status will be different.
+  \item Consider which signal number this will trigger (look at the beginning of \texttt{kill\_curthread}).
+\end{itemize}
+
+\subsection{Managing Memory}
+During bootstrap, the kernel allocates memory by calling \texttt{getppages}, which in turn calls \texttt{ram\_stealmem(pages)}. \\
+
+\texttt{ram\_stealmem} just allocates pages without providing any mechanism to release pages (see \texttt{free\_kpages}). \\
+
+We want to manage our own memory after bootstrap. \\
+
+In \texttt{vm\_bootstrap}, call \texttt{ram\_getsize} to get the remaining physical memory in the system. \\
+Do \emph{not} call \texttt{ram\_stealmem} again! \\
+
+Logically partition the memory into fixed size frames. \\
+Each frame is \texttt{PAGE\_SIZE} bytes. \\
+
+Keep track of the status of each frame (core-map data structure). \\
+
+Where should we store the core-map data structure? \\
+Store it in the start of the memory return by \texttt{ram\_getsize}. \\
+The frames should start after the core-map data structure. \\
+The core-map should track which frames are used and available. \\
+It should also keep track of contiguous memory allocations, because frames need to be contiguous.
+
+\subsection{Alloc and Free}
+\texttt{alloc\_kpages(int npages)}:
+\begin{itemize}
+  \item Allocate frames for both \texttt{kmalloc} and address spaces
+  \item Frames need to be contiguous
+\end{itemize}
+
+\texttt{kfree\_kpages(vaddr\_t addr)}:
+\begin{itemize}
+  \item Free pages allocated with \texttt{alloc\_kpages}
+  \item We don't specify how many pages we need to free.
+  It should free the same number of pages that was allocated.
+  \item Update core-map to make frames available after \texttt{free\_kpages}
+\end{itemize}
+
+Consider adding some information in the core-map to help determine the number of pages that need to be free. \\
+e.g. If 4 contiguous frames were allocated using \texttt{alloc\_kpages}, then store 4 in the core-map entry for the start for the start of the four frames.
+
+\subsection{Page Tables}
+In order to avoid external fragmentation, we need to introduce paging. \\
+New VM system combines segmentation with page. \\
+Three segments:
+\begin{itemize}
+  \item Text (read-only)
+  \item Data
+  \item Stack
+\end{itemize}
+Create a page table for each segment,
+\begin{itemize}
+  \item each page table entry should include the frame number
+\end{itemize}
+
+In \texttt{dumbmvm}, \texttt{struct addrspace} has the following fields:
+\begin{itemize}
+  \item \texttt{vaddr\_t as\_vbase1}
+  \item \texttt{paddr\_t as\_pbase1}
+  \item \texttt{size\_t as\_npages1}
+
+  \item \texttt{vaddr\_t as\_vbase2}
+  \item \texttt{paddr\_t as\_pbase2}
+  \item \texttt{size\_t as\_npages2}
+
+  \item \texttt{paddr\_t as\_stackpbase}
+\end{itemize}
+
+With segmentation and paging, replace \texttt{pbase} with page table. \\
+
+\texttt{as\_create}:
+\begin{itemize}
+  \item Initialize address space data structures
+\end{itemize}
+
+\texttt{as\_define\_region}:
+\begin{itemize}
+  \item A region is essentially a segment
+  \item Allocate (\texttt{kmalloc}) and initialize the page table for the specified segment
+  \item Size of the segment is a parameter of \texttt{as\_define\_region}
+  \begin{itemize}
+    \item Because we perform preloading, segment size will never grow
+    \item Size of the page table is based on the segment size
+  \end{itemize}
+  \item Setup the read/write permissions for this segment
+  \item Optionally have permissions per page
+\end{itemize}
+
+\texttt{as\_prepare\_load}:
+\begin{itemize}
+  \item Pre-allocate frames for each page in the segment
+  \item Frames do not need to be contiguous
+  \item Allocate each frame one at a time
+\end{itemize}
+
+\texttt{as\_define\_stack}:
+\begin{itemize}
+  \item Always allocate \texttt{NUM\_STACK\_PAGES} for the stack
+  \item Need to create a page table for the stack
+  \item Need to allocate frames for the stack
+  \begin{itemize}
+    \item \texttt{as\_prepare\_load} only allocates frames for segments that were defined by \texttt{load\_elf}
+    \item Stack segment is not defined by \texttt{load\_elf}
+  \end{itemize}
+\end{itemize}
+
+\texttt{as\_copy}:
+\begin{itemize}
+  \item Call \texttt{as\_create} to create the address space
+  \item Create segments based on old address space
+  \item Allocate frames for the segments
+  \item \texttt{memcpy} frames from the old address space to the frames in the new address space
+\end{itemize}
+
+\texttt{as\_destroy}:
+\begin{itemize}
+  \item Call \texttt{free\_kpages} on the frames for each segment
+  \item \texttt{kfree} the page tables
+\end{itemize}
+
+\subsection{User Address/Kernel Virtual Address/Physical Address}
+Remember that you are always working with virtual addresses,
+\begin{itemize}
+  \item only use physical addresses when loading entries in the TLB.
+  \item virtual addresses are converted either by the TLB or by the MMU directly.
+\end{itemize}
+
+Addresses below 0x8000 0000 are user space addresses that are TLB mapped. \\
+
+Addresses between 0x8000 0000 and 0xa000 0000 are kernel virtual addresses that are converted by the MMU directly, $\text{kernel virtual address} - 0\text{x}8000~0000 = \text{physical address}$. \\
+
+\texttt{kmalloc} always return a kernel virtual address. \\
+Do \emph{not} use \texttt{kmalloc} to allocate frames.
 
 %%%%%%%%%%%%%%%%%%%%%
 %% DEVICES AND I/O %%
@@ -1862,6 +2057,27 @@ Blocks are the unit of transfer between the disk and memory. \\
 Typically, one or more contiguous blocks can be transferred in a single operation. \\
 
 Storage is \emph{non-volatile}, i.e., data persists even when the device is without power.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{pictures/disk_platter.png}
+  \caption{A disk platter's surface}
+  \label{fig:disk_platter}
+\end{figure}
+
+\subsubsection{Cost Model for Disk I/O}
+Moving data to/from a disk involves:
+\begin{itemize}
+  \item \textbf{seek time}: move the read/write heads to the appropriate cylinder.
+  Depends on the distance (in tracks) between previous request and current request --- called the \emph{seek distance}.
+
+  \item \textbf{rotational latency}: wait until the desired sectors spin to the read/write heads.
+  Depends on the rotational speed of the disk.
+
+  \item \textbf{transfer time}: wait while the desired sectors spin past the read/write heads.
+  Depends on the rotational speed of the disk and the amount of data being read/written.
+\end{itemize}
+
 
 \newpage
 \section{File Systems}
