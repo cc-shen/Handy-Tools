@@ -1,5 +1,5 @@
 \documentclass[12pt]{article}
-\usepackage[margin = 1.5in]{geometry}
+\usepackage[lmargin=0.7in, rmargin=1.1in]{geometry}
 \setlength{\parindent}{0in}
 \usepackage{amsfonts, amssymb, amsthm, mathtools, tikz, qtree, float}
 \usepackage{algpseudocode, algorithm, algorithmicx}
@@ -36,10 +36,8 @@
 
 \crefname{ex}{Example}{Example}
 
-\setlength{\marginparwidth}{1.5in}
+\setlength{\marginparwidth}{1.0in}
 \newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
-
-\newcommand{\defnterm}[1]{\textbf{\textcolor{teal}{#1}}\index{#1}}
 
 \newcommand{\floor}[1]{\ensuremath{\left\lfloor #1 \right\rfloor}}
 \newcommand{\ceil}[1]{\ensuremath{\left\lceil #1 \right\rceil}}
@@ -78,7 +76,7 @@
 
 \newpage
 \section{Selection in deterministic linear time}
-\lecture{October 25, 2016}
+\lecture{2016/10/25}
 In the selection problem, the goal is to determine the $i$-th smallest element from an unsorted list of $n$ elements in linear time. \\
 ``Deterministic'' here means that no random numbers are used. \\
 For simplicity, suppose that all elements are distinct, but this is not crucial as a small modification will make it work any list. \\
@@ -289,7 +287,7 @@ $W$ signifies the element has won at least one comparison. \\
 $L$ signifies the element has lost at least one comparison. \\
 $WL$ signifies the element has won at least one and lost at least one comparison. \\
 
-\lecture{October 27, 2016}
+\lecture{2016/10/27}
 
 So the the adversary uses the following table. \\
 \begin{table}[H]
@@ -428,7 +426,7 @@ First, we call a comparison involving x crucial, say x against y, if it is the f
 \end{enumerate}
 So the algorithm must perform at least $(n - 1)$ crucial comparisons in order to determine the median. \\
 
-\lecture{November 1, 2016}
+\lecture{2016/11/01}
 
 We now give an adversary strategy to \emph{force} the algorithm to perform $(n - 1)/2$ \emph{non-crucial} comparisons (since we've proved earlier that the algorithm requires $(n - 1)$ \emph{crucial} comparisons. \\
 
@@ -654,7 +652,7 @@ Minimum spanning trees come up all the time in network problems. \\
 Here the nodes represent nodes of a network that need to be connected, and the weights represent distances (or perhaps, amounts of wire required) between the vertices. \\
 We want to hook up all the nodes in our network using the smallest total distance (or amount of wire). \\
 
-\lecture{November 3, 2016}
+\lecture{2016/11/03}
 
 Algorithms for \emph{minimum spanning tree}:
 \begin{itemize}
@@ -767,7 +765,7 @@ But $T''$ has one more edge in common with $T$ than $T'$ does, contradicting the
 \end{proof}
 
 \subsubsection{Prim's Algorithm}
-\lecture{November 8, 2016}
+\lecture{2016/11/08}
 It is a greedy algorithm where, at each step, we choose a previously unconnected vertex that becomes connected by a lowest-weight edge. \\
 
 At every step, we need to pick an appropriate vertex that is not in the tree $T$, say $r$. \\
@@ -902,7 +900,7 @@ The \emph{Bellman-Ford} algorithm: it computes the length of a shortest path $d[
 Further, it returns either true or false, false iff. the graph contains a reachable negative-weight cycle, true otherwise. \\
 It makes no assumptions at all about the weights on the edges;
 they can be negative.
-\lecture{November 10, 2016}
+\lecture{2016/11/10}
 \begin{algorithmic}
 \Function{bellman-ford}{$G, w, s$}
   \State \Call{initialize}{$G, s$}
@@ -1019,22 +1017,164 @@ Because there are millions and millions of possible vertices in the database, Go
 Rather, it uses some heuristics. \\
 For example, to go from Kitchener to Winnipeg, it first routes you through Kitchener to some big road going in the right direction (using shortest paths on the much-smaller local database), then follows the big road to the vicinity of Winnipeg, then runs shortest-paths on that local area.
 
-\subsection{All-pairs Shortest Paths}
-In this variation, we are given a weighted directed graph, represented as a matrix. \\
-Our goal is to find the shortest path (i.e., the path of smallest total weight) from vertex $i$ to vertex $j$, \emph{for all pairs i, j}.
-(Before we wanted the shortest paths from a \emph{single vertex} to all other vertices.) \\
+\subsection{Floyd-Warshall Algorithm}
+\lecture{2016/11/15}
+We're interested in the \emph{all-pairs shortest path} problem;
+we are given a weighted directed graph and we want to find the shortest-path distance between \emph{every} pair of vertices. \\
+Note that the edges can possibly be negative, but no negative-weight cycles. \\
 
-\subsubsection{Path Algebra}
-With "path algebra" we can solve the following three problems on directed graphs, and many more:
+It's easy to find shortest paths when there are 0 edges, or 1 edge, in the path. \\
+So maybe the right way to do it is solve all-pairs shortest paths for paths having 0 edges, or 1 edges, etc. \\
+Let $cost[i, j, k]$ be the minimum cost of a path from node $i$ to node $j$ using at most $k$ edges.
+We arrive at the following recursion,
+$$cost[i, j, k] = \underset{1 \leq \ell \leq n}{\min} ~ w(i, \ell) + cost[\ell, j, k - 1]$$
+We have to fill in all the entries for $1 \leq i, j, k \leq n$, and filling each entry costs $O(n)$.
+This gives an $O(n^{4})$ algorithm which is rather slow, we can do better! \\
+
+Floyd came up with the idea. \\
+Let the vertices be numbered $1, 2, \dots, n$. \\
+We consider all paths from vertex $i$ to vertex $j$ in which all intermediate vertices are numbered $k$ or lower. \\
+Let $d_{ij}^{~(k)}$ be the weight of the shortest path from $i$ to $j$ in which all intermediate vertices are numbered $k$ or lower. \\
+
+Then we get the following recurrence:
+$$
+d_{ij}^{~(k)} =
+\begin{cases}
+  w_{ij} & \text{if } k = 0 \\
+  \min(d_{ij}^{~(k-1)},~d_{ik}^{~(k-1)} + d_{kj}^{~(k-1)}) & \text{if } k \geq 1
+\end{cases}
+$$
+
+Note that if $k = 0$, then there can be no intermediate vertices at all, so the only possibility is a one-step path from $i$ to $j$, which has weight $w_{ij}$. \\
+
+Now $d_{ij}^{~(k)}$ is supposed to reflect paths where all intermediate vertices are numbered $\leq k$. \\
+So either $k$ appears as an intermediate vertex in a shortest path, or it doesn't. \\
+In the latter case, $d_{ij}^{~(k-1)}$. \\
+In the former case, $k$ appears only once so we can break the path into the part before $k$ appears and the part after.
+In both of these parts $k$ does not appear again, so $d_{ij}^{~(k-1)} = d_{ik}^{~(k-1)} + d_{kj}^{~(k-1)}$. \\
+
+\begin{algorithmic}
+\Function{Floyd}{$W, n$}
+  \For{$i = 1$ to $n$}
+    \For{$j = 1$ to $n$}
+      \State $cost[i, j, 0] = W[i, j]$
+    \EndFor
+  \EndFor
+  \For{$k = 1$ to $n$}
+    \For{$i = 1$ to $n$}
+      \For{$j = 1$ to $n$}
+        \State $cost[i, j, k] = \min(cost[i, j, k-1], cost[i, k, k-1] + cost[k, j, k-1])$
+      \EndFor
+    \EndFor
+  \EndFor
+  \For{$i = 1$ to $n$}
+    \For{$j = 1$ to $n$}
+      \State $M[i, j] = cost[i, j, n]$
+    \EndFor
+  \EndFor
+  \State \Return{$M$}
+\EndFunction
+\end{algorithmic}
+
+The algorithm runs in $O(n^{3})$ in the unit-cost model, so with this we can match the running time of Dijkstra's algorithm run from every vertex, even if we use the complicated Fibonacci heaps in Dijkstra's algorithm. \\
+
+This uses $\theta(n^{3})$ space, but it is easy to rewrite it so that only $\theta(n^{2})$ space is needed. \\
+To do this, we can just store the $k-1$ value since we only look at the previous one.
+
+\newpage
+\section{P, NP, and all that}
+There are some problems that are solvable, but for which it is possible to prove that \textbf{no faster algorithm exists}. \\
+There are also problems for which no fast algorithm is \emph{currently known} to exist, and for which there is some evidence that no fast algorithm will ever be found. \\
+
+\subsection{P}
+What does ``fast'' mean? \\
+The answer that has become traditional by now is that the program's running time should be \textbf{bounded by a polynomial in the input size}, in the log-cost model;
+in other words, the worst-case running time should be $O(n^{k})$ for some $k$. \\
+This is called \textbf{polynomial time}, and the complexity class P is the class of all problems solvable in polynomial time.
+Strictly speaking, P is actually the class of \emph{languages} denoting encoding of polynomial-time-solvable decision problems, but we don't need to be so rigorous for this course. \\
+
+P contains pretty much every problem we have looked at so far in this course: maximum sub-range sum, greatest common divisor, matrix multiplication, all-pairs shortest paths, etc. \\
+
+One problem we discussed that is \emph{not} in P is the problem of listing all the permutations. \\
+This cannot be in P because we need to output $n!$ results on an input of size $n$. \\
+But this isn't so interesting because the complexity of the problem arises from the large output size.
+So sometimes it makes more sense to measure complexity of a problem in terms of the size of the input \emph{and} the size of the output. \\
+
+Why is polynomial-time a synonym for ``fast''?
 \begin{itemize}
-  \item Compute the total number of paths between all pairs of vertices in a directed acyclic graph
-  \item Solve the "all-pairs-shortest-paths" problem in a weighted directed graph with no negative cycles
-  \item Compute the "transitive" closure of a directed graph
+  \item Nearly every algorithm that people actually consider to be fast in practice runs in polynomial time in theory.
+  (A possible exception is the simplex algorithm for linear programming, which runs relatively quickly on most natural examples, but has an exponential worst-case run time.
+  However, there are algorithms for linear programming which are genuinely polynomial time, like the ellipsoid method.)
+
+  \item A program that runs in polynomial time in one model runs in polynomial time in almost all other models.
+  This is not completely trivial and there is definitely something to prove here.
+  (The relatively recent invention of the quantum computing model means this is probably no longer true for all pairs of models.)
+
+  \item The class P has nice closure properties.
+  It is closed under composition.
+  P is also closed under using a polynomial-time subroutine, \emph{provided} that the input is not expanded each time the subroutine is called. (If the input is expanded in size, then you could get something that runs in exponential, not polynomial time.)
 \end{itemize}
 
-The principal idea in path algebras is that matrix multiplication (and things like matrix multiplication) of adjacency matrices of directed graphs give important information about the graphs. \\
+Objections to the definition of P:
+\begin{itemize}
+  \item It doesn't consider the exponent of the polynomial.
+  An algorithm running in $n^{10000}$ time is considered ``fast'' and one running in $2^{n/10000}$ is not, although for practical problem sizes the second will be more useful that the first. \\
+  Response: true, but ``most'' natural problems in P has algorithms with small polynomial exponents.
 
+  \item It doesn't consider the size of the constant out in front.
+  An algorithm running in $1000000n^{2}$ will be less useful than an algorithm running in $2^{n/10000}$. \\
+  Response: true again, but ``most'' natural problems in P have algorithms with relatively small constants out in front.
 
+  \item It considers only worst-case behaviour.
+  Some problems may be efficiently solvable for most inputs, and only require lots of time on a small set of inputs. \\
+  Response: true, but such problems may be relatively rare.
+
+  \item It doesn't consider other models of computation, such as quantum computing. \\
+  Response: true, but we don't yet have a practical quantum computer
+\end{itemize}
+
+Recall that P is the class of problems solvable in polynomial time. \\
+There is one subtlety here, which we have already encountered, and that is how the size of the input is measured. \\
+The convention is that numbers are usually represented in base-2 (or any base $\geq$ 2), \emph{not} in unary. \\
+Forcing the input to be in unary can transform an algorithm that doesn't run in polynomial time to one that does.
+\begin{ex*}
+Consider prime factorization, which is generally considered to be a ``hard'' problem. \\
+Nobody currently knows an algorithm for the prime factorization of $n$ in time polynomial in $\lg{n}$, but there are easy algorithms that run in time polynomial in $n$.
+\end{ex*}
+
+Similarly, if we choose a crazy encoding for a problem (the way the problem is actually represented as input) then we could get a crazy result, like hard problems suddenly become easy. \\
+Normally there is an obvious way to encode things, and usually two different reasonable encoding are polynomial-related;
+there is a polynomial-time algorithm converting one to the other.
+
+\subsection{Problems not in P}
+There are some problems, like the halting problem, that are not solvable in \emph{any} time bound. \\
+
+Consider the following problem: \\
+ERE problem: Given two extended regular expressions $E$ and $F$ over an alphabet $\Sigma$, decide if $E$ and $F$ specify the same set. \\
+
+An extended regular expression (ERE) is just like an ordinary regular expression, except that exponentiation is allowed.
+\begin{ex*}
+$(a^{3} + b^{2})^{2} = (aaa + bb)^{2} = (aaa + bb)(aaa + bb) = aaaaaa + aaabb + bbaaa + bbbb$
+\end{ex*}
+
+We may assume that the exponents are decimal numbers.
+No other exponents are allowed. \\
+
+The ERE problem is \emph{solvable}: to see this, we can take any ERE and expand out all the exponents to get a regular RE. \\
+Do this for $E$ and $F$, getting RE's $E'$ and $F'$. \\
+Now convert these to equivalent deterministic finite automata, minimize the automata, and check if the resulting minimized automata are the same. \\
+
+However, the ERE problem is not \emph{efficiently} solvable.
+
+\begin{theorem}
+There exists a constant $c$ such that every algorithm that solves the ERE problem must use at least $2^{cn/\lg{n}}$ time on infinitely many inputs.
+(Here n, as usual, measures the size of the input.)
+\end{theorem}
+
+Therefore the ERE problem cannot be solved in polynomial time. \\
+Unfortunately, the number of such natural examples that are known is fairly small.
+
+\subsection{NP}
 
 \clearpage
 \printindex
