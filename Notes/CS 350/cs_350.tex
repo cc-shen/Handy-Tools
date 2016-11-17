@@ -1,5 +1,5 @@
 \documentclass[12pt]{article}
-\usepackage[margin = 1.5in]{geometry}
+\usepackage[margin = 1.0in]{geometry}
 \setlength{\parindent}{0in}
 \usepackage{amsfonts, amssymb, amsthm, mathtools, tikz, qtree, float}
 \usepackage{algpseudocode, algorithm, algorithmicx}
@@ -35,9 +35,6 @@
 \newtheorem{defn}{Definition}
 
 \crefname{ex}{Example}{Example}
-
-\setlength{\marginparwidth}{1.5in}
-\newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
 
 \newcommand{\defnterm}[1]{\textbf{\textcolor{teal}{#1}}\index{#1}}
 
@@ -2076,6 +2073,156 @@ Moving data to/from a disk involves:
 
   \item \textbf{transfer time}: wait while the desired sectors spin past the read/write heads.
   Depends on the rotational speed of the disk and the amount of data being read/written.
+\end{itemize}
+
+Request service time is the \emph{sum} of seek time, rotational latency, and transfer time.
+
+\subsubsection{Seek, Rotation, and Transfer}
+Seek Time:
+\begin{itemize}
+  \item If the next request is for data on the same track as the previous request, seek distance and seek time will be zero.
+  \item In the worst case, e.g., seek from outermost track to innermost track, seek time may be 10 milliseconds or more.
+\end{itemize}
+\medskip
+Rotational Latency:
+\begin{itemize}
+  \item Consider a disk that spins at $12,000$ RPM.
+  \item One complete rotation takes 5 milliseconds.
+  \item Rotational latency ranges from 0ms to 5ms.
+\end{itemize}
+\medskip
+Transfer Time:
+\begin{itemize}
+  \item Once positioned, the $12,000$ RPM disk can read/write all data on a track in one rotation (5ms).
+  \item If only $x\%$ of the track's sectors are being read/written, transfer time will be $x\%$ of the complete rotation time (5ms).
+\end{itemize}
+
+\subsubsection{Performance Implications of Disk Characteristics}
+Larger transfers to/from a disk device are \emph{more efficient} than smaller ones. \\
+That is, the cost (time) per byte is smaller for larger transfers. \\
+
+Sequential I/O is faster than non-sequential I/O. \\
+Sequential I/O operations eliminate the need for (most) seeks.
+
+\subsection{Disk Head Scheduling}
+Goal: reduce seek times by controlling the order in which requests are serviced. \\
+
+Disk head scheduling may be performed by the device, by the operating system, or both. \\
+
+For disk head scheduling to be effective, there must be a queue of outstanding disk requests (otherwise there is nothing to reorder). \\
+
+An on-line approach is required: new I/O requests may arrive at any time.
+
+\subsubsection{FCFS Disk Head Scheduling}
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{pictures/fcfs_disk.png}
+\end{figure}
+Handle requests in the order in which they arrive. \\
+Fair and simple, but no optimization of seek times.
+
+\subsubsection{Shortest Seek Time First (SSTF)}
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{pictures/sstf_disk.png}
+\end{figure}
+Choose closest request (a greedy approach). \\
+Seek times are reduced, but requests may starve.
+
+\subsubsection{Elevator Algorithms (SCAN)}
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{pictures/scan_disk.png}
+\end{figure}
+Under SCAN, aka the elevator algorithm, the disk head moves in one direction until there are no more requests in front of it, then reverses direction. \\
+There are many variations on this idea. \\
+
+SCAN reduces seek times (relative to FCFS), while avoiding starvation.
+
+\subsection{Data Transfer To/From Devices}
+Option 1: \emph{program-controlled I/O} \\
+The device driver moves the data between memory and a buffer on the device.
+\begin{itemize}
+  \item Simple, but the CPU is \emph{busy} while the data is being transferred.
+\end{itemize}
+\medskip
+Option 2: \emph{direct memory access} (DMA)
+\begin{itemize}
+  \item The device itself is responsible for moving data to/from memory.
+  CPU is \emph{not busy} during this data transfer, and is free to do something else.
+\end{itemize}
+
+Sys/161 disks do program-controlled I/O.
+\begin{table}[H]
+  \vspace{-20pt}
+  \caption{Sys/161 Disk Controller}
+  \label{tab:sys1161_disk_control}
+  \centering
+
+  \begin{tabular}{|c|c|c|l|}
+  \hline
+  Offset & Size & Type & Description \\ \hline \hline
+  0 & 4 & status & number of sectors \\ \hline
+  4 & 4 & status and command & status \\ \hline
+  8 & 4 & command & sector number \\ \hline
+  12 & 4 & status & rotational speed (RPM) \\ \hline
+  32768 & 512 & data & transfer buffer \\ \hline
+  \end{tabular}
+\end{table}
+
+\subsubsection{Writing to a Sys/161 Disk}
+\textbf{Device Driver Write Handler}
+\begin{verbatim}
+  // only one disk request at a time
+  P(disk semaphore)
+  copy data from memory to device transfer buffer
+  write target sector number to disk sector number register
+  write "write" command to disk status register
+  // wait for request to complete
+  P(disk completion semaphore)
+  V(disk semaphore)
+\end{verbatim}
+\medskip
+\textbf{Interrupt Handler for Disk Device}
+\begin{verbatim}
+  // make the device ready again
+  write disk status register to acknowledge completion
+  V(disk completion semaphore)
+\end{verbatim}
+
+\subsubsection{Reading from a Sys/161 Disk}
+\textbf{Device Driver Read Handler}
+\begin{verbatim}
+  // only one disk request at a time
+  P(disk semaphore)
+  write target sector number to disk sector number register
+  write "read" command to disk status register
+  // wait for request to complete
+  P(disk completion semaphore)
+  copy data from device transfer buffer to memory
+  V(disk semaphore)
+\end{verbatim}
+\medskip
+\textbf{Interrupt Handler for Disk Device}
+\begin{verbatim}
+  // make the device ready again
+  write disk status register to acknowledge completion
+  V(disk completion semaphore)
+\end{verbatim}
+
+\subsection{Direct Memory Access (DMA)}
+DMA is used for block data transfers between devices (e.g., a disk) and memory. \\
+
+Under DMA, the CPU initiates the data transfer and is notified when the transfer is finished. \\
+However, the device (not the CPU) controls the transfer itself.
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.7]{pictures/dma.png}
+\end{figure}
+\begin{itemize}
+  \item[1.] CPU issues DMA request to device
+  \item[2.] Device directs data transfer
+  \item[3.] Device interrupts CPU on completion
 \end{itemize}
 
 
