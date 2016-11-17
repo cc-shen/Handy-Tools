@@ -150,6 +150,7 @@ Use the unit-cost model if your algorithm has a variable number of inputs, each 
 Use the log-cost model if your algorithm has a single input, or where the individual inputs typically don't fit in a single machine word.
 
 \subsection{More on Algorithm Analysis}
+\lecture{2016/09/13}
 Sometimes computing the cost of a step strongly depends on how things are implemented.
 
 \begin{ex*}
@@ -243,7 +244,7 @@ Enumerate all possible subblocks of the array,
 Run time: $O(n^{3})$. \\
 
 \textbf{Slightly better}: \\
-We're
+
 
 \newpage
 \section{Selection in Deterministic Linear Time}
@@ -1343,9 +1344,175 @@ There exists a constant $c$ such that every algorithm that solves the ERE proble
 \end{theorem}
 
 Therefore the ERE problem cannot be solved in polynomial time. \\
-Unfortunately, the number of such natural examples that are known is fairly small.
+Unfortunately, the number of such natural examples that are known is fairly small. \\
+
+\lecture{2016/11/17}
+
+Up to now we have been talking about problems in general. \\
+Now we restrict our attention to one particular kind of problem: the \emph{decision problem}. \\
+A decision problem is a problem with some inputs (parameters) and a \emph{single output}, which is either ``yes'' or ``no''. \\
+
+An ``instance'' of a problem is a particular set of inputs to the problem. \\
+We say this set of inputs if a ``yes'' instance if the answer to the problem on these inputs is ``yes'', and it is a ``no'' instance if the answer is ``no''.
 
 \subsection{NP}
+What is NP? \\
+NP is the class of decision problems having the property that their ``yes'' instances can be \emph{verified} in polynomial time.
+
+\begin{ex*}
+Let us say an undirected graph has a \emph{Hamiltonian cycle} if there is a simple cycle visiting all the vertices in the graph, never repeating an edge or vertex. \\
+The decision problem is:
+\texttt{HAM-CYCLE}: given a graph $G$, does it have a Hamiltonian cycle? \\
+
+The associated ``yes'' instances are those graphs \emph{having} a Hamiltonian cycle. \\
+It is not obvious how to solve \texttt{HAM-CYCLE} in polynomial time;
+actually, no polynomial-time algorithm is currently known. \\
+However, if I claim that a particular graph \emph{has} a Hamiltonian cycle, and you demand proof, then there is a certificate I can produce that you can \emph{easily} check: namely, the list of vertices forming the cycle! \\
+All you have to do is check that that it really is a simple cycle, and that it actually visits each vertex.
+You can verify this quickly, \emph{if} I provide you with the cycle. \\
+Of course, finding the cycle appears to be hard --- but \emph{verifying} it is easy. \\
+That's the essence of NP.
+\end{ex*}
+
+\begin{ex*}
+Another example is the \texttt{SMALL DIVISORS} problem. \\
+Here the decision problem is as follows: given a positive integer $n$, and a bound $B$, is $n$ divisible by an integer $c$ with $1 < c < B$? \\
+
+Suppose I claim that, say, 187 has a divisor < 12. \\
+If you are skeptical, I can convince you by producing the factorization $187 = 11 \times 17$.
+You check to make sure that the factors indeed multiply to the given number. \\
+Of course, it may take me a long time to find the factorization, but once found, it can be quickly verified.
+\end{ex*}
+
+That's the crux of the differences between P and NP. \\
+Problems in P can be quickly solved;
+problems in NP are not necessarily solvable quickly, but the answer can be \emph{verified} quickly provided you have the certificate.
+
+\subsection{Formal Definition of NP}
+A \emph{decision problem} is a parameterized problem with a yes/no answer. \\
+
+A \emph{verifier} for a decision problem is an algorithm $V$ that takes two inputs: an instance $I$ of the decision problem and a certificate $C$. \\
+$V$ returns ``true'' if $C$ is a valid certificate and ``false'' otherwise. \\
+Furthermore, for each ``yes'' instance $I$, there must be \emph{at least one} valid certificate, and for each ``no'' instance there must be \emph{no} valid certificates at all. \\
+If, further, $V$ runs in time bounded by a polynomial in the size of $I$, then it is called a \emph{polynomial-time} verifier. \\
+
+\textbf{A decision problem is in NP if it has a polynomial-time verifier.} \\
+
+\begin{ex*}
+Given a graph $G$, does $G$ have a Hamiltonian cycle? \\
+A polynomial-time verifier takes $I = G$ and $C =$ a claimed list of the vertices forming the cycle as input. \\
+It then checks to ensure that all vertices are represented and the edges actually exist in $G$.
+\end{ex*}
+
+\begin{ex*}
+Is $n$ a composite number? \\
+A polynomial-time verifier takes $I = n$ and $C = (a,b)$ as input. \\
+It then verifies that both $a$ and $b$ are $\geq 2$ and that $n = ab$. \\
+If this is the case, it answer ``yes'';
+otherwise it answers ``false''.
+\end{ex*}
+
+\begin{ex*}
+The travelling salesman problem.
+Here you are given a directed graph $G$ with weights on the edges, and a number $B$, and you want to find a directed cycle passing through all the vertices, with total weight $\leq B$.
+\end{ex*}
+
+\begin{ex*}
+We say a subset of the vertices of an undirected graph is an ``independent set'' if no two of the vertices are connected by an edge. \\
+The problem is, given a graph $G$, and an integer $b$, is there an independent set of size $\geq b$?
+\end{ex*}
+
+Although not every problem is a decision problem, the following principle applies: \\
+\textbf{Principle}: Usually, a problem $p$ has an associated decision problem $p'$ such that
+\begin{itemize}
+  \item[(a)] Given an algorithm for $p'$, we can solve $p$ with a small amount of additional work, and
+  \item[(b)] Given an algorithm for $p$, we can solve $p'$ with a small amount of additional work.
+\end{itemize}
+
+\begin{theorem}
+P is a subset of NP.
+\end{theorem}
+\begin{proof}
+We just need to see that if a problem is in P, then it has a polynomial-time verifier. \\
+If the problem is in P, then there is already a polynomial-time algorithm $A$ to solve it.
+So the verifier just runs $A$ and checks that the answer is ``yes''.
+The certificate plays no role, so it can just be the empty string.
+\end{proof}
+
+The big question is: is P actually \emph{equal} to NP? \\
+This is one of the most important question in all of mathematics and computer science.
+
+\subsection{Why is it called NP?}
+``NP'' stands for ``non-deterministic polynomial'', not ``not polynomial.'' \\
+\emph{We don't yet know} that the hard problems in NP can't be solved in polynomial time. \\
+
+Why is ``NP'' called ``non-deterministic polynomial time''? \\
+It comes from another way of thinking about NP, the way people originally thought about it.
+Instead of using a verifier to define this class, we could instead consider a different machine model: the non-deterministic RAM. \\
+Such a machine $M$ is just like the ordinary RAM, but also has an instruction \texttt{NCHOICE(l1, l2)}.
+When this instruction is executed, the machine has a choice to branch to \emph{either} line \texttt{l1} or line \texttt{l2} of the program. \\
+The machine is said to accept the input if \emph{some sequence of choices} results in the machine halting with ``1'' on the output tape. (It doesn't matter if some sequences of choices fail, just as long as at least one succeeds.) \\
+The machine $M$ fails to accept if \emph{no sequence of choices} results in this action. \\
+uch a machine is said to run in polynomial time if, for every accepted input, there is some accepting sequence of choices that causes $M$ to run in time bounded by a polynomial in the size of the input. \\
+It is easy to see that this is equivalent to the definition with the verifier. \\
+
+To see this, note that we can create a certificate by listing the series of non-deterministic choices that causes $M$ to halt with "1" on the output tape. \\
+Similarly, given a verifier $V$ we can make a non-deterministic RAM that simply non-deterministically runs $V$ on all possible certificates of length bounded by a polynomial.
+
+\subsubsection{co-NP}
+There is a certain asymmetry in our definition of NP. \\
+We only need certificates for the instances with ``yes'' answers. \\
+For ``no'' answers we need not provide any certificate at all. \\
+For many problems in NP, it is not obvious how we could produce a certificate for the ``no'' answers. \\
+
+Due to this symmetry, it is reasonable to consider those decision problems for which there is a verifier for the ``no'' instances (instead of the ``yes'' instances). \\
+This class is called co-NP (``co-'' stands for ``complement'' or ``complementary''). \\
+
+Nobody currently knows the relationship between NP and co-NP. \\
+It could be that NP $=$ co-NP, and it could be that P $=$ NP $\cap$ co-NP. \\
+Most experts don't believe that either of these two equalities holds.
+
+\subsection{Reductions}
+We want some way of saying that problem $B$ is as hard as, or harder than, than problem $A$. \\
+To do so, we introduce a great idea: \emph{reductions}. \\
+
+We say a \textbf{computational problem $A$ reduces to a problem $B$ if you can solve $A$ given access to an algorithm to solve $B$ as a subroutine}. \\
+
+If problem $A$ reduces to problem $B$, we say that ``problem $B$ is at least as hard as problem $A$''. \\
+This is sensible, because knowing an algorithm for $B$ allows us to solve $A$, but not necessarily the other way around.
+So somehow the capability of solving $B$ is more powerful than (or as powerful as) the capability of solving $A$. \\
+We sometimes write $A \leq B$.
+This notation is very helpful, because the inequality goes from the ``easier'' problem to the ``harder'' problem. \\
+
+\begin{ex*}
+$A =$ ``primality testing'' reduces to $B =$ ``compute prime factorization''. \\
+To see this, we need to see how to test $n$ for primality, given an algorithm to compute the prime factorization of $n$.
+That's easy: we just compute the prime factorization of $n$ and see if it consists of a single prime. \\
+Note that we can test primality in time polynomial in $\lg{n}$, but there is still no algorithm for prime factorization known that runs in time polynomial in $\lg{n}$. \\
+So at least conjecturally, $B$ is truly harder than $A$.
+\end{ex*}
+
+\begin{ex*}
+$A =$ ``compute the median of $n$ numbers'' reduces to $B =$ ``given $k$ and $n$ numbers, compute the $k$-th smallest''. \\
+Less obviously, $B$ also reduces to $A$.
+\end{ex*}
+
+\begin{ex*}
+$A =$ ``compute the median of a list'' reduces to $B =$ ``sort a list''. \\
+Again, this is easy: first, sort the list of n numbers;
+then look for the element in position $\ceil(n/2)$.
+Note that we know how to find the median in $O(n)$ time, but any comparison-based algorithm for sorting uses $\Omega(n log n)$ time. \\
+So $B$ is truly harder than $A$.
+\end{ex*}
+
+\subsection{Reductions with Restrictions}
+Our notion of reduction $A \leq B$ is too liberal for many uses, because it permits our algorithm for solving $A$ to use an algorithm for $B$, plus \emph{anything} else at all. \\
+For many purposes, it makes more sense to put some restrictions (on time and/or space) on the ``additional work'' that $A$ does, in addition to calling $B$. \\
+
+As an example, we could restrict our reductions to those that use only a constant amount of additional space, not counting the input to $A$ and its output, and what $B$ itself uses. \\
+We could call this a ``constant-space'' reduction. \\
+In our example of $A =$ ``compute the median of $n$ numbers'' reduces to $B =$ ``given $k$ and $n$ numbers, compute the $k$-th smallest''. then the reduction $A \leq B$ is constant-space, because given an algorithm for $B$, to solve $A$ all we have to do is compute $k = \ceil(n/2)$ and then call $B$ on the input list and $k$.
+
 
 \clearpage
 \printindex
