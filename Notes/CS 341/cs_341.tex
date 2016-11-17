@@ -1,5 +1,5 @@
 \documentclass[12pt]{article}
-\usepackage[lmargin=0.7in, rmargin=1.1in]{geometry}
+\usepackage[lmargin=0.7in, rmargin=1.1in, bmargin=1.0in, tmargin=1.0in]{geometry}
 \setlength{\parindent}{0in}
 \usepackage{amsfonts, amssymb, amsthm, mathtools, tikz, qtree, float}
 \usepackage{algpseudocode, algorithm, algorithmicx}
@@ -33,6 +33,7 @@
 \newtheorem{ex}[theorem]{Example}
 \newtheorem*{ex*}{Example}
 \newtheorem{defn}{Definition}
+\newtheorem*{defn*}{Definition}
 
 \crefname{ex}{Example}{Example}
 
@@ -75,7 +76,177 @@
 \pagenumbering{arabic}
 
 \newpage
-\section{Selection in deterministic linear time}
+\section{Introduction}
+\lecture{2016/09/08}
+A few things to review first:
+\begin{itemize}
+  \item sorting algorithms (quicksort, heapsort, mergesort, counting sort, radix sort)
+  \item lower bound for sorting in comparison-based model
+  \item searching algorithms (binary search, interpolation search)
+  \item data structures (trees, graphs, binary search trees, balanced binary trees, priority queues)
+  \item hashing
+  \item string search (Knuth-Morris-Pratt linear time)
+  \item big-O notation
+\end{itemize}
+
+What is an algorithm? \\
+A series of computational steps intended to solve a problem. \\
+Algorithms should be,
+\begin{itemize}
+  \item effective (can actually carry out steps)
+  \item unambiguous --- steps are not subject to interpretation
+  \item have a finite description (only finitely many lines of code)
+  \item finite (should eventually halt; some exceptions to this rule, such as servers or operating systems)
+  \item deterministic (although randomized algorithms are also studied these days)
+\end{itemize}
+
+Focuses on,
+\begin{itemize}
+  \item Design: what are some techniques to build algorithms to solve problems?
+  \item Analysis: what resources are consumed by the algorithm?
+  \begin{itemize}
+    \item Time
+    \item Space
+    \item Randomness
+  \end{itemize}
+  \item Hardness: what problems cannot be solved with algorithms? Or cannot be solved efficiently? Lower bounds for problems.
+\end{itemize}
+
+\newpage
+\section{Algorithm Analysis}
+Algorithm analysis is hard!
+A simple algorithm can have a very difficult or incomplete analysis. \\
+
+We want a rigorous analysis of algorithms, where we count the number of steps an algorithm requires.
+Steps are usually measured as a function of $n$, the number of inputs. \\
+
+The way we count steps depends on our \emph{model of computation}. \\
+There are many models, and most are theoretical models that are far simpler than a modern computer because they are easier to analyze! \\
+More complicated models are much harder to analyze.
+Think of all the parts of a computer: the RAM, the primary cache, the secondary cache, the disk, etc.
+Modelling all of these precisely would be a real pain. \\
+So we simply things by assuming that each ``basic operations'' takes 1 unit of time. \\
+This is the so-called ``\emph{unit cost}'' model. \\
+
+The unit-cost model is good if all operations use numbers that fit in a single computer word and if you are interested in analyzing an algorithm's behaviour on $n$ inputs as $n$ gets large. \\
+
+Another model is the ``\emph{log-cost}'' model, where all basic operations are charged a cost proportional to the \textbf{size} (number of bits) of the number(s) you are dealing with;
+in other words, the base-2 logarithms of the number(s). \\
+If there is more than one number, you take the logarithms of each and add them up. \\
+When you're all done, you often phrase the result in terms of $n$, which is now the \textbf{number of bits of the input}. \\
+The number of bits required to represent a positive number $x$ is $(\floor{\lg{|x|}} + 1)$ for $x \neq 0$ and 1 if $x = 0$, but there is usually no harm in just using $\lg{x}$ as an approximation.
+
+\begin{ex*}
+Suppose we have $x \times y + z$. \\
+There are two operations: a multiplication and an addition. \\
+The multiplication costs $\lg{x} + \lg{y}$. \\
+In the addition, we are adding $xy$ to $z$, so the cost is $\lg(xy) + \lg{z}$. \\
+The total log cost is thus $\lg{x} + \lg{y} + \lg(xy) + \lg{z} = 2(\lg{x} + \lg{y}) + \lg{z}$.
+\end{ex*}
+
+\textbf{Summarizing}: \\
+Use the unit-cost model if your algorithm has a variable number of inputs, each of which fits in a machine word. \\
+
+Use the log-cost model if your algorithm has a single input, or where the individual inputs typically don't fit in a single machine word.
+
+\subsection{More on Algorithm Analysis}
+Sometimes computing the cost of a step strongly depends on how things are implemented.
+
+\begin{ex*}
+Consider concatenating (joining) two lists of length $n$. \\
+The cost in the unit-cost model depends entirely on \emph{how the lists are represented}. \\
+
+If the lists are represented as arrays, then you'll have to allocate a new array of length $2n$, then copy the elements of the two lists into it.
+All that is \textbf{non-destructive} (doesn't affect the two lists) and it would cost $\Theta(n)$.\\
+
+If the lists are linked lists, and you maintain pointers to the front and back of the list, then you could concatenate two such lists, in a \textbf{destructive} way, by moving pointers. \\
+This would cost only $\Theta(1)$.
+\end{ex*}
+
+Therefore, when estimating costs, we need to think carefully about how the items being manipulated would be represented at the very lowest level of the machine.
+
+\subsection{Big-O, Big-Theta, and so forth}
+Four important kinds of asymptotic notations: $O$, $\Omega$, $\Theta$, $o$
+
+\begin{defn*}
+We say $f(n)$ is $O(g(n))$ if there exist constants $c > 0$, $n_{0}$ such that $f(n) \leq cg(n)$ for all $n \geq n_{0}$.
+\end{defn*}
+
+\begin{defn*}
+We say $f(n)$ is $\Omega(g(n))$ if there exist constants $c > 0$, $n_{0}$ such that $f(n) \geq cg(n)$ for all $n \geq n_{0}$.
+\end{defn*}
+
+\begin{defn*}
+We say $f(n)$ is $\Theta(g(n))$ if there exist constants $c_{1} > 0$, $c_{2} > 0$, $n_{0}$ such that $c_{1}g(n) \leq f(n) \leq c_{2}g(n)$ for all $n \geq n_{0}$. \\
+Equivalently, $f(n)$ is $\Theta(g(n))$ if both $f(n) = O(g(n))$ and $g(n) = O(f(n))$.
+\end{defn*}
+
+\begin{defn*}
+We say $f(n)$ is $o(g(n))$ if $\lim_{n\to\infty}f(n)/g(n) = 0$.
+\end{defn*}
+
+If $f = O(g)$, then the function $f$ \emph{grows more slowly than} $g$ or \emph{has slower growth rate} than $g$. \\
+Slow-growing functions corresponds to quickly-running algorithms. \\
+
+\textbf{Stirling's approximation}:
+$$n! = n^{n}e^{-n}\sqrt{2\pi n}\left(1 + \Theta\left(\frac{1}{n}\right)\right) = \left(\frac{n}{e}\right)^{n}\sqrt{2\pi n}\left(1 + \Theta\left(\frac{1}{n}\right)\right)$$
+
+\subsubsection{Tricks}
+\textbf{Trick 1}: \\
+If $\lim_{n\to\infty}f(n)/g(n) = c$, then
+\begin{itemize}
+  \item if $c = 0$, then $f = o(g)$;
+  \item if $0 < c < \infty$, then $f = \Theta(g)$; and
+  \item if $c = \infty$, then $g = o(f)$
+\end{itemize}
+\medskip \textbf{Trick 2}: \\
+$n^{b} = o(a^{n})$ for all real numbers $a$ and $b$ such that $a > 1$. \\
+$(\lg{n})^{b} = o(n^{a})$ for every fixed positive number $a$ and every fixed real number $b$. \\
+
+\medskip \textbf{Trick 3}: \\
+L'H\^opital's Rule, which says that if $f$ and $g$ are differentiable functions, and \emph{both} $f$ and $g$ tend to $\infty$ as $n$ tends to $\infty$, then
+$$\lim_{n\to\infty}\frac{f(n)}{g(n)} = \lim_{n\to\infty}\frac{f'(n)}{g'(n)}$$ \\
+
+\textbf{Trick 4}: \\
+If you're trying to prove $f(n) = O(g(n))$, sometimes it's easier just to prove an explicit inequality, such as $f(n) < cg(n)$ for some appropriate explicit constant $c$. \\
+
+\medskip \textbf{Trick 5}: \\
+Use fact that if $f_{1} = O(g_{1})$ and $f_{2} = O(g_{2})$, then $f_{1} + f_{2} = O(g_{1} + g_{2})$ and $f_{1}f_{2} = O(g_{1}g_{2})$. \\
+
+\medskip \textbf{Trick 6}: \\
+If $f(n), g(n) \geq 1$ for all sufficiently large $n$ and $f = o(g)$ then $e^{f} = o(e^{g})$.
+
+\subsection{Polynomial Time}
+\begin{defn*}
+An algorithm runs in \emph{polynomial time} if there exists a $k \geq 0$ such that its worst-case time complexity $T(n)$ is $O(n^{k})$.
+\end{defn*}
+
+We generally think of an algorithm as ``good'' if it runs in polynomial time.
+
+\newpage
+\section{Maximum Subrange Sum}
+Given an array $x[1..n]$ of integers (possibly \emph{negative}) and we want to find the block of contiguous entries with the largest sum.
+
+\subsection{Naive and Still Naive}
+Enumerate all possible subblocks of the array,
+\begin{verbatim}
+  maxsubrangesum1(x, n):
+    max = 0
+    for lower = 1 to n do
+      for upper = lower to n do
+        sum = 0
+        for i = lower to upper do
+          sum = sum + x[i]
+        if sum > max then
+          max = sum
+\end{verbatim}
+Run time: $O(n^{3})$. \\
+
+\textbf{Slightly better}: \\
+We're
+
+\newpage
+\section{Selection in Deterministic Linear Time}
 \lecture{2016/10/25}
 In the selection problem, the goal is to determine the $i$-th smallest element from an unsorted list of $n$ elements in linear time. \\
 ``Deterministic'' here means that no random numbers are used. \\
@@ -83,9 +254,9 @@ For simplicity, suppose that all elements are distinct, but this is not crucial 
 
 One method to choose a pivot is via randomness. \\
 We want a deterministic method to clever choose a pivot to be used to partition a list. \\
-Thus we arrive at the ``medians-of-five'' algorithm by Blum, Floyd, Pratt, Rivest, and Tarjan (1973). \\
+Thus we arrive at the \texttt{medians-of-five} algorithm by Blum, Floyd, Pratt, Rivest, and Tarjan. \\
 
-Idea: \\
+\textbf{Idea}: \\
 Split the list into $\floor{\frac{n}{5}}$ groups of 5 elements, and one additional group of at most 4 elements. \\
 Then sort each group of 5 elements, and find the median of each group of 5.
 This can be done in constant time, so sorting each group of 5 costs $O(n)$. \\
