@@ -1250,13 +1250,13 @@ In both of these parts $k$ does not appear again, so $d_{ij}^{~(k-1)} = d_{ik}^{
 
 The algorithm runs in $O(n^{3})$ in the unit-cost model, so with this we can match the running time of Dijkstra's algorithm run from every vertex, even if we use the complicated Fibonacci heaps in Dijkstra's algorithm. \\
 
-This uses $\theta(n^{3})$ space, but it is easy to rewrite it so that only $\theta(n^{2})$ space is needed. \\
+This uses $\Theta(n^{3})$ space, but it is easy to rewrite it so that only $\Theta(n^{2})$ space is needed. \\
 To do this, we can just store the $k-1$ value since we only look at the previous one.
 
 \newpage
 \section{P, NP, and all that}
 There are some problems that are solvable, but for which it is possible to prove that \textbf{no faster algorithm exists}. \\
-There are also problems for which no fast algorithm is \emph{currently known} to exist, and for which there is some evidence that no fast algorithm will ever be found. \\
+There are also problems for which no fast algorithm is \emph{currently known} to exist, and for which there is some evidence that no fast algorithm will ever be found.
 
 \subsection{P}
 What does ``fast'' mean? \\
@@ -1482,7 +1482,7 @@ If problem $A$ reduces to problem $B$, we say that ``problem $B$ is at least as 
 This is sensible, because knowing an algorithm for $B$ allows us to solve $A$, but not necessarily the other way around.
 So somehow the capability of solving $B$ is more powerful than (or as powerful as) the capability of solving $A$. \\
 We sometimes write $A \leq B$.
-This notation is very helpful, because the inequality goes from the ``easier'' problem to the ``harder'' problem. \\
+This notation is very helpful, because the inequality goes from the ``easier'' problem to the ``harder'' problem.
 
 \begin{ex*}
 $A =$ ``primality testing'' reduces to $B =$ ``compute prime factorization''. \\
@@ -1494,13 +1494,15 @@ So at least conjecturally, $B$ is truly harder than $A$.
 
 \begin{ex*}
 $A =$ ``compute the median of $n$ numbers'' reduces to $B =$ ``given $k$ and $n$ numbers, compute the $k$-th smallest''. \\
-Less obviously, $B$ also reduces to $A$.
+Less obviously, $B$ also reduces to $A$. \\
+$A \leq B$: call algorithm to solve $B$ with $k = \ceil{n/2}$. \\
+$B \leq A$: pad/remove elements such that $\ceil{n/2} = k$.
 \end{ex*}
 
 \begin{ex*}
 $A =$ ``compute the median of a list'' reduces to $B =$ ``sort a list''. \\
 Again, this is easy: first, sort the list of n numbers;
-then look for the element in position $\ceil(n/2)$.
+then look for the element in position $\ceil{n/2}$.
 Note that we know how to find the median in $O(n)$ time, but any comparison-based algorithm for sorting uses $\Omega(n log n)$ time. \\
 So $B$ is truly harder than $A$.
 \end{ex*}
@@ -1511,8 +1513,161 @@ For many purposes, it makes more sense to put some restrictions (on time and/or 
 
 As an example, we could restrict our reductions to those that use only a constant amount of additional space, not counting the input to $A$ and its output, and what $B$ itself uses. \\
 We could call this a ``constant-space'' reduction. \\
-In our example of $A =$ ``compute the median of $n$ numbers'' reduces to $B =$ ``given $k$ and $n$ numbers, compute the $k$-th smallest''. then the reduction $A \leq B$ is constant-space, because given an algorithm for $B$, to solve $A$ all we have to do is compute $k = \ceil(n/2)$ and then call $B$ on the input list and $k$.
+In our example of $A =$ ``compute the median of $n$ numbers'' reduces to $B =$ ``given $k$ and $n$ numbers, compute the $k$-th smallest''. then the reduction $A \leq B$ is constant-space, because given an algorithm for $B$, to solve $A$ all we have to do is compute $k = \ceil{n/2}$ and then call $B$ on the input list and $k$.
 
+\subsection{Polynomial Time Reductions}
+\lecture{2016/11/22}
+A decision problem $A$ reduces to a decision problem $B$ in polynomial time (denoted $A \leq_{p} B$) if there exists a \emph{polynomial-time-computable function} $f$ that maps instances of $A$ to instances of $B$, such that the \emph{answers to the instances are preserved} under $f$. \\
+In other words, if $x$ is an instance of decision problem $A$, then $f(x)$ is an instance of decision problem $B$, and the answer for $x$ must be the same as that for $f(x)$. \\
+$f$ can be viewed as a \emph{translation}.
+
+\begin{theorem}
+If $A$ and $B$ are decision problems, and $B$ is in P, and $A \leq_{p} B$, then $A$ is in P;
+i.e. if $B$ is easy and $A$ reduces to $B$, then $A$ is easy.
+\end{theorem}
+\begin{proof}
+Since $A \leq_{p} B$, there is a polynomial-time computable function $f$ mapping instances of $A$ to instances of $B$, such that the answers are the same in both cases. \\
+Let us say we are given an instance of problem $A$ --- call it $x$. \\
+To decide $x$, we cam $x$ to $f(x)$ and feed it into our algorithm to solve $B$.
+Whatever $B$ answers, we answer the same thing for $A$.
+The total running time is the cost of computing $f(x)$ and the cost of running $B$ on $f(x)$. \\
+Since both are polynomial-time, the resulting algorithm is polynomial-time.
+\end{proof}
+
+\begin{theorem}[transitive property of reductions]
+If $A \leq_{p} B$ and $B \leq_{p} C$, then $A \leq_{p} C$.
+\end{theorem}
+\begin{proof}
+We have a polynomial-time computable function $f$ mapping instances of $A$ to instances of $B$, and similarly $g$ mapping instances of $B$ to instances of $C$. \\
+So the composition $x \to g(f(x))$ maps instances of $A$ to instances of $C$. \\
+If $f$ and $g$ are polynomial-time computable, so if $g(f(x))$.
+\end{proof}
+
+\begin{theorem}
+If $A \leq_{p} B$ and $B \in$ NP, then $A \in$ NP.
+\end{theorem}
+\begin{proof}
+If $B \in$ NP, then $B$ has a polynomial-time verifier $V$. \\
+For each ``yes'' instances of $B$, say $y$, there is a short certificate $C_{y}$ and $V(y, C_{y}) =$ true.
+If $A \leq_{p} B$, there is a function $f$ mapping instances $x$ of $A$ to instances of $B$ that preserves the answers. \\
+We can create a polynomial-time verifier $V'$ for $A$: let $V'(x, C) = V(f(x), C)$.
+Furthermore, a certificate $C$ for $f(x)$ is a certificate for $x$. \\
+Since $V'$ is a composition of two polynomial-time computable function, it is computable in polynomial time.
+\end{proof}
+
+\textbf{NP-hard and NP-complete}: \\
+A decision problem is \emph{NP-hard} if $B \leq_{p} A$ for every $B \in NP$.
+Which means $A$ is ``as hard as or harder'' than every single problem in NP. \\
+
+A decision problem $A$ is \emph{NP-complete} if $A$ is NP-hard and $A \in$ NP. \\
+
+Each NP-complete problem is the ``hardest'' problem in NP. \\
+Furthermore, if a single NP-complete problem is in P, then, by Theorem 8.8.1, NP = P;
+\textbf{every} problem in NP would be polynomial-time solvable.
+
+\begin{theorem}
+If there is a polynomial-time algorithm for any one NP-complete problem, then there is a polynomial time algorithm for every problem in NP.
+\end{theorem}
+\begin{proof}
+Let $A$ be an NP-complete problem, and suppose we find a polynomial-time algorithm for it, call it \texttt{solveA}.
+Let $B$ be any problem in NP. \\
+Since $A$ is NP-complete, we know that $B \leq_{p} A$;
+this means there is a polynomial-time computable function $f$ mapping instances of $B$ to instances of $A$ and preserving the answers. \\
+To solve $B$ in polynomial time, map an instance using $f$ and use \texttt{solveA} on the result. \\
+The composition runs in polynomial-time.
+\end{proof}
+
+\begin{theorem}
+If no polynomial-time algorithm exists for any single problem in NP, then there is no polynomial-time algorithm for any NP-complete problem.
+\end{theorem}
+\begin{proof}
+Suppose no polynomial-time algorithm exists for some problem $A$ in NP. \\
+Let $B$ be any NP-complete problem.
+If $B$ has a polynomial-time solution, since $A$ reduces to $B$, $A$ would have a polynomial-time algorithm, a contradiction.
+\end{proof}
+
+\begin{table}[H]
+  \vspace{-15pt}
+  \caption{Examples of easy and hard problems}
+  \centering
+  \begin{tabular}{| l | l |}
+  \hline
+  \textbf{Easy (P)} & \textbf{Hard (NP-complete)} \\ \hline \hline
+  2SAT & 3SAT \\
+  Minimum spanning tree & Travelling salesman \\
+  Shortest path & Longest path \\
+  Linear programming & Integer linear programming \\
+  Eulerian cycle & Hamiltonian cycle \\
+  \hline
+  \end{tabular}
+\end{table}
+
+\subsubsection{Circuit Satisfiability Problem}
+We're going to prove this problem is NP-complete. \\
+
+A \emph{Boolean circuit} consists of a bunch of logical gates joined together by wires.
+It has inputs that can take 0/1 (true/false) values, and is made up of \texttt{AND}, \texttt{OR}, and \texttt{NOT} gates. \\
+It acyclic.
+The \emph{size} of the circuit is defined to be the total number of gates and wires. \\
+Generally, a Boolean circuit can have multiple outputs. \\
+Let's restrict to a single output, 0 or 1.
+Given such a circuit, we want to decide if it is ``satisfiable'', that is, does there exist an assignment of truth values (0 or 1, F or T) to the wires that results in the circuit outputting a ``1''? \\
+
+Formally, \texttt{CIRCUIT-SAT} = the decision problem, given a Boolean circuit $C$, is it satisfiable?
+
+\begin{theorem}
+\texttt{CIRCUIT-SAT} is NP-complete.
+\end{theorem}
+\begin{proof}
+First, we claim that \texttt{CIRCUIT-SAT} is in NP.
+The ``certificate'' we would want would be a satisfying assignment.
+Given this, we can easily verify in polynomial time that the circuit outputs a 1, by substituting our values for the gate inputs and computing the value of each gate output. \\
+
+To prove that \texttt{CIRCUIT-SAT} is NP-complete, we will give a polynomial-time transformation from \textbf{every} problem $L$ in NP to \texttt{CIRCUIT-SAT}. \\
+If $L \in$ NP, then there is a verifier $A(x, y)$ that runs in time $T(|x|) = O(|x|^{k})$ for some $k$. \\
+We now construct a single Boolean circuit $M$ that maps one ``configuration'' of a machine that carries out the computation of the program $A(x, y)$ to the next ``configuration'', after executing one step of the program.
+Here $M$ has many inputs and many outputs. \\
+We now hook together $T(|x|)$ of these circuits together, making the inputs to the circuit at the top the value of $y$, and the output the single bit that reflects the value of $A(x, y)$. \\
+This big circuit $C(x)$ is satisfiable (by a value of $y$) iff. $x$ was a ``yes'' instance of $L$.
+The size of this circuit is polynomial in $x$, and the transformation can be done in polynomial time. \\
+Therefore, \texttt{CIRCUIT-SAT} is NP-complete.
+\end{proof}
+
+\begin{lemma}
+Suppose a problem $A$ is known to be NP-complete. \\
+If $A \leq_{p} B$, then $B$ is NP-hard. \\
+If in addition, $B$ is in NP, then $B$ is NP-complete.
+\end{lemma}
+\begin{proof}
+Let $C$ be any problem in NP.
+By definition, $C \leq_{p} A$ and by hypothesis $A \leq_{p} B$. \\
+By transitivity of reductions, $C \leq_{p} B$.
+It follows that $B$ is NP-hard. \\
+If $B$ is also in NP, then $B$ is NP-complete by definition.
+\end{proof}
+
+The lemma says that if we want to prove a problem $B$ NP-complete, we can base the proof on previous results, not on the original definition. \\
+The \emph{four-step method} for proving NP-completeness of a decision problem $B$.
+\begin{itemize}
+  \item[1.] Prove $B$ is in NP by describing the polynomial-time verifier $V$ that verifies ``yes'' instances of $B$.
+  What is the certificate?
+  How is it verified?
+
+  \item[2.] Select a problem $A$ that you already know to be NP-hard or NP-complete.
+  Usually this is a problem that is related to $B$ in some way.
+
+  \item[3.] Design a function $f$ that maps all instances $x$ of $A$ to instances $y = f(x)$ of $B$, such that the answer on $x$ is always the same as the answer on $y$, and justify your construction.
+
+  \item[4.] Explain why $f$ can be computed in polynomial time.
+\end{itemize}
+
+Additional notes:
+\begin{itemize}
+  \item We do \emph{not} require that every single possible instance of $B$ gets  mapped to by the function $f$
+  \item Nor do we require that different x's must necessarily map to different y's
+  \item However, \emph{every possible instance --- whether a ``yes'' or ``no'' instance --- of a problem} $A$ must have an image under $f$, and the answer for instance $x$ of $A$ must always be the same as for the instance $f(x)$ of $B$
+  \item The function $f$ should not depend on the whether $x$ is a ``yes'' instance or ``no'' instance of problem $A$.
+\end{itemize}
 
 \clearpage
 \printindex
