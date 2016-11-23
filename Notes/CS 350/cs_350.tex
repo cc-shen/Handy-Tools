@@ -2228,9 +2228,244 @@ However, the device (not the CPU) controls the transfer itself.
 
 \newpage
 \section{File Systems}
+\subsection{Files and File Systems}
+Files: persistent, named data objects
+\begin{itemize}
+  \item data consists of a sequence of numbered bytes
+  \item file may change size over time
+  \item file has associated meta-data. Ex., owner, access controls, file type, creation and access timestamps
+\end{itemize}
+
+\subsubsection{File Interface: Basics}
+open
+\begin{itemize}
+  \item open returns a file identifier (or handle or descriptor), which is used in subsequent operations to identify the file
+  \item other operations (e.g., read, write) require file descriptor as a parameter
+\end{itemize}
+
+close
+\begin{itemize}
+  \item kernel tracks while file descriptors are currently valid for each process
+  \item close invalidates a valid file descriptor
+\end{itemize}
+
+read, write, seek
+\begin{itemize}
+  \item read copies data from a file into a virtual address space. \texttt{read(fileID, vaddr, length)}
+  \item write copies data from a virtual address space into a file
+  \item seek enables non-sequential reading/writing
+\end{itemize}
+
+get/set file meta-data
+
+\subsubsection{File Position and Seeks}
+Each file descriptor (open file) has an associated file position. \\
+
+Read and write operations,
+\begin{itemize}
+  \item start from the current file position
+  \item update the current file position
+\end{itemize}
+
+This makes sequential file I/O easy for an application to request. \\
+
+Seeks (\texttt{lseek}) are used for achieve for non-sequential file I/O,
+\begin{itemize}
+  \item \texttt{lseek} changes the file position associated with a descriptor
+  \item next read ore write from that descriptor will use the new position
+\end{itemize}
+
+\subsubsection{Directories and File Names}
+A directory maps \emph{files names} (strings) to \emph{i-numbers}
+\begin{itemize}
+  \item an i-number is a unique (within a file system) identifier for a file or directory
+  \item given an i-number, the file system can find the data and meta-data for the file
+\end{itemize}
+
+Directories provide a way for applications to group related files.
+
+\begin{figure}[H]
+  \vspace{-15pt}
+  \centering
+  \includegraphics[scale=0.7]{pictures/directory_tree.png}
+  \caption{Hierarchical Namespace Example}
+  \label{fig:dir_tree_ex}
+\end{figure}
+Since directories can be nested, a file system's directories can be viewed as a tree, with a single \emph{root} directory.
+In a directory tree, files are leaves. \\
+Files may be identified by \emph{path names}, which describe a path through the directory tree from the root directory to the file.
+Directories also have path names. \\
+Applications refer to files using path names, not i-numbers.
+
+\subsection{Links}
+A \emph{hard link} is an association between a name (string) and an i-number. \\
+Each entry in a directory is a hard link. \\
+
+When a file is created, so is a hard link to that file; ex.,
+\begin{itemize}
+  \item \texttt{open(/foo/misc/biz, O\_CREAT|O\_TRUNC)}
+  \item this creates a new file if a file called \texttt{/foo/misc/biz} does not already exist
+  \item it also creates a hard link to the file in the directory \texttt{/foo/misc}
+\end{itemize}
+
+Once a file is created, \emph{additional} hard links can be made to it. \\
+Ex., \texttt{link(/docs/a.txt, /foo/myA)} creates a new hard link \texttt{myA} in directory \texttt{/foo}.
+The link refers to the i-number of file \texttt{/docs/a.txt}, which must exist. \\
+
+Linking to an existing file creates a new path name for that file. \\
+Each file has a \emph{unique} i-number, but may have \emph{multiple} path names. \\
+
+Not possible to \texttt{link} to a directory (to avoid cycles)!
+
+\subsubsection{Unlinking}
+Hard links can be removed,
+\begin{itemize}
+  \item \texttt{unlink(/docs/b.doc)}
+  \item this removes the link \texttt{b.doc} from the directory \texttt{/docs}
+\end{itemize}
+When the last hard link to a file is removed, the file is also removed! \\
+Since there are no links to the file, it has no path name, and can no longer to opened.
+
+\subsection{Multiple File Systems}
+It is not uncommon for a system to have multiple file systems. \\
+
+Some kind of global file namespace is required.
+Examples,
+\begin{itemize}
+  \item \textbf{DOS/Windows}: use two-part file names: file system name, path name within file system.
+  Example: \texttt{C:\\user\\cs350\\schedule.txt}
+
+  \item \textbf{Unix}: create single hierarchical namespace that combines that namespaces of two file systems.
+  Unix \texttt{mount} system call does this.
+\end{itemize}
+
+Mounting does \emph{not} two file systems into one file system,
+\begin{itemize}
+  \item it merely creates a single, hierarchical namespace that combines the namespaces of two file systems
+  \item the new namespace is temporary --- it exists only until the file system in unmounted
+\end{itemize}
+
+\subsubsection{Unix mount Example}
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.9]{pictures/unix_mount.png}
+\end{figure}
+
+\subsection{File System Implementation}
+What needs to be stored persistently?
+\begin{itemize}
+  \item file data
+  \item file meta-data
+  \item directories and links
+  \item file system meta-data
+\end{itemize}
+
+Non-persistent information,
+\begin{itemize}
+  \item open files per process
+  \item file position for each open file
+  \item \emph{cached} copies of persistent data
+\end{itemize}
+
+\subsubsection{File System Example}
+Use an extremely small disk as an example:
+\begin{itemize}
+  \item 256 KB disk
+  \item Most disks have a sector size of 512 bytes.
+  Memory is usually \emph{byte addressable}.
+  Disk is usually \emph{sector addressable}.
+  \item 512 total sectors on this disk.
+\end{itemize}
+
+Group every 8 consecutive sectors into a block.
+\begin{itemize}
+  \item Better spatial locality (fewer seeks).
+  \item Reduces the number of block pointers.
+  \item 4 KB block is a convenient size for demand paging.
+  \item 64 total blocks on this disk.
+\end{itemize}
+
+\subsection{i-nodes}
+An i-node is a \emph{fixed-size} index structure that holds both file meta-data and a small number of pointers to data blocks. \\
+i-node fields may include:
+\begin{itemize}
+  \item file type
+  \item file permission
+  \item file length
+  \item number of file blocks
+  \item time of last file access
+  \item time of last i-node update, last file update
+  \item number of hard links to this file
+  \item direct data block pointers
+  \item single, double, and triple indirect data block pointers
+\end{itemize}
+
+\subsection{VSFS: Very Simple File System}
+Most of the blocks should be for storing user data (last 56 blocks).
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.8]{pictures/vsfs_1.png}
+\end{figure}
+
+Need some way to map files to data blocks. \\
+
+Create an array of i-nodes, where each i-node contains the meta-data for a file. \\
+The index into the array is the file's index number (i-number). \\
+
+Assume each i-node is 256 bytes, and we dedicate 5 blocks for i-nodes.
+This allows for 80 total i-nodes/files.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.8]{pictures/vsfs_2.png}
+\end{figure}
+
+We also need to know which i-nodes and blocks are unused. \\
+Many ways of doing this:
+\begin{itemize}
+  \item in VSFS, we use a bitmap for each.
+  \item can also use a free list instead of a bitmap.
+\end{itemize}
+
+A block size of 4 KB means we can track 32K i-nodes and 32K blocks.
+This is much more than actually required.
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.8]{pictures/vsfs_3.png}
+\end{figure}
+
+Reserve the first block as the \textbf{superblock}. \\
+A superblock contains meta-information about the entire file system.
+e.g., how many i-nodes and blocks are in the system, where the i-node table begins, etc.
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.8]{pictures/vsfs_4.png}
+\end{figure}
+\begin{figure}[H]
+  \vspace{-20pt}
+  \centering
+  \includegraphics[scale=0.8]{pictures/vsfs_5.png}
+\end{figure}
+
+\subsubsection{VSFS: i-node}
+Assume disk blocks can be referenced based on a 4 byte address. \\
+$2^{32}$ blocks, 4 KB blocks.
+Maximum disk size is 16TB. \\
+
+In VSFS, an i-node is 256 bytes. \\
+Assume there is enough room for 12 direct pointers to blocks. \\
+Each pointer points to a different block for storing user data. \\
+Pointers are ordered: first pointer points to the first block in the file, etc. \\
+
+What is the maximum file size if we only have direct pointers? $12 \times 4$ KB $= 48$ KB. \\
+Great for small files (which are common). \\
+Not great if we want to store larger files.
+
+\subsubsection{VSFS: Indirect Blocks}
+
 
 \newpage
-\section{Interprocess Communications and Networking}
+\section{Inter-process Communications and Networking}
 
 \clearpage
 \printindex
