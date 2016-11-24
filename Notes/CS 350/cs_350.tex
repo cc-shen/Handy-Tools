@@ -2462,6 +2462,149 @@ Great for small files (which are common). \\
 Not great if we want to store larger files.
 
 \subsubsection{VSFS: Indirect Blocks}
+In addition to 12 direct pointers, we can also introduce an \textbf{indirect pointer}. \\
+An indirect pointer points to a block full of direct pointers. \\
+
+4 KB block of direct pointers $=$ 1024 pointers. \\
+Maximum file size is: $(12 + 1024) \times 4 \text{ KB} = 4144 \text{ KB}$ \\
+
+What if the disk were larger? \\
+Add a \textbf{double indirect pointer}, it points to a 4 KB block of indirect pointers. \\
+Maximum file size is: $(12 + 1024 + 1024 \times 1024) \times 4 \text{ KB}$ (just over 4 GB).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.73]{pictures/i-node_diagram.png}
+\end{figure}
+
+\subsection{File System Design}
+File system parameters:
+\begin{itemize}
+  \item \emph{How many i-nodes should a file system have?}
+  \item \emph{How many direct and indirect blocks should an i-node have?}
+  \item \emph{What is the ``right'' block size?}
+\end{itemize}
+
+For a general purpose file system, design it to be efficient for the common case,
+\begin{table}[H]
+  \centering
+  \begin{tabular}{l|l}
+  Most files are small & Roughly 2K is the most common size \\
+  Average file size is growing & Almost 200K is the average \\
+  Most bytes are stored in large files & A few big files use most of the space \\
+  File systems contains lots of files & Almost 100K on average \\
+  File systems are roughly half full & Even as disks grow, file system remains \textasciitilde50\% full \\
+  Directories are typically small & Many have few entries; most have 20 or fewer
+  \end{tabular}
+\end{table}
+
+\subsection{DIrectories}
+Implemented as a special type of file. \\
+Directory file contains directory entries, each consisting of a file name (component of a path name) and the corresponding i-number.
+\begin{table}[H]
+  \centering
+  \begin{tabular}{l|l}
+  name & i-number \\ \hline
+  . & 5 \\
+  .. & 2 \\
+  foo & 12 \\
+  bar & 13 \\
+  foobar & 24
+  \end{tabular}
+\end{table}
+
+Directory files can be read by application programs. \\
+Directory files are only updated by the kernel, in response to file system operations. \\
+Application programs cannot write directly to directory files.
+
+\subsection{In-Memory (Non-Persistent) Structures}
+\begin{itemize}
+  \item per process
+  \begin{itemize}
+    \item descriptor table
+    \begin{itemize}
+      \item which file descriptors does this process have open?
+      \item to which file does each open descriptor refer?
+      \item what is the current file position for each descriptor?
+    \end{itemize}
+  \end{itemize}
+
+  \item system wide
+  \begin{itemize}
+    \item open file table
+    \begin{itemize}
+      \item which files are currently open (by any process)?
+    \end{itemize}
+    \item i-node cache
+    \begin{itemize}
+      \item in-memory copies of recently-used i-nodes
+    \end{itemize}
+    \item block cache
+    \begin{itemize}
+      \item in-memory copies of data blocks and indirect blocks
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\subsection{Reading from a File (/foo/bar)}
+First, read the root i-node.
+\begin{itemize}
+  \item At ``well known'' position (i-node 2)
+  \item i-node 1 is usually for tracking bad blocks
+\end{itemize}
+Read the directory information from root.
+\begin{itemize}
+  \item Find the i-number for foo
+  \item Read the foo i-node
+\end{itemize}
+Read the directory information from foo.
+\begin{itemize}
+  \item Find the i-number for bar
+  \item Read the bar i-node
+\end{itemize}
+Permission check. (is the user allowed to read this file?) \\
+Allocate a file descriptor in the per-process descriptor table. \\
+Increment the counter for this i-number in the global open file table. \\
+Find the block using a direct/indirect pointer and read the data. \\
+Update the i-node with a new access time. \\
+Update the file position in the per-process descriptor table. \\
+Closing a file deallocates the file descriptor and decrements the counter for this i-number in the global open file table.
+
+\subsection{Problems Caused by Failures}
+A single logical file system operation may require several disk I/O operations.
+
+\begin{ex*}
+Deleting a file,
+\begin{itemize}
+  \item remove entry from directory
+  \item remove file index (i-node) form i-node table
+  \item mark file's data blocks free in free space index
+\end{itemize}
+\end{ex*}
+
+What if, due to a failure, some but not all of these changes are reflected on the disk?
+\begin{itemize}
+  \item System failure will destroy in-memory file system structures.
+  \item Persistent structures should be \emph{crash consistent}, i.e., should be consistent when system restarts after a failure.
+\end{itemize}
+
+\subsubsection{Fault Tolerance}
+Special-purpose consistency checkers (e.g., Unix \texttt{fsck} in Kerkeley FFS, Linux ext2),
+\begin{itemize}
+  \item runs after a crash, before normal operations resume
+  \item find and attempt to repair inconsistent file system data structures, e.g.:
+  \begin{itemize}
+    \item file with no directory entry
+    item free space that is not marked as free
+  \end{itemize}
+\end{itemize}
+
+Journaling (e.g., Veritas, NTFS, Linux ext3),
+\begin{itemize}
+  \item record file system meta-data changes in a journal (log), so that sequences of changes can be written to disk in a single operation
+  \item \emph{after} changes have been journaled, update the disk data structures (\emph{write-ahead logging})
+  \item after a failure, redo journaled updates in case they were not done before the failure
+\end{itemize}
 
 
 \newpage
