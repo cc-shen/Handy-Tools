@@ -1221,9 +1221,9 @@ Note that if $k = 0$, then there can be no intermediate vertices at all, so the 
 
 Now $d_{ij}^{~(k)}$ is supposed to reflect paths where all intermediate vertices are numbered $\leq k$. \\
 So either $k$ appears as an intermediate vertex in a shortest path, or it doesn't. \\
-In the latter case, $d_{ij}^{~(k-1)}$. \\
+In the latter case, $d_{ij}^{~(k)} = d_{ij}^{~(k-1)}$. \\
 In the former case, $k$ appears only once so we can break the path into the part before $k$ appears and the part after.
-In both of these parts $k$ does not appear again, so $d_{ij}^{~(k-1)} = d_{ik}^{~(k-1)} + d_{kj}^{~(k-1)}$. \\
+In both of these parts $k$ does not appear again, so $d_{ij}^{~(k)} = d_{ik}^{~(k-1)} + d_{kj}^{~(k-1)}$. \\
 
 \begin{algorithmic}
 \Function{Floyd}{$W, n$}
