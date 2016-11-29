@@ -1555,7 +1555,7 @@ Furthermore, a certificate $C$ for $f(x)$ is a certificate for $x$. \\
 Since $V'$ is a composition of two polynomial-time computable function, it is computable in polynomial time.
 \end{proof}
 
-\textbf{NP-hard and NP-complete}: \\
+\subsection{NP-hard and NP-complete}
 A decision problem is \emph{NP-hard} if $B \leq_{p} A$ for every $B \in NP$.
 Which means $A$ is ``as hard as or harder'' than every single problem in NP. \\
 
@@ -1633,6 +1633,7 @@ The size of this circuit is polynomial in $x$, and the transformation can be don
 Therefore, \texttt{CIRCUIT-SAT} is NP-complete.
 \end{proof}
 
+\subsubsection{More on NP-Complete}
 \begin{lemma}
 Suppose a problem $A$ is known to be NP-complete. \\
 If $A \leq_{p} B$, then $B$ is NP-hard. \\
@@ -1668,6 +1669,348 @@ Additional notes:
   \item However, \emph{every possible instance --- whether a ``yes'' or ``no'' instance --- of a problem} $A$ must have an image under $f$, and the answer for instance $x$ of $A$ must always be the same as for the instance $f(x)$ of $B$
   \item The function $f$ should not depend on the whether $x$ is a ``yes'' instance or ``no'' instance of problem $A$.
 \end{itemize}
+
+A scheme of reductions to use to prove some problems NP-complete (reduction downwards),
+\begin{verbatim}
+                                  CIRCUIT-SAT
+                                      |
+                                     SAT
+                                      |
+                                   3-CNF-SAT
+                                   /       \
+                              CLIQUE    SUBSET-SUM
+                                /
+                          VERTEX-COVER
+\end{verbatim}
+
+\subsubsection{SAT}
+A \emph{Boolean formula} consists of Boolean (true/false, 1/0) variables joined by connectives. \\
+The connectives consists of \texttt{AND}, \texttt{OR}, \texttt{IMPLIES}, \texttt{IFF}, \texttt{NOT}.
+Also, parentheses may be used.
+
+\begin{ex*}
+  $F = \left(\left(x_{1}~\texttt{IMPLIES}~x_{2}\right)\texttt{OR NOT}\left(\left(\texttt{NOT}~x_{1}~\texttt{IFF}~x_{3}\right)\texttt{OR}~x_{4}\right)\right)\texttt{AND NOT}~x_{2}$
+\end{ex*}
+
+An \emph{assignment} is a specification of truth values of the various variables.
+
+\begin{ex*}
+$(x_{1}, x_{2}, x_{3}, x_{4}) = (0, 0, 0, 1)$ is an assignment that makes $F$ true (equal to 1).
+\end{ex*}
+
+Such an assignment is called a \emph{satisfying} assignment. \\
+If a formula $F$ has a satisfying assignment, it is called \emph{satisfiable}. \\
+
+The problem \texttt{SAT} asks, given a Boolean formula $F$, is it satisfiable?
+\begin{theorem}
+\texttt{SAT} is NP-complete.
+\end{theorem}
+\begin{proof}
+We use the ``four-step'' method. \\
+First, we need to show that \texttt{SAT} is in NP.
+In other words, there is a polynomial-time verifier $V(x, C)$ to verify that $x$ is a ``yes'' instance of \texttt{SAT}. \\
+This should be easily convinced, using the choice of $X$ as the purported satisfying assignment for the Boolean formula $x$. \\
+
+Second, we need to choose an NP-complete problem to reduce to \texttt{SAT}.
+We only know \texttt{CIRCUIT-SAT} at the moment. \\
+
+Third, we need to design a function that maps circuit to Boolean formulas. \\
+One way to do this is as follows: label each wire coming out of a gate with a new variable name. \\
+We need to see that $C$ is satisfiable circuit if and only if the formula $f(C)$ is a satisfiable Boolean formula. \\
+If $C$ is satisfiable, then there exists some assignment to the input wires that results in the output being 1.
+Therefore, there exists some assignment to the variables input wires, plus the additional variables representing the output wires, that results in the formula $f(C)$ evaluating to 1. \\
+Similarly, if the formula $f(C)$ is satisfiable, then it corresponds to the circuit being satisfiable, and each output wire being correctly computed in terms of the gate type. \\
+
+Fourth, we need to prove that $f$ can be computed in polynomial-time. \\
+We can simply do a breadth-first search on the graph representation of the circuit, outputting the appropriate part of the formula for each gate. \\
+
+Thus, \emph{SAT} is NP-complete.
+\end{proof}
+
+\subsection{3-CNF-SAT}
+The \texttt{3-CNF-SAT} problem is not really of intrinsic interest, but it will prove very useful for showing that other problems we \emph{are} interested in are NP-complete. \\
+
+A Boolean formula is in \emph{3-conjunctive normal form} (3-CNF) if it consists of \emph{clauses} connected by \texttt{AND}s, and each clause if the \texttt{OR} of \emph{exactly} three literals.
+(A literal is a variable or its negation).
+
+\begin{ex*}
+$\left(x_{1}~\texttt{OR}~x_{2}~\texttt{OR}~x_{3}\right)\texttt{AND}\left(x_{4}~\texttt{OR}~x_{5}~\texttt{OR}~x_{6}\right)$
+\end{ex*}
+
+Note: usually it can be assumed that \emph{all the variables in a single clause are distinct}.
+(However, the same variable can certainly appear in different clauses).
+
+\begin{theorem}
+\texttt{3-CNF-SAT} is NP-complete.
+\end{theorem}
+\begin{proof}
+Step 1 is to prove that \texttt{3-CNF-SAT} is in NP.
+We have seen that \texttt{SAT} itself is in NP, and an algorithm to verify \texttt{SAT} can verify \texttt{3-CNF-SAT} with the small additional work of ensuring that the encoded formula itself is in 3-CNF form. \\
+
+Step 2 says to choose an NP-complete problem;
+we choose \texttt{SAT}. \\
+
+Step 3 involves designing a function $f$ mapping instances of \texttt{SAT} to instances of \texttt{3-CNF-SAT}. \\
+We design it in three stages:
+\begin{enumerate}
+  \item[1.] Take the Boolean formula and rewrite it so that the \texttt{AND} and \texttt{OR} of more than three items is fully parenthesized;
+  thus, no connective has more than two arguments.
+  Now we parse the formula, getting a tree in which each node has out-degree at most 2.
+  In this tree, the leaves are the literals, and the internal nodes represent the connectives.
+  One can think of this tree as a circuit, and then apply the same transformation as in $\texttt{CIRCUIT-SAT} \leq_{p} \texttt{SAT}$;
+  namely, one constructs a formula that ensures that the output (at the root of the tree) is correctly computed in terms of the various connectives.
+  This formula has at most three variables per clause (one for the connective, and at most 2 for the children). \medskip
+
+  \item[2.] Take this new formula, and treat each clause separately.
+  Since each clause $C$ has at most three variables, we can make a truth table for the function represented by the clause.
+  Now look at $\neg C$, and rewrite it in \emph{disjunctive normal form}---that is, as the \texttt{OR} of \texttt{AND} clauses.
+  This can be done by looking at the truth table for $\neg C$;
+  we can do this for each clause. \medskip
+
+  \item[3.] Fix up those clauses having only 1 or 2 variables per clause, such that they are of 3-CNF. \medskip
+\end{enumerate}
+We also need to prove that the new formula is satisfiable if and only if the old formula was.
+i.e. verify (at each stage) the transformation we made preserves the satisfiability relation. \\
+Note that the new formula is \emph{not} always logically equivalent to the old one, but that's not what we need;
+we just need that the new one is satisfiable if and only if the old one was. \\
+
+Step 4 says to prove that we an compute $f$ in polynomial time. \\
+
+Thus, we have that \texttt{3-CNF-SAT} is NP-complete as required.
+\end{proof}
+
+\subsubsection{CLIQUE}
+\begin{defn*}
+A graph $G = (V, E)$ has a \textbf{clique} of size $k$ if there exists a subset $V'$, with $|V'| = k$ of the vertices $V$ such that for all $U, v \in V'$, the edge $uv$ is in $E$. \\
+In other words, the induced subgraph on the vertices $V'$ is the complete graph of $k$ vertices.
+\end{defn*}
+
+One version of the \texttt{CLIQUE} problem is as follows: given a graph $G$, find a clique of maximum size. (There may be several.) \\
+
+The decision version of the \texttt{CLIQUE} problem is: given a graph $G = (V, E)$, and an integer $k$, does it have a clique of size $k$? \\
+
+We can solve \texttt{CLIQUE} in ${k \choose 2}{|V| \choose k}$ steps, by checking every single k-subset of the vertices $V$ to see if there are edges in $E$ connecting all the vertices in that k-subset. \\
+This is polynomial in any specific \emph{fixed} $k$, but not polynomial time in general since $k$ may vary with $|V|$.
+
+\begin{theorem}
+\texttt{CLIQUE} is NP-complete.
+\end{theorem}
+\begin{proof}
+\begin{enumerate}
+  \item[1.] \texttt{CLIQUE} is in NP.
+  To see this, observe that a verification algorithm can prove that a graph has a clique of size $k$, if it is given a list of $k$ vertices that form such a clique $V'$.
+  It needs to be check only that $V'$ does indeed have $k$ vertices, and that all the ${k \choose 2}$ edges are in $E$.
+  This can be done in $O(k^{2})$ steps.
+
+  \item[2.] Choose the problem \texttt{3-CNF-SAT}.
+
+  \item[3.] Given a Boolean formula $F$ in \texttt{3-CNF-SAT}, suppose we have
+  $$F = (a_{11}~\texttt{OR}~a_{12}~\texttt{OR}~a_{13})\texttt{AND}(a_{21}~\texttt{OR}~a_{22}~\texttt{OR}~a_{23})\texttt{AND}\dots(a_{n1}~\texttt{OR}~a_{n2}~\texttt{OR}~a_{n3})$$
+  Here each $a_{ij}$ is a literal, that is, a variable or its negation.
+  We create a graph $G = (V, E)$ as follows.
+  We create a vertex for each $a_{ij}$l
+  that means that $|V| = 3n$.
+  Next, we create an edge $a_{ij}a_{k\ell}$ if and only if
+  \begin{enumerate}
+    \item $i \neq k$ (i.e., the literals are in different clauses); and
+    \item $a_{ij} \neq \neg a_{k\ell}$ (i.e., no edge between a variable and its negation)
+  \end{enumerate}
+  $F$ can be claimed that it is a satisfiable boolean formula if and only if $G = (V, E)$ has a clique $V'$ of size $n$. \\
+
+  Suppose that $F$ is satisfiable.
+  Then each clause must be satisfiable;
+  furthermore, each clause has at least one literal that takes on the value 1.
+  From each clause, choose one such literal, and let $V'$ be the set of vertices corresponding to these literals.
+  Then I claim that $V'$ is a clique of size $n$.
+  Since there is one vertex for each clause, clearly $|V'| = n$.
+  Let $a_{ij}, a_{k\ell}$ be the labels of two vertices in $V'$.
+  If there were no edge between $a_{ij}$ and $a_{k\ell}$, then we would have $i = k$ (contradicting the choice of one vertex from each clause), or $a_{ij} = \neg a_{k\ell}$ (contradicting the fact that we chose a literal with a value 1 from each clause).
+  Thus, there must be an edge between $a_{ij}$ and $a_{k\ell}$. \\
+
+  Now suppose that $G$ has a clique of $V'$ of size $n$.
+  Since there are no edges between vertices whose labels appear in the same clause, for all $i$, $V'$ must contain at most one vertex labelled with a literal in clause $C_{i}$.
+  On the other hand, $|V'| = n$, so $V'$ must contain \emph{exactly} one vertex labelled with a literal in clause $i$, for all $i$.
+  Assign each literal in $V'$ the value 1.
+  This will be a satisfying assignment.
+  The assignment is consistent because $V'$ will not contain both a literal and its negation.
+
+  \item[4.] Verify that the transformation in step 3 in computable in polynomial time.
+\end{enumerate}
+\end{proof}
+
+\subsubsection{VERTEX-COVER}
+We say a graph $G = (V, E)$ has a \emph{vertex cover} of size $k$ if there is a subset $V'$ of $V$ of size $k$ such that for all edges $uv$ in $E$, either $u$ is in $V'$ or $v$ is in $V'$ (or both).
+Thus, a vertex cover is a set of vertices $V'$ such that every edge in $E$ is incident on a vertex in $V'$. (A vertex cover is a cover by \emph{some} vertices \emph{of all} the edges.) \\
+
+The \texttt{VERTEX-COVER} problem is: given a graph $G$ and an integer $k$, does it have a vertex cover $V'$ of size $k$?
+
+\begin{theorem}
+\texttt{VERTEX-COVER} is NP-complete.
+\end{theorem}
+\begin{proof}
+\begin{enumerate}
+  \item[1.] \texttt{VERTEX-COVER} is in NP.
+  A verification algorithm can take a list of vertices $V'$ forming the alleged vertex cover, and check that $|V'| = k$, and that each edge in $E$ is incident on some vertex in $V'$.
+  This verification can be done in polynomial time.
+
+  \item[2.] Choose to reduce $\texttt{CLIQUE} \leq_{p} \texttt{VERTEX-COVER}$.
+
+  \item[3.] I claim that
+  \begin{lemma}
+  $G$ has a clique of size $k$ if and only if $G$ complement has a vertex cover of size $|V| - k$. (G complement is the graph formed by taking all the edges that are \emph{not} in $E$.)
+  \end{lemma}
+  \begin{proof}
+  Suppose $V'$ is a clique of size $k$ in $G = (V, E)$.
+  Then let $uv$ be an edge of $E$ complement in $G$ complement.
+  Then $uv$ is not in $E$.
+  Hence either $U$ is not in $V'$, or $v$ is not in $V'$, for if they were both in $V'$, $uv$ would be in $E$.
+  Therefore, either $u$ is in $V - V'$ or $v$ is in $V - V'$.
+  Thus each edge $uv$ in $E$ complement has at least one endpoint in $V - V'$. so $V - V'$ is a vertex cover for $G$ complement, of size $|V| - k$. \\
+
+  On the other hand, suppose $G$ complement has a vertex cover $V''$ of size $|V| - k$.
+  Then for any edge $uv$ in $E$ complement, either $U$ is in $V''$ or $v$ is in $V''$.
+  Taking the contrapositive, if $u$ is not in $V''$, \emph{AND} $v$ is not in $V''$, then $uv$ is not in $E$ complement.
+  In other words, if $u$ is in $V - V''$, and $v$ is in $V - V''$, then $uv$ is in $E$.
+  In other words, $V - V''$ is a clique of size $|V| - (|V| - k) = k$.
+  \end{proof}
+
+  The lemma shows that the map $f$ that transform an instance of \texttt{CLIQUE} to an instance of \texttt{VERTEX-COVER} is: $(G, k) \rightarrow (G \text{ complement}, |V| - k$
+
+  \item[4.] Verify that this transformation can be done in polynomial time.
+\end{enumerate}
+\end{proof}
+
+\subsubsection{The Subset Sum Problem}
+The \texttt{SUBSET-SUM} problem is: you are given a set of positive integers $S$ and a ``target'' $t$. \\
+Question: is there a subset $S'$ of $S$ such that the sum of the elements of $S'$ is equal to $t$?
+
+\begin{ex*}
+If $S = \{35, 54, 384, 520, 530, 672, 831, 935\}$ and $t = 1757$, then the answer is yes, since the subset $S' = \{35, 520, 530, 672\}$ sums to 1757. \\
+But if $t = 1758$, the answer is no, as can be verified by trying all $2^{8} = 256$ subsets.
+\end{ex*}
+
+\begin{theorem}
+\texttt{SUBSET-SUM} is NP-complete.
+\end{theorem}
+\begin{proof}
+\begin{enumerate}
+  \item[1.] \texttt{SUBSET-SUM} is in NP.
+  If we have the set $S'$, we can in polynomial time determine the sum of the elements in $S'$, and see if that is equal to $t$.
+  We also need to check that each element of $S'$ is in $S$ and no element occurs twice.
+
+  \item[2.] $\texttt{3-CNF-SAT} \leq_{p} \texttt{SUBSET-SUM}$
+
+  \item[3.] Given a 3-CNF formula $\phi$ with variables $x_{1}, x_{2}, \dots, x_{n}$ and clauses $C_{1}, C_{2}, \dots, C_{k}$, we need to create an instance of subset sum: namely, a set $S$ and an integer $t$, such that $\phi$ is satisfiable if and only if there is some subset of $S$ that sums to $t$. \\
+
+  We make the following assumptions about $\phi$: first, no clause has both a variable and its negation.
+  This is easy to enforce;
+  if any clause has both a variable and its negation, we just delete the clause, because it is always satisfied.
+  Second, we assume that every variable appears in at least one clause.
+  Again, if this doesn't hold, then we could just delete the variable from our list of variables. \\
+
+  Our reduction constructs $S$ by making two numbers for each clause and two numbers for each variable.
+  We construct these numbers by specifying their base-10 digits.
+  Each number has a digit corresponding to each variable $x_{i}$ and a digit corresponding to each clause $C_{j}$. \\
+
+  For each variable $x_{i}$, we construct the two numbers $v_{i}$ and $v_{i}'$.
+  Both numbers have a 1 in the digit corresponding to $x_{i}$ and 0's in the digits corresponding to the other variables.
+  If the literal $x_{i}$ appears in $C_{j}$, then $v_{i}$ has a digit 1 in the digit corresponding to $C_{j}$.
+  If the literal $\neg x_{i}$ appears in $C_{j}$, then $v_{i}'$ has a digit 1 in the digit corresponding to $C_{j}$.
+  All the other digits are 0. \\
+
+  For each clause $C_{j}$ we construct the two numbers $s_{j}$ and $s_{j}'$.
+  The number $s_{j}$ has a 1 in the digit corresponding to $C_{j}$, while the number $s_{j}'$ has a 2 in the digit corresponding to $C_{j}$.
+  All the other digits are 0. \\
+
+  Finally, we need to specify the target $t$.
+  The digits of $t$ are as follows: there should be a 1 in the digit corresponding to each variable, and a 4 in the digit corresponding to each clause. \\
+
+  Now we claim that $\phi$ is satisfiable if and only if the set $S$ of all the numbers specified above has some subset that sums to the target $t$. \\
+
+  To see this, suppose $\phi$ is satisfiable, and suppose $(x_{1}, \dots, x_{n}) = (y_{1}, \dots, y_{n})$ is a satisfying assignment.
+  Then we put $v_{i}$ into $S'$ if $y_{i} = 1$;
+  otherwise we put $v_{i}'$ into $S'$.
+  Now, depending on how many literals in each clause are set to 1 by the assignment $(x_{1}, \dots, x_{n}) = (y_{1}, \dots, y_{n})$, we take some of the ``slack'' variables $s_{j}$.
+  If our assignment sets 3 literals true in clause $C_{j}$, we take $s_{j}$.
+  If it sets 2 literals true, we take $s_{j}'$.
+  If it sets 1 literal true, we take both $s_{j}$ and $s_{j}'$.
+  Thus no matter how many literals $h$ are satisfied in a clause, the sum of the digits of $s_{j}$ and $s_{j}'$ in the position corresponding to $C_{j}$ is $4 - h$. \\
+
+  It remains to see that the sum of the numbers we have chosen is $t$.
+  To see this, we compare the numbers digit-by-digit.
+  For each variable $x_{i}$, we take exactly one of $v_{i}$ and $v_{i}'$, and each of these has a 1 in the position corresponding to $x_{i}$.
+  So when we sum up the numbers chosen, we get a 1 in a position corresponding to each variable.
+  For each clause, we get a contribution of 1 from each literal that is set to true, giving a total of $h$, and then we have chosen the slack variables to sum to $4-h$.
+  So in the digit corresponding to $C_{j}$, we always get 4.
+  Thus we hit the target $t$. \\
+
+  For the converse, let's assume that there is some subset $S'$ that hits $t$.
+  Then because the sum of the digits in any fixed position is at most 6 (1 for each literal in a clause, plus 3 for the slack variables) there can be no carries from one position to the next.
+  So it suffices to consider each position by itself.
+  Because the positions corresponding to the variables $x_{i}$ are 1, this means that we must take exactly one of each variable $v_{i}$, $v_{i}'$.
+  If we choose $v_{i}$, this corresponds to setting $x_{i} = 1$.
+  If we choose $v_{i}'$, this corresponds to setting $x_{i} = 0$. \\
+
+  Why is this a satisfying assignment?
+  Because the sum matches the target in each position corresponding to a clause, and because the slack variables add up to at most 3 while the target is 4, this means that there is a 1 in at least one position corresponding to a clause, which corresponds to the corresponding literal set to 1.
+  So there is at least 1 literal set to true in each clause, and hence the formula is satisfied.
+
+  \item[4.] Convince yourself the transformation is computed in polynomial time.
+\end{enumerate}
+\end{proof}
+
+\section{Solvability and Unsolvability}
+Up to now we have been discussing problems that are solvable on a computer, and for each problem we have been trying to find efficient algorithms. \\
+Here ``solvable'' means that there exists a \textbf{finite, deterministic program given access to unlimited resources in terms of time and space, that will, after a finite time, halt and output the correct solution for the problem, for every syntactically-correct input instance}. \\
+
+The kinds of computational problems we look at all have the following characteristics: the problems have one or more parameters;
+the parameters can take infinitely many different values;
+and there is a well-defined solution for each choice of the input parameters. \\
+Recall that if if our computational problem has a ``yes/no'' answer, we call it a \emph{decision problem}.
+Decision problems are particularly easy to study and analyze, and so a lot of theory of computation concerns them. \\
+
+So then, is \textbf{every} computational problem solvable? \\
+At first, it might seem like a silly question: surely \textbf{some} strategy should work on any reasonable problem.
+At the worst case, you might think, we could simply explore the solution space by brute force.
+And you'd be right --- \emph{if} the solution space were bounded. \\
+But what if it isn't? \\
+
+\subsection{Hilbert and Solution of Diophantine Equations}
+In 1900, David Hilbert gave a \href{http://aleph0.clarku.edu/~djoyce/hilbert/problems.html}{famous address} at the International Congress of Mathematicians in which he enunciated about 25 important problems for the next century. \\
+
+His 10th problem concerned the solution of Diophantine equations: \\
+``Given a diophantine equation with any number of unknown quantities and with rational integral numerical coefficients: \emph{to devise a process according to which it can be determined by a finite number of operations whether the equation is solvable in rational integers}.'' \\
+
+By ``diophantine equation'', Hilbert meant a multivariate polynomial equation with integer coefficients;
+an example is
+$$(1)\quad 3x^{2}y + 17xz - 5xy^{3} - 4 = 0$$
+(For us a ``multivariate polynomial'' means a sum of monomials, each with a nonzero coefficient. A monomial is a product of variables, raised to any non-negative integer power. A ``multivariate polynomial equation'' sets that multivariate polynomial equal to 0.) \\
+
+In modern language, Hilbert was essentially asking: is the general problem of deciding whether such an equation has a solution in integers \emph{solvable}? \\
+Here the input is the equation and the answer is ``true'' or ``false''.
+For such a problem, it is no longer so obvious that there is some general strategy to solve it.
+For if the equation does have a solution, we will eventually find it by enumeration.
+But what if it doesn't?
+How could we know when to stop? \\
+
+For the equation (1), there is the solution $(x,y,z) = (-4, 3, 10)$.
+But not all equations have such small solutions.
+For example, consider the equation
+$$(2)\quad x^{2} -991y^{2} = 1$$
+Remarkably enough, this equation's smallest solution in positive integers is
+$$(x,y) = (379516400906811930638014896080, 12055735790331359447442538767)$$
+
+This suggests why Hilbert's 10th problem might be hard: there might be no easy bound on how big solutions can be, when they exist, so there would be no easy way to decide to terminate one's search. \\
+Of course, it may be easy to decide in any \emph{individual case} whether a \emph{particular} equation has a solution, but perhaps there is no \emph{general} approach that will work for \emph{all} equations. \\
+Surprisingly, and contrary to what Hilbert wanted and expected, this turns out to be the case!
+
+\subsection{Turing}
+Turing was the first to exhibit a computational problem that had no solution, in his ground-breaking 1936 paper.
+His problem was a variant of what is now known as the halting problem. \\
+
+We can define the halting problem as follows: given a computer program P written in some language (say, Pascal or C or Java or Python), and an input $i$ to that program, does the program P eventually halt when it is run on input $i$? \\
+
+Before we see how Turing accomplished his feat, let's look at what was happening intellectually elsewhere in the mathematical world of the time.
 
 \clearpage
 \printindex
