@@ -1684,6 +1684,7 @@ A scheme of reductions to use to prove some problems NP-complete (reduction down
 \end{verbatim}
 
 \subsubsection{SAT}
+\lecture{2016/11/24}
 A \emph{Boolean formula} consists of Boolean (true/false, 1/0) variables joined by connectives. \\
 The connectives consists of \texttt{AND}, \texttt{OR}, \texttt{IMPLIES}, \texttt{IFF}, \texttt{NOT}.
 Also, parentheses may be used.
@@ -1839,6 +1840,7 @@ This is polynomial in any specific \emph{fixed} $k$, but not polynomial time in 
 \end{proof}
 
 \subsubsection{VERTEX-COVER}
+\lecture{2016/11/29}
 We say a graph $G = (V, E)$ has a \emph{vertex cover} of size $k$ if there is a subset $V'$ of $V$ of size $k$ such that for all edges $uv$ in $E$, either $u$ is in $V'$ or $v$ is in $V'$ (or both).
 Thus, a vertex cover is a set of vertices $V'$ such that every edge in $E$ is incident on a vertex in $V'$. (A vertex cover is a cover by \emph{some} vertices \emph{of all} the edges.) \\
 
@@ -2011,6 +2013,380 @@ His problem was a variant of what is now known as the halting problem. \\
 We can define the halting problem as follows: given a computer program P written in some language (say, Pascal or C or Java or Python), and an input $i$ to that program, does the program P eventually halt when it is run on input $i$? \\
 
 Before we see how Turing accomplished his feat, let's look at what was happening intellectually elsewhere in the mathematical world of the time.
+
+\subsection{Frege and Russel}
+Gottlob Frege was a philosopher of mathematics who wanted to axiomatize mathematics (1848 - 1925);
+he wanted to write down a system of axioms from which all mathematical truths would follow. \\
+Among other things, he was responsible for formalizing the ideas of the existential and universal quantifiers that we still consider essential today.
+He formulated his ideas in a book called \emph{Grundgesetze der Arithmetik} (Basic Laws of Arithmetic), but just before the 1903 edition was to go to press, he got a very surprising and disturbing letter from Bertrand Russell. \\
+
+Russell wrote to Frege to show that some sentences which could be constructed according to Frege's rules did not result in a consistent mathematical object.
+Today this is known as \emph{Russell's paradox}. \\
+
+To illustrate the idea of Russell's paradox, consider another similar paradox mentioned by Russell (but invented by an unknown acquaintance of him). \\
+In a certain town, where no one is bald, there lives a barber.
+This barber cuts the hair of every person in the town (both male and female) who does not cut their own hair.
+Who cuts the barber's hair? \\
+
+If the barber cuts his own hair, then according to the rule, he doesn't cut his own hair.
+And if he doesn't cut his own hair, then by the rule, he does.
+So we get a contradiction.
+The only reasonable conclusion is that there cannot be such a barber.
+(Often the paradox is stated so that there is an ``out'' that resolves it, such as saying that the barber cuts the hair of all \emph{men} who do not cut their own hair, allowing the barber to be female --- or allowing bald people, where cutting their hair in undefined. But hopefully there is no ``out'' the way we stated it.) \\
+
+There is another related paradox, the Grelling-Nelson paradox. \\
+Let's say that an adjective is \emph{autological} if it describes itself, and \emph{heterological} otherwise. \\
+For example, \emph{short} is autological, since it is an adjective that is also short.
+On the other hand, \emph{long} is heterological, since it is not long. \\
+
+Now the question is, is ``heterological'' heterological?
+If it is, then it does not describe itself and so would not be heterological.
+If it isn't, then it does describe itself, and so would be heterological.
+We get a contradiction, but not a very satisfying one, since for some adjectives we may not be able to decide if they describe themselves.
+(Is the adjective ``vague'' actually vague?) \\
+
+Now let's go to Russell's paradox, which essentially destroyed Frege's idea.
+Let's think about sets.
+Sets contains members; but could we have a set that contained itself as a member?
+A priori, nothing rules this out;
+we could, for example let
+$$S = \text{the set of all mathematical concepts}$$
+Since $S$ is itself a mathematical concept, $S$ is a member of $S$. \\
+Another example is
+$$S = \text{the set of all ideas expressible in less than 12 words}$$
+Since $S$ is expressible in less than 12 words, $S$ is a member of $S$. \\
+
+Frege's axiomatization of mathematics did not rule out expressions such as $\{S : S \in S\}$.
+But even worse, it did not rule out expressions such as $T = \{S : S \not\in S\}$.
+Such an expression would denote a valid mathematical object, according to Frege.
+But as Russell wrote him, this introduces a genuine paradox that is impossible to resolve within Frege's system.
+The problem comes when we try to decide, for the $T$ defined above, whether $T \in T$. \\
+
+If $T \in T$, then by the definition, we have $T \not\in T$.
+And if $T \not\in T$, then $T \in T$.
+This contradiction so disturbed Frege that he proposed a change to his system that would have created a mathematical universe with only one object.
+
+\subsection{Hilbert and G\"odel}
+In 1928, David Hilbert posed three questions about mathematical proof:
+\begin{enumerate}
+  \item[1.] Is mathematics \emph{complete}, in the sense that every statement can be either proved or disproved?
+
+  \item[2.] Is mathematics \emph{consistent}, in the sense that one can never arrive at a contradiction such that $0 = 1$ by a sequence of valid proof steps?
+
+  \item[3.] Is mathematics \emph{decidable}, in the sense that there exists a mechanical procedure that will always determine the truth of any statement?
+\end{enumerate}
+
+Kurt G\"odel answer ``no'' to the first two questions in his famous 1931 paper:
+\begin{itemize}
+  \item Every sufficiently powerful arithmetic system is either inconsistent or incomplete.
+
+  \item Also, such an arithmetic system cannot be proved consistent within its own axiom system.
+\end{itemize}
+
+Here the modifier ``sufficiently powerful'' is important, because there are some weak systems that \emph{are} both consistent and complete. \\
+
+Hilbert's third question remained open, with ``provability'' substituted for ``truth''.
+
+\subsection{Turing}
+\lecture{2016/12/01}
+To make the idea of program more rigorous, Turing developed the notion of ``Turing machine'', an abstract computational model that, he argued, could do anything that a human computer could do.
+But we can still prove the existence of unsolvable problems with the same rigor, if you are willing to grant that when we say something is easy to program, you agree that we could (in principle) actually write such a program. \\
+
+Turing's uncomputability proof draws on the ideas of Russell's paradox. \\
+Let's assume that a function (written, say, in a Pascal-like language, although the exact choice of language is not important) \texttt{H} to solve the halting problem exists.
+\texttt{H} takes as input a Pascal procedure $P$ and an input $I$, both represented as, say, files of text.
+After some number of steps, \texttt{H} is guaranteed to halt and return ``true'' if $P$ halts on input $I$, and ``false'' otherwise. \\
+We're going to assume that our variant of Pascal has the feature that if, in the course of running the program, you try to index an array out of bounds, or divide by 0, or perform any other kind of error, then the program immediately halts.
+Further, if $P$ has syntax errors, so that we can't even understand it to run it on input $I$, \texttt{H} will still return ``true''. \\
+
+The program \texttt{H} might look something like:
+\begin{verbatim}
+  function H(P: program, I:input):boolean;
+    begin
+      [text of program omitted]
+    end;
+\end{verbatim}
+
+Although we have two different input types in the parameter list for \texttt{H}, we'll assume that both of them are, say, files of ordinary ascii text.
+Examples where we pass code of a program into a program are: a compiler and a ``prettyprinter''. \\
+
+We now create a new procedure \texttt{H'} with a single argument $P$.
+On input $P$, the procedure \texttt{H'} does the following: it calls the function \texttt{H} on input $(P, P)$. \\
+If \texttt{H} returns ``true'', then \texttt{H'} is designed to enter an infinite loop and hence not halt. \\
+If \texttt{H} returns ``false'', then \texttt{H'} halts. \\
+
+The program \texttt{H'} might look something like:
+\begin{verbatim}
+  procedure H'(P: program);
+    var
+      x : integer;
+
+    begin
+      x := 0;
+      if (H(P,P) = true) then
+        while (true) do x := 1-x;
+    end;
+\end{verbatim}
+
+Now, how will \texttt{H'} work when we call it on its own description? \\
+If \texttt{H'} halts on input $H'$, then \texttt{H(H', H')} must be false.
+But then, by definition of \texttt{H}, it must be that \texttt{H'} does not halt on input $H'$. \\
+
+If \texttt{H'} does not halt on input $H'$, then by looking at the code we see that the only thing that can cause this is if the while loop fails to terminate.
+So \texttt{H(H', H')} must be true.
+But then, by definition of \texttt{H}, it must be that \texttt{H'} does indeed half on input $H'$. \\
+
+Since both possibilities are ruled out, it must be that our original assumption that \texttt{H} exists is wrong.
+There can be no such program \texttt{H}.
+
+\subsubsection{Objections to Turing's Proof}
+Many people find Turing's proof disturbing somehow. This even includes some computer science professors at universities!
+They find the conclusion hard to accept, and they try to come up with objections to it.
+Let's consider some of these objections in turn: \\
+
+1. \emph{Turing's proof must be wrong. It says you can't solve the halting problem, but I do so all the time when I prove a program correct!} \\
+
+This objection is based on a misunderstanding of the theorem.
+Turing's theorem doesn't say that it is impossible to solve the halting problem in some \emph{particular instance};
+it says instead that there is no \emph{single general method} that is guaranteed to work in \emph{all cases}.
+So for simple programs we can and do prove all the time that they halt on particular inputs.
+Nevertheless, there are some very simple programs for which we still have no answer to the halting question;
+see below. \\
+
+2. \emph{The whole program is self-reference. If you avoid self-reference, like \texttt{H'} calling itself on its own description, you avoid the paradox}. \\
+
+This is an appealing objection, but it doesn't really make any sense.
+As we will see, there are many other problems for which there is no obvious self-referential aspect, yet the same unsolvability result holds.
+An example is Hilbert's 10th problem. \\
+
+3. \emph{You're assuming unlimited space and time are allowed for the programs you test. But in the real world, programs are bounded in space. Maybe it would be possible to prove halting for such programs}. \\
+
+This objection makes sense in some ways, because it is correct!
+If a program has only finitely many distinct states, then we can deduce whether it halts simply by executing for one more than the number of states.
+If some state repeats, then we are stuck in a loop. \\
+
+On the other hand, even very simple programs can have an astronomical number of states.
+A program that uses only 1000 bits of storage has potentially $2^{1000}$ states, and there is no reasonable way we can test all of them, even if we could process $2^{30}$ states a second. \\
+
+So the ``unbounded'' assumption, while not strictly true, is somehow a ``closer approximation'' to the state of affairs in real programs than the ``unbounded'' assumption --- at least in many cases. \\
+
+Furthermore, there are even some very, very simple programs for which we cannot currently decide whether they halt or not.
+Consider the following Pascal program:
+\begin{verbatim}
+  program opn;
+    var
+      n, d, s: integer;
+
+    begin
+      n := 1;
+      repeat
+        n := n+2;
+        s := 0;
+        for d := 1 to n-1 do
+          if n mod d = 0 then s := s+d
+      until s = n
+    end;
+\end{verbatim}
+This program attempts to find an odd perfect number.
+(A perfect number is a number $n$ which is equal to the sum of its positive divisors, excluding $n$ itself.)
+No odd perfect number is currently known, and it is known that the least such number is at least $10^{300}$.
+Hence it is currently unknown whether or not this program will ever terminate.
+If you are able to decide one way or the other, you will be extremely famous. \\
+
+4. \emph{You've only shown that \texttt{H} is unable to answer correctly in at least one instance. Maybe it would be possible to have \texttt{H} answer correctly for nearly all programs}. \\
+
+Again, this is a reasonable objection.
+And in fact, there's been a lot of work trying to make nontrivial classes of programs for which halting can be proved.
+For example, Presburger arithmetic is a system in which each well-formed assertion can be either proved or disproved, and there is an algorithm for doing so. \\
+
+Nevertheless, under our definition of ``solve'', a program that works in nearly all cases would not ``solve'' the halting problem. \\
+
+5. \emph{You've only shown that halting is unsolvable for a program $P$ and input $I$. Maybe halting is solvable for programs $P$ that take no input.} \\
+
+Suppose halting were solvable for programs that take no input.
+Now I want to solve the general halting problem for program $P$ and input $I$.
+Now modify $P$, getting a new program $P'$ where $I$ is defined on the first line and then rest of the body of $P$ is as before.
+If we can solve halting for $P'$, we can solve it for program $P$ and input $I$, a contradiction.
+
+\subsection{Other Unsolvable Problems}
+\begin{theorem}
+If $A \leq B$ and $A$ is unsolvable, then $B$ is unsolvable.
+\end{theorem}
+\begin{proof}
+If there were an algorithm for $B$, we could use it to solve $A$.
+But $A$ is unsolvable, a contradiction.
+\end{proof}
+
+\subsubsection{The Post Correspondence Problem}
+Named for Emil Post, this problem's input is a finite list of pairs of strings, $(x_{1}, y_{1}), (x_{2}, y_{2}), \dots, (x_{n}, y_{n})$.
+The question is, does there exist a finite nonempty list of indices $i_{1}, i_{2}, \dots, i_{r}$ such that
+$$x_{i_{1}}x_{i_{2}} \cdots x_{i_{r}} = y_{i_{1}}y_{i_{2}} \cdots y_{i_{r}}$$
+
+\begin{ex*}
+One input might be
+\begin{align*}
+(x_{1}, y_{1}) &= (1, 111) \\
+(x_{2}, y_{2}) &= (10111, 10) \\
+(x_{3}, y_{3}) &= (10, 0)
+\end{align*}
+and a corresponding solution is
+$$(i_{1}, i_{2}, i_{3}, i_{4}) = (2, 1, 1, 3)$$
+which gives $x_{i_{1}}x_{i_{2}}x_{i_{3}}x_{i_{4}} = y_{i_{1}}y_{i_{2}}y_{i_{3}}y_{i_{4}} = 101111110$
+\end{ex*}
+
+Emil Post proved in 1944 that the Post correspondence problem is unsolvable. \\
+
+\emph{Actually}, the halting problem reduces to the the post correspondence problem!
+
+\subsubsection{Hilbert's 10th problem}
+It was finally solved by the combined efforts of Martin Davis, Julia Robinson, and Yuri Matiyasevic, but not in the way Hilbert expected: it is unsolvable.
+
+\subsubsection{The Game of Life}
+In this game, there is an infinite grid of cells in the plane.
+Initially some of the cells are occupied by beings. \\
+Generations are discrete: if an occupied cell has 2 or 3 neighbours at time $t$, it survives to time $t+1$.
+Otherwise, it dies. \\
+If an unoccupied cell has exactly 3 neighbours at time $t$, it becomes born at time $t+1$. \\
+
+Given an initial configuration, we would like to know: does it persist indefinitely, or does it die out?
+This problem is also unsolvable.
+
+\subsection{More on Unsolvability}
+Paterson showed in 1970 that the following problem is unsolvable: given a finite list of $3 \times 3$ matrices with integer entries, determine if some product of these matrices (allowing any matrix to appear multiple times in the product) is equal to the all-zeros matrix. \\
+
+Prof. Shallit showed in 1996 (with Buss and Frandsen) that the following problem is unsolvable: given a matrix $M$ with both integer and variable entries (variables like $x, y, z$, etc.), determine if there is some integer substitution of the variables such that the determinant of the matrix is 0. \\
+
+Another unsolvable problem that is quite cool: Conway's \texttt{FRACTRAN}.
+\texttt{FRACTRAN} is one of the world's strangest programming languages.
+A program in \texttt{FRACTRAN} is just a list of fractions.
+To run the program on an integer $n$, we simply try multiplying $n$ by each fraction $f$ in the list until we find some product $nf$ that is an integer $n'$.
+Then we replace $n$ by $n'$ and start again.
+The program halts if no product $nf$ is an integer. \\
+
+Now it turns out that \texttt{FRACTRAN} is Turing-complete;
+it can mimic the computations of a Turing machine, and hence deciding if an arbitrary \texttt{FRACTRAN} program halts on a given input is unsolvable.
+
+\subsection{Proving Problems Unsolvable}
+Above we proved that the halting problem is unsolvable.
+More precisely, the problem ``Given program $P$ and input $I$, does $P$ halt when run on $I$?'' is unsolvable.
+Now we'll see how to prove that some related problems are unsolvable. \\
+
+Let's start by considering the problem: ``does program $P$ halt on all inputs?''
+To prove this problem unsolvable, we will assume it \emph{is} solvable, and get a contradiction. \\
+
+Suppose it is solvable.
+Then there is a Pascal function, say \texttt{always-halts} that takes a program $P$ as an input and returns ``true'' if $P$ halts on all inputs and ``false'' otherwise.
+We show how to use \texttt{always-halts} to solve the original halting problem.
+Since the original halting problem is unsolvable, this contradiction shows our original assumption was false. \\
+
+Given $P$ and $I$, we create a new Pascal program, follows:
+\begin{verbatim}
+  procedure test(J:input);
+    {simply ignore the input and run P on I}
+    begin
+      run P on I;
+    end;
+\end{verbatim}
+
+Now call \texttt{always-halts(test)}.
+Since no matter what the input is to \texttt{test}, we run $P$ on input $I$, if \texttt{always-halts(test)} returns ``true'', then $P$ halts on input $I$.
+If \texttt{always-halt(test)} returns ``false'', then $P$ doesn't halt on input $I$.
+Thus calling \texttt{always-halt(test)} would solve the halting problem for program $P$ and input $I$.
+But we know that it is unsolvable, a contradiction. \\
+
+In a similar way we can prove that the following problem is unsolvable: ``given a program $P$, does $P$ index an array out of bounds on input $I$?'' \\
+
+Once again, our strategy is the same.
+We assume that this problem is solvable, and by using it to solve the original halting problem we get a contradiction.
+Suppose there is a Pascal program \texttt{arrayindex} that takes a program $P$ and input $I$ as input and returns ``true'' if $P$ attempts to index an array out of bounds on input $I$ and ``false'' otherwise.
+Now create a Pascal procedure
+\begin{verbatim}
+  procedure indextest(J:input);
+    var
+      x : array[1..1] of integer;
+
+    begin
+      simulate P on input I, but use runtime checking on each statement
+      before it executes so P never indexes an array out of bounds.
+
+      { we only get to this line if P halts on I }
+
+      x[2] := 1;
+    end;
+\end{verbatim}
+
+You see that \texttt{indextest} has been defined in such a way that it indexes an array out of bounds if and only if $P$ halts on $I$.
+(If $P$ fails to halt on $I$, then it never gets to execute the line that indexes the array $s$ out of bounds.) \\
+
+Now to solve the halting problem, we call \texttt{arrayindex(indextest, empty)}, where ``empty'' is the empty input file. \\
+If $P$ halts on $I$, then \texttt{indextest} run on empty input will attempt to reference an array out of bounds, so \texttt{arrayindex} will return ``true''.  \\
+If $P$ doesn't halt on $I$, then \texttt{indextest} run on empty input will not attempt to reference an array out of bounds, so \texttt{arrayindex} will return ``false''. \\
+We have now solved the halting problem, a contradiction.
+
+\subsection{Reductions}
+In both of the previous examples, we used similar ideas: we showed how to solve the halting problem using a hypothetical subroutine that solved the problem we are interested in. \\
+
+This is a specific example of a more general concept: reductions. \\
+Recall that we say \textbf{a computational problem A reduces to a problem B if you can solve A given access to an algorithm to solve B as a subroutine}. \\
+
+If problem A reduces to problem B, we say that ``problem B is at least as hard as problem A''.
+This is sensible, because knowing an algorithm for B allows us to solve A, but not necessarily the other way around.
+We sometimes write $A \leq B$. This notation is very helpful, because the inequality goes from the ``easier'' problem to the ``harder'' problem. \\
+
+There are two main results about reductions:
+\begin{itemize}
+  \item if A reduces to B, and B is solvable, then A is solvable.
+  \item if A reduces to B, and A is unsolvable, then B is unsolvable
+\end{itemize}
+
+In our first example above, we showed that the halting problem reduced to $B =$ ``given program $P$, does $P$ halt on all inputs?''.
+Since the halting problem is unsolvable, this shows $B$ is unsolvable. \\
+
+In our second example above, we showed that the halting problem reduced to $B' =$ ``given program $P$ and input $I$, does $P$ index an array out of bounds on input $I$''. Since the halting problem is unsolvable, this shows $B'$ is unsolvable. \\
+
+OK, let's do one more unsolvability proof using the new language of reductions. \\
+Consider the program-equivalence problem: ``given two Pascal programs $P_{1}$ and $P_{2}$, do they have the same input-output behaviour on all inputs''?
+We will show this problem is unsolvable, by showing that the halting problem reduces to it.
+To show \emph{that}, we must figure out a way to solve the halting problem given an algorithm for the program-equivalence problem.
+This isn't too hard: we let $P_{1}$ be the program that ignores its input and runs $P$ on input $i$, returning ``1'' if $P$ halts on $i$ (and not halting otherwise).
+We let $P_{2}$ be the program that ignores its input and returns ``1''.
+Then $P_{1}$ and $P_{2}$ have the same input-output behaviour on all inputs if and only if $P$ halts on $i$.
+So we have reduced halting to the program-equivalence problem.
+It follows that program-equivalence is unsolvable.
+
+\subsubsection{The Impossibility of Foolproof Virus Testing}
+A computer virus is a piece of code that, when you run it, it somehow causes the operating system of the computer to be altered.
+Obviously, computer viruses are undesirable, and millions of dollars are spent every year on testing software for viruses and removing them.
+We'd like to have a \textbf{perfect} virus tester.
+Unfortunately, such a thing cannot exist. \\
+
+Suppose there were a perfect virus tester.
+Such a thing might be a function
+\begin{verbatim}
+  virusfree(P:program, I:input)
+\end{verbatim}
+that returns ``false'' if program $P$ run on input $I$ alters the operating system; and ``true'' otherwise.
+Of course, we would want \texttt{virusfree} to be free of any side effects when it is run, so to be a genuine virustester, the program \texttt{virusfree} must itself not alter the operating system when it is run. \\
+
+Now create a program $S$ that on input $W$ checks to see if running $W$ on $W$ is safe according to \texttt{virusfree}.
+If it is safe, then $S$ alters the operating system.
+Otherwise, $S$ does nothing.
+\begin{verbatim}
+  program S(W: program)
+    begin
+      if virusfree(W, W) then alter the operating system;
+    end;
+\end{verbatim}
+What happens when we run $S$ on input $S$? \\
+
+If running $S$ on $S$ is safe, then \texttt{virusfree(S, S)} returns ``true''.
+But then $S$ alters the operating system, so running $S$ on $S$ is not safe. \\
+
+If running $S$ on $S$ is not safe, then \texttt{virusfree(S, S)} returns ``false''.
+But then running $S$ on $S$ does nothing, so \texttt{virusfree(S, S)} should have returned ``true''. \\
+
+Neither answer is correct, so a perfect virus tester cannot exist.
+
 
 \clearpage
 \printindex
