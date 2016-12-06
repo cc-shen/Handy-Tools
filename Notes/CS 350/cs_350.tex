@@ -403,7 +403,7 @@ Logical behaviour of \texttt{xchg} can be thought of as an \emph{atomic} functio
   Acquire(bool *lock) {
     while (Xchg(true,lock) == true) ;
   }
-  Release(book *lock) {
+  Release(bool *lock) {
     *lock = false; /* give up the lock */
   }
 \end{verbatim}
@@ -500,8 +500,7 @@ Eventually, a blocked thread is signalled and awakened by another thread.
 Wait channels are used to implement thread blocking in OS/161.
 \begin{itemize}
   \item \texttt{void wchan\_sleep (struct wchan *wc);} \\
-  blocks calling thread on wait channel \texttt{wc} \\
-  causes a context switch, like \texttt{thread\_yield}
+  blocks calling thread on wait channel \texttt{wc}, causes a context switch (like \texttt{thread\_yield}), and unlocks the wait channel
   \item \texttt{void wchan\_wakeall (struct wchan *wc);} \\
   unblocks all threads sleeping on waiting channel \texttt{wc}
   \item \texttt{void wchan\_wakeone (struct wchan *wc);} \\
@@ -561,14 +560,14 @@ The waiting threads need to wait until the signaller releases the lock before it
    * and Consume() are called
    */
   Produce(itemType item) {            itemType Consume() {
-    lock acquire(mutex);                lock_acquire(mutex);
+    lock_acquire(mutex);                lock_acquire(mutex);
     while (count == N) {                while (count == 0)
       cv_wait(notfull, mutex);            cv_wait(nonempty, mutex);
     }                                   remove item from buffer
     add item to buffer                  count = count - 1;
     count = count + 1;                  cv_signal(notfull, mutex);
     cv_signal(notempty, mutex);         lock_release(mutex);
-    lock release(mutex);                return(item);
+    lock_release(mutex);                return(item);
   }                                   }
 \end{verbatim}
 
@@ -607,7 +606,7 @@ Each program's process \emph{isolates} it from other programs in other processes
 System calls (syscalls) are the interface between processes and the kernel. \\
 A process uses syscalls to request operating system services.
 \begin{table}[H]
-  \vspace{-20pt}
+  \vspace{-18pt}
   \caption{Syscall examples}
   \label{tab:ex_syscall}
   \centering
@@ -1397,7 +1396,7 @@ The header includes an entry for each segment which describes:
   \item the virtual address of the start of the segment
   \item length of the segment in the virtual address space
   \item location of the start of the segment image in the ELF file (if present)
-  \item the length of the segment image in the LEF file (if present)
+  \item the length of the segment image in the ELF file (if present)
 \end{itemize}
 
 The image is an exact copy of the binary data that should be loaded into specified portion of the virtual address space. \\
@@ -1413,7 +1412,7 @@ In OS/161, the kernel copies segment images from the ELF file to the specified p
   \caption{ELF File Diagram}
   \label{fig:elf}
 \end{figure}
-OS/161's \texttt{dumbvm} implementation assumes that an LEF file contains two segments:
+OS/161's \texttt{dumbvm} implementation assumes that an ELF file contains two segments:
 \begin{itemize}
   \item a \emph{text segment}, containing the program code and any read-only data
   \item a \emph{data segment}, containing any other global program data
@@ -1478,7 +1477,7 @@ To track which pages are in physical memory, each PTE needs to contain an extra 
 \begin{itemize}
   \item valid = 1, present = 1: page is valid and in memory
   \item valid = 1, present = 0: page is valid, but not in memory
-  \item value = 0, present - $x$: invalid page
+  \item value = 0, present = x: invalid page
 \end{itemize}
 
 \subsection{Page Faults}
@@ -1498,9 +1497,9 @@ When a page fault happens, it is the kernel's job to:
 \end{enumerate}
 
 \subsection{Secondary Storage is Slow}
-Access times for disks are measured in \emph{milli}seconds, SSD read latencies are 10’s-100’s of \emph{micro}seconds. \\
+Access times for disks are measured in \emph{milli}seconds, SSD read latencies are 10's-100's of \emph{micro}seconds. \\
 
-Both of these are much higher than memory access times (100’s of \emph{nano}seconds) \\
+Both of these are much higher than memory access times (100's of \emph{nano}seconds) \\
 
 Suppose that secondary storage access is 1000 times slower than memory access.
 Then:
@@ -2333,7 +2332,7 @@ Some kind of global file namespace is required.
 Examples,
 \begin{itemize}
   \item \textbf{DOS/Windows}: use two-part file names: file system name, path name within file system.
-  Example: \texttt{C:\\user\\cs350\\schedule.txt}
+  Example: \texttt{C:\textbackslash user\textbackslash cs350\textbackslash schedule.txt}
 
   \item \textbf{Unix}: create single hierarchical namespace that combines that namespaces of two file systems.
   Unix \texttt{mount} system call does this.
@@ -2498,7 +2497,7 @@ For a general purpose file system, design it to be efficient for the common case
   \end{tabular}
 \end{table}
 
-\subsection{DIrectories}
+\subsection{Directories}
 Implemented as a special type of file. \\
 Directory file contains directory entries, each consisting of a file name (component of a path name) and the corresponding i-number.
 \begin{table}[H]
@@ -2608,7 +2607,7 @@ Journaling (e.g., Veritas, NTFS, Linux ext3),
 
 
 \newpage
-\section{Inter-process Communications and Networking}
+\section{Interprocess Communications and Networking}
 \emph{Note}: bonus material. See slides.
 
 \clearpage
