@@ -1291,18 +1291,18 @@ Objections to the definition of P:
 \begin{itemize}
   \item It doesn't consider the exponent of the polynomial.
   An algorithm running in $n^{10000}$ time is considered ``fast'' and one running in $2^{n/10000}$ is not, although for practical problem sizes the second will be more useful that the first. \\
-  Response: true, but ``most'' natural problems in P has algorithms with small polynomial exponents.
+  \emph{Response}: true, but ``most'' natural problems in P has algorithms with small polynomial exponents.
 
   \item It doesn't consider the size of the constant out in front.
   An algorithm running in $1000000n^{2}$ will be less useful than an algorithm running in $2^{n/10000}$. \\
-  Response: true again, but ``most'' natural problems in P have algorithms with relatively small constants out in front.
+  \emph{Response}: true again, but ``most'' natural problems in P have algorithms with relatively small constants out in front.
 
   \item It considers only worst-case behaviour.
   Some problems may be efficiently solvable for most inputs, and only require lots of time on a small set of inputs. \\
-  Response: true, but such problems may be relatively rare.
+  \emph{Response}: true, but such problems may be relatively rare.
 
   \item It doesn't consider other models of computation, such as quantum computing. \\
-  Response: true, but we don't yet have a practical quantum computer
+  \emph{Response}: true, but we don't yet have a practical quantum computer
 \end{itemize}
 
 Recall that P is the class of problems solvable in polynomial time. \\
@@ -1396,7 +1396,7 @@ $V$ returns ``true'' if $C$ is a valid certificate and ``false'' otherwise. \\
 Furthermore, for each ``yes'' instance $I$, there must be \emph{at least one} valid certificate, and for each ``no'' instance there must be \emph{no} valid certificates at all. \\
 If, further, $V$ runs in time bounded by a polynomial in the size of $I$, then it is called a \emph{polynomial-time} verifier. \\
 
-\textbf{A decision problem is in NP if it has a polynomial-time verifier.} \\
+\textbf{A decision problem is in NP if it has a polynomial-time verifier.}
 
 \begin{ex*}
 Given a graph $G$, does $G$ have a Hamiltonian cycle? \\
@@ -1453,7 +1453,7 @@ Such a machine $M$ is just like the ordinary RAM, but also has an instruction \t
 When this instruction is executed, the machine has a choice to branch to \emph{either} line \texttt{l1} or line \texttt{l2} of the program. \\
 The machine is said to accept the input if \emph{some sequence of choices} results in the machine halting with ``1'' on the output tape. (It doesn't matter if some sequences of choices fail, just as long as at least one succeeds.) \\
 The machine $M$ fails to accept if \emph{no sequence of choices} results in this action. \\
-uch a machine is said to run in polynomial time if, for every accepted input, there is some accepting sequence of choices that causes $M$ to run in time bounded by a polynomial in the size of the input. \\
+Such a machine is said to run in polynomial time if, for every accepted input, there is some accepting sequence of choices that causes $M$ to run in time bounded by a polynomial in the size of the input. \\
 It is easy to see that this is equivalent to the definition with the verifier. \\
 
 To see this, note that we can create a certificate by listing the series of non-deterministic choices that causes $M$ to halt with "1" on the output tape. \\
@@ -1461,8 +1461,8 @@ Similarly, given a verifier $V$ we can make a non-deterministic RAM that simply 
 
 \subsubsection{co-NP}
 There is a certain asymmetry in our definition of NP. \\
-We only need certificates for the instances with ``yes'' answers. \\
-For ``no'' answers we need not provide any certificate at all. \\
+We only need certificates for the instances with ``yes'' answers;
+don't need one for ``no'' answers. \\
 For many problems in NP, it is not obvious how we could produce a certificate for the ``no'' answers. \\
 
 Due to this symmetry, it is reasonable to consider those decision problems for which there is a verifier for the ``no'' instances (instead of the ``yes'' instances). \\
@@ -1664,8 +1664,8 @@ The \emph{four-step method} for proving NP-completeness of a decision problem $B
 
 Additional notes:
 \begin{itemize}
-  \item We do \emph{not} require that every single possible instance of $B$ gets  mapped to by the function $f$
-  \item Nor do we require that different x's must necessarily map to different y's
+  \item We do \emph{not} require that every single possible instance of $B$ gets  mapped to by the function $f$;
+  nor do we require that different x's must necessarily map to different y's
   \item However, \emph{every possible instance --- whether a ``yes'' or ``no'' instance --- of a problem} $A$ must have an image under $f$, and the answer for instance $x$ of $A$ must always be the same as for the instance $f(x)$ of $B$
   \item The function $f$ should not depend on the whether $x$ is a ``yes'' instance or ``no'' instance of problem $A$.
 \end{itemize}
@@ -1768,7 +1768,7 @@ We design it in three stages:
   This can be done by looking at the truth table for $\neg C$;
   we can do this for each clause. \medskip
 
-  \item[3.] Fix up those clauses having only 1 or 2 variables per clause, such that they are of 3-CNF. \medskip
+  \item[3.] Fix up those clauses having only 1 or 2 variables per clause, such that they are of 3-CNF.
 \end{enumerate}
 We also need to prove that the new formula is satisfiable if and only if the old formula was.
 i.e. verify (at each stage) the transformation we made preserves the satisfiability relation. \\
@@ -1782,7 +1782,7 @@ Thus, we have that \texttt{3-CNF-SAT} is NP-complete as required.
 
 \subsubsection{CLIQUE}
 \begin{defn*}
-A graph $G = (V, E)$ has a \textbf{clique} of size $k$ if there exists a subset $V'$, with $|V'| = k$ of the vertices $V$ such that for all $U, v \in V'$, the edge $uv$ is in $E$. \\
+A graph $G = (V, E)$ has a \textbf{clique} of size $k$ if there exists a subset $V'$, with $|V'| = k$, of the vertices $V$ such that for all $u, v \in V'$, the edge $uv$ is in $E$. \\
 In other words, the induced subgraph on the vertices $V'$ is the complete graph of $k$ vertices.
 \end{defn*}
 
@@ -1809,7 +1809,7 @@ This is polynomial in any specific \emph{fixed} $k$, but not polynomial time in 
   $$F = (a_{11}~\texttt{OR}~a_{12}~\texttt{OR}~a_{13})\texttt{AND}(a_{21}~\texttt{OR}~a_{22}~\texttt{OR}~a_{23})\texttt{AND}\dots(a_{n1}~\texttt{OR}~a_{n2}~\texttt{OR}~a_{n3})$$
   Here each $a_{ij}$ is a literal, that is, a variable or its negation.
   We create a graph $G = (V, E)$ as follows.
-  We create a vertex for each $a_{ij}$l
+  We create a vertex for each $a_{ij}$;
   that means that $|V| = 3n$.
   Next, we create an edge $a_{ij}a_{k\ell}$ if and only if
   \begin{enumerate}
@@ -2134,7 +2134,7 @@ But then, by definition of \texttt{H}, it must be that \texttt{H'} does not halt
 
 If \texttt{H'} does not halt on input $H'$, then by looking at the code we see that the only thing that can cause this is if the while loop fails to terminate.
 So \texttt{H(H', H')} must be true.
-But then, by definition of \texttt{H}, it must be that \texttt{H'} does indeed half on input $H'$. \\
+But then, by definition of \texttt{H}, it must be that \texttt{H'} does indeed halt on input $H'$. \\
 
 Since both possibilities are ruled out, it must be that our original assumption that \texttt{H} exists is wrong.
 There can be no such program \texttt{H}.
