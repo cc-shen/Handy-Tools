@@ -319,7 +319,7 @@ Then, $n - (3\ceil{\floor{n/5}/2} - 1) \leq 7n/10 + 3$ for all $n \geq 1$.
 To prove this, see that
 $$\floor{n/5} \geq n/5 - 1$$
 so
-$$ceil{floor{n/5}/2} \geq n/10 - 1/2$$
+$$\ceil{\floor{n/5}/2} \geq n/10 - 1/2$$
 then
 $$3\ceil{\floor{n/5}/2} - 1 \geq 3n/10 - 5/2$$
 hence
@@ -791,7 +791,7 @@ Advantages and disadvantages of each representation: \\
 \emph{Adjacency List}:
 \begin{itemize}
   \item harder to manipulate
-  \item checking if $uv$ is an edge takes $O(|V|) time$
+  \item checking if $uv$ is an edge takes $O(|V|)$ time
   \item but storage is $O(|V| + |E|)$
   \item time to add an edge:
   \begin{itemize}
@@ -1780,7 +1780,7 @@ Step 4 says to prove that we an compute $f$ in polynomial time. \\
 Thus, we have that \texttt{3-CNF-SAT} is NP-complete as required.
 \end{proof}
 
-\subsubsection{CLIQUE}
+\subsection{CLIQUE}
 \begin{defn*}
 A graph $G = (V, E)$ has a \textbf{clique} of size $k$ if there exists a subset $V'$, with $|V'| = k$, of the vertices $V$ such that for all $u, v \in V'$, the edge $uv$ is in $E$. \\
 In other words, the induced subgraph on the vertices $V'$ is the complete graph of $k$ vertices.
@@ -1839,7 +1839,7 @@ This is polynomial in any specific \emph{fixed} $k$, but not polynomial time in 
 \end{enumerate}
 \end{proof}
 
-\subsubsection{VERTEX-COVER}
+\subsection{VERTEX-COVER}
 \lecture{2016/11/29}
 We say a graph $G = (V, E)$ has a \emph{vertex cover} of size $k$ if there is a subset $V'$ of $V$ of size $k$ such that for all edges $uv$ in $E$, either $u$ is in $V'$ or $v$ is in $V'$ (or both).
 Thus, a vertex cover is a set of vertices $V'$ such that every edge in $E$ is incident on a vertex in $V'$. (A vertex cover is a cover by \emph{some} vertices \emph{of all} the edges.) \\
@@ -1882,7 +1882,7 @@ The \texttt{VERTEX-COVER} problem is: given a graph $G$ and an integer $k$, does
 \end{enumerate}
 \end{proof}
 
-\subsubsection{The Subset Sum Problem}
+\subsection{The Subset Sum Problem}
 The \texttt{SUBSET-SUM} problem is: you are given a set of positive integers $S$ and a ``target'' $t$. \\
 Question: is there a subset $S'$ of $S$ such that the sum of the elements of $S'$ is equal to $t$?
 
