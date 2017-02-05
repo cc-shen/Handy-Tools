@@ -82,7 +82,7 @@ There are three views of an operating system:
 \end{enumerate}
 \emph{An operating system is part cop, part facilitator}. \\
 
-\textbf{kernel}: The operating system kernel is the part of the operating system that responds to system calls, interrupts and exception. \\
+\textbf{kernel}: The operating system kernel is the part of the operating system that responds to system calls, interrupts and exceptions. \\
 
 \textbf{operating system} (OS): The operating system as a whole includes the kernel, and may include other related programs that provide services for application such as utility programs, command interpreters, and programming libraries.
 
@@ -2046,7 +2046,7 @@ This illustrates \emph{polling}: the kernel driver repeatedly checks device stat
 \end{figure}
 
 \subsection{Logical View of a Disk Drive}
-Disk is an array of of numbered blocks (or sectors). \\
+Disk is an array of numbered blocks (or sectors). \\
 Each block is the same size (e.g. 512 bytes). \\
 
 Blocks are the unit of transfer between the disk and memory. \\
@@ -2225,6 +2225,9 @@ However, the device (not the CPU) controls the transfer itself.
 \end{itemize}
 
 
+%%%%%%%%%%%%%%%%%%
+%% FILE SYSTEMS %%
+%%%%%%%%%%%%%%%%%%
 \newpage
 \section{File Systems}
 \subsection{Files and File Systems}
@@ -2236,26 +2239,26 @@ Files: persistent, named data objects
 \end{itemize}
 
 \subsubsection{File Interface: Basics}
-open
+\texttt{open}
 \begin{itemize}
-  \item open returns a file identifier (or handle or descriptor), which is used in subsequent operations to identify the file
-  \item other operations (e.g., read, write) require file descriptor as a parameter
+  \item \texttt{open} returns a file identifier (or handle or descriptor), which is used in subsequent operations to identify the file
+  \item other operations (e.g., \texttt{read}, \texttt{write}) require file descriptor as a parameter
 \end{itemize}
 
-close
+\texttt{close}
 \begin{itemize}
   \item kernel tracks while file descriptors are currently valid for each process
-  \item close invalidates a valid file descriptor
+  \item \texttt{close} invalidates a valid file descriptor
 \end{itemize}
 
-read, write, seek
+\texttt{read}, \texttt{write}, \texttt{seek}
 \begin{itemize}
-  \item read copies data from a file into a virtual address space. \texttt{read(fileID, vaddr, length)}
-  \item write copies data from a virtual address space into a file
-  \item seek enables non-sequential reading/writing
+  \item \texttt{read} copies data from a file into a virtual address space. \texttt{read(fileID, vaddr, length)}
+  \item \texttt{write} copies data from a virtual address space into a file
+  \item \texttt{seek} enables non-sequential reading/writing
 \end{itemize}
 
-get/set file meta-data
+\texttt{get}/\texttt{set} file meta-data
 
 \subsubsection{File Position and Seeks}
 Each file descriptor (open file) has an associated file position. \\
@@ -2312,7 +2315,7 @@ Ex., \texttt{link(/docs/a.txt, /foo/myA)} creates a new hard link \texttt{myA} i
 The link refers to the i-number of file \texttt{/docs/a.txt}, which must exist. \\
 
 Linking to an existing file creates a new path name for that file. \\
-Each file has a \emph{unique} i-number, but may have \emph{multiple} path names. \\
+Each file has a \emph{unique} i-number (within its file system), but may have \emph{multiple} path names. \\
 
 Not possible to \texttt{link} to a directory (to avoid cycles)!
 
@@ -2338,7 +2341,7 @@ Examples,
   Unix \texttt{mount} system call does this.
 \end{itemize}
 
-Mounting does \emph{not} two file systems into one file system,
+Mounting does \emph{not} merge two file systems into one file system,
 \begin{itemize}
   \item it merely creates a single, hierarchical namespace that combines the namespaces of two file systems
   \item the new namespace is temporary --- it exists only until the file system in unmounted
