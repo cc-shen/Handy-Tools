@@ -36,7 +36,7 @@
 	"terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe",
 
 	/* Window */
-	"window.openFoldersInNewWindow": "on",
+	"window.openFoldersInNewWindow": "default",
 	"window.reopenFolders": "all",
 	"window.zoomLevel": 0,
 	"window.menuBarVisibility": "toggle"
