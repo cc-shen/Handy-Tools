@@ -2,13 +2,16 @@
 {
 	/* Editor */
 	"editor.acceptSuggestionOnEnter": false,
+	"editor.detectIndentation": true,
+	"editor.dragAndDrop": true,
 	"editor.fontLigatures": true,
 	"editor.formatOnPaste": true,
 	"editor.insertSpaces": false,
+	"editor.minimap.enabled": true,
 	"editor.tabSize": 2,
 	"editor.renderIndentGuides": true,
 	"editor.rulers": [],
-	"editor.wrappingColumn": 0,
+	"editor.wordWrap": "on",
 
 	/* Files */
 	"files.exclude": {
@@ -33,11 +36,16 @@
 	"terminal.integrated.fontLigatures": true,
 	"terminal.integrated.lineHeight": 0,
 	"terminal.integrated.scrollback": 50000,
+	/* Terminal for windows */
 	"terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe",
 
 	/* Window */
-	"window.openFoldersInNewWindow": "default",
+	"window.openFoldersInNewWindow": "off",
 	"window.reopenFolders": "all",
 	"window.zoomLevel": 0,
-	"window.menuBarVisibility": "toggle"
+	"window.menuBarVisibility": "toggle",
+
+	/* Workbench */
+	"workbench.colorTheme": "Monokai",
+	"workbench.iconTheme": "vscode-icons"
 }
