@@ -1,51 +1,74 @@
 // Place your settings in this file to overwrite the default settings
 {
-	/* Editor */
-	"editor.acceptSuggestionOnEnter": false,
-	"editor.detectIndentation": true,
-	"editor.dragAndDrop": true,
-	"editor.fontLigatures": true,
-	"editor.formatOnPaste": true,
-	"editor.insertSpaces": false,
-	"editor.minimap.enabled": true,
-	"editor.tabSize": 2,
-	"editor.renderIndentGuides": true,
-	"editor.rulers": [],
-	"editor.wordWrap": "on",
+    /* Editor */
+    "editor.acceptSuggestionOnEnter": false,
+    "editor.cursorBlinking": "phase",
+    "editor.cursorStyle": "line",
+    "editor.detectIndentation": true,
+    "editor.dragAndDrop": true,
+    "editor.fontLigatures": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
+    "editor.insertSpaces": false,
+    "editor.minimap.enabled": true,
+    "editor.renderIndentGuides": true,
+    "editor.renderLineHighlight": "all",
+    "editor.tabCompletion": true,
+    "editor.tabSize": 2,
+    "editor.wordWrap": "on",
 
-	/* Files */
-	"files.exclude": {
-		"**/.git": true,
-		"**/.svn": true,
-		"**/.hg": true,
-		"**/.DS_Store": true,
-		"**/node_modules": true,
-		"**/.idea": true,
-		"**/.gradle": true,
-		"**/build": true
-	},
-	"files.insertFinalNewline": true,
-	"files.trimTrailingWhitespace": true,
+    /* Files */
+    "files.encoding": "utf8",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/node_modules": true,
+        "**/.idea": true,
+        "**/.gradle": true,
+        "**/build": true,
+        "**/.vscode": true
+    },
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true,
 
-	/* Git */
-	"git.allowLargeRepositories": true,
+    /* Git */
+    "git.allowLargeRepositories": true,
+    "git.confirmSync": true,
 
-	/* Terminal */
-	"terminal.integrated.cursorBlinking": true,
-	"terminal.integrated.cursorStyle": "line",
-	"terminal.integrated.fontLigatures": true,
-	"terminal.integrated.lineHeight": 0,
-	"terminal.integrated.scrollback": 50000,
-	/* Terminal for windows */
-	"terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe",
+    /* Telemetry */
+    "telemetry.enableCrashReporter": false,
+    "telemetry.enableTelemetry": false,
 
-	/* Window */
-	"window.openFoldersInNewWindow": "off",
-	"window.reopenFolders": "all",
-	"window.zoomLevel": 0,
-	"window.menuBarVisibility": "toggle",
+    /* Terminal */
+    "terminal.integrated.cursorBlinking": true,
+    "terminal.integrated.cursorStyle": "line",
+    "terminal.integrated.fontLigatures": true,
+    "terminal.integrated.lineHeight": 0,
+    "terminal.integrated.scrollback": 10000,
+    "terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe",
 
-	/* Workbench */
-	"workbench.colorTheme": "Monokai",
-	"workbench.iconTheme": "vscode-icons"
+    /* Window */
+    "window.openFoldersInNewWindow": "off",
+    "window.reopenFolders": "all",
+    "window.zoomLevel": 0,
+
+    /* Workbench */
+    "workbench.colorTheme": "Monokai",
+    "workbench.iconTheme": "vscode-icons",
+
+    /* Extensions */
+    /* C/C++ Configuration */
+	"C_Cpp.clang_format_style": "Chromium",
+
+    /* LaTeX Workshop */
+    "latex-workshop.compile_argument": "-synctex=1 -interaction=nonstopmode -file-line-error",
+    "latex-workshop.compile_workflow": [
+        "%compiler% %arguments% %document%",
+        "bibtex %document%",
+        "%compiler% %arguments% %document%",
+        "rm -f %document%*.aux %document%*.bbl %document%*.blg %document%*.drv %document%*.dvi %document%*.glo %document%*.gls %document%*.idx %document%*.ilg %document%*.ing %document%*.ind %document%*.lof %document%*.lot %document%*.log %document%*.synctex.gz %document%*.toc"
+    ],
+    "latex-workshop.log_level": "warning"
 }
