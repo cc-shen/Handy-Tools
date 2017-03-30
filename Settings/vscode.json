@@ -6,7 +6,6 @@
     "editor.cursorStyle": "line",
     "editor.detectIndentation": true,
     "editor.dragAndDrop": true,
-    "editor.fontLigatures": true,
     "editor.formatOnPaste": true,
     "editor.formatOnType": true,
     "editor.insertSpaces": false,
@@ -63,12 +62,16 @@
 	"C_Cpp.clang_format_style": "Chromium",
 
     /* LaTeX Workshop */
-    "latex-workshop.compile_argument": "-synctex=1 -interaction=nonstopmode -file-line-error",
-    "latex-workshop.compile_workflow": [
-        "%compiler% %arguments% %document%",
-        "bibtex %document%",
-        "%compiler% %arguments% %document%",
-        "rm -f %document%*.aux %document%*.bbl %document%*.blg %document%*.drv %document%*.dvi %document%*.glo %document%*.gls %document%*.idx %document%*.ilg %document%*.ing %document%*.ind %document%*.lof %document%*.lot %document%*.log %document%*.synctex.gz %document%*.toc"
+    "latex-workshop.toolchain": [
+        "latexFile=`echo %DOC% | sed -e \"s/^.*\\///\" -e \"s/\\.tex$//\"`; pdflatex -synctex=1 -interaction=nonstopmode -file-line-error ${latexFile}.tex; bibtex ${latexFile}; pdflatex -synctex=1 -interaction=nonstopmode -file-line-error ${latexFile}.tex",
+        "rm -f *.aux *.bbl *.blg *.drv *.dvi *.fdb_latexmk *.fls *.glo *.gls *.idx *.ilg *.ing *.ind *.lof *.lot *.log *.synctex.gz *.toc"
     ],
-    "latex-workshop.log_level": "warning"
+    "latex-workshop.linter": true,
+
+    "[cpp]": {
+		"editor.quickSuggestions": false
+	},
+	"[c]": {
+		"editor.quickSuggestions": false
+	}
 }
