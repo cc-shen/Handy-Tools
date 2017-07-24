@@ -33,7 +33,8 @@
         "**/node_modules": true,
         "**/.idea": true,
         "**/.gradle": true,
-        "**/build": true
+        "**/build": true,
+        "**/.dropbox": true
     },
     "files.hotExit": "onExitAndWindowClose",
     "files.insertFinalNewline": true,
@@ -74,7 +75,7 @@
     "C_Cpp.clang_format_style": "Chromium",
     
     /* Code Spell Checker */
-    "cSpell.minWordLength": 2,
+    "cSpell.minWordLength": 4,
     "cSpell.ignorePaths": [
         "**/node_modules/**",
         "**/vscode-extension/**",
@@ -113,9 +114,21 @@
 
     /* markdownlint */
     "markdownlint.config": {
+        "MD009": {
+            "br_spaces": 2
+        },
         "MD013": false,
-        "MD009": false,
-        "MD033": false,
+        "MD029": {
+            "style": "ordered"
+        },
+        "MD033": {
+            "allowed_elements": [
+                "sup", "sub"
+            ]
+        },
+        "MD035": {
+            "style": "---"
+        },
         "MD041": false
     }
 }
