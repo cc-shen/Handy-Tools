@@ -1,18 +1,20 @@
-- AlanWalk.markdown-toc
-- DavidAnson.vscode-markdownlint
-- James-Yu.latex-workshop
-- Zignd.html-css-class-completion
-- abusaidm.html-snippets
-- austin.code-gnu-global
-- christian-kohler.path-intellisense
-- donjayamanne.githistory
-- donjayamanne.python
-- mdickin.markdown-shortcuts
-- mitaki28.vscode-clang
-- ms-vscode.cpptools
-- ms-vscode.csharp
-- msjsdiag.debugger-for-chrome
-- robertohuertasm.vscode-icons
-- streetsidesoftware.code-spell-checker
-- vsmobile.vscode-react-native
-- zhuangtongfa.Material-theme
+DavidAnson.vscode-markdownlint
+James-Yu.latex-workshop
+abusaidm.html-snippets
+austin.code-gnu-global
+avli.clojure
+christian-kohler.path-intellisense
+dbaeumer.vscode-eslint
+donjayamanne.githistory
+donjayamanne.python
+eg2.vscode-npm-script
+mitaki28.vscode-clang
+ms-vscode.cpptools
+ms-vscode.csharp
+msjsdiag.debugger-for-chrome
+robertohuertasm.vscode-icons
+shd101wyy.markdown-preview-enhanced
+streetsidesoftware.code-spell-checker
+vsmobile.vscode-react-native
+yzhang.markdown-all-in-one
+zhuangtongfa.Material-theme
