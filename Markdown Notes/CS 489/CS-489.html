@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <title>CS-489</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      
+        <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({"extensions":["tex2jax.js"],"jax":["input/TeX","output/HTML-CSS"],"messageStyle":"none","tex2jax":{"processEnvironments":false,"processEscapes":true,"inlineMath":[["$","$"],["\\(","\\)"]],"displayMath":[["$$","$$"],["\\[","\\]"]]},"TeX":{"extensions":["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"]},"HTML-CSS":{"availableFonts":["TeX"]}});
+        </script>
+        <script type="text/javascript" async src="file:////Users/Charles/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.2.8/node_modules/@shd101wyy/mume/dependencies/mathjax/MathJax.js"></script>
+        
+      
+
+      
+      
+      
+
+      <style> 
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none} 
+       
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview   ">
+      <h1 id="cs-489698-introduction-to-machine-learning">CS 489/698 - Introduction to Machine Learning</h1>
+<ul>
+<li>Instructor: YaoLiang Yu (<a href="yaoliang.yu@uwaterloo.ca" class="uri">yaoliang.yu@uwaterloo.ca</a>)
+<ul>
+<li>Office hours: DC 3617: TTh 2:40 - 3:40</li>
+</ul></li>
+<li>TAs: Amir, Jingjing, Nicole, Nimesh, Shrinu</li>
+<li>Website: <a href="https://cs.uwaterloo.ca/~y328yu/mycourses/489" class="uri">https://cs.uwaterloo.ca/~y328yu/mycourses/489</a></li>
+<li>Piazza: announcements, questions, discussions, etc.</li>
+<li>Learn: assignments, solutions, grades, etc.</li>
+</ul>
+<h2 id="lecture-00-introduction-_september-07-2017_">Lecture 00: Introduction, <em>September 07, 2017</em></h2>
+<h3 id="course-overview">Course Overview</h3>
+<h4 id="what-is-machine-learning">What is Machine Learning</h4>
+<p>“…field of study that gives computers the ability to learn without being explicitly programmed.” – Arthur Samuel (1959)</p>
+<h4 id="learning-categories">Learning Categories</h4>
+<h5 id="supervised">Supervised</h5>
+<ul>
+<li>Classification</li>
+<li>Regression</li>
+<li>Ranking</li>
+</ul>
+<p>Teacher provides answer</p>
+<h5 id="reinforcement">Reinforcement</h5>
+<ul>
+<li>Control</li>
+<li>Pricing</li>
+<li>Gaming</li>
+</ul>
+<p>Teacher provides motivation</p>
+<h5 id="unsupervised">Unsupervised</h5>
+<ul>
+<li>Clustered</li>
+<li>Visualization</li>
+<li>Representation</li>
+</ul>
+<p>Surprise, surprise</p>
+<h4 id="supervised-formally">Supervised, formally</h4>
+<ul>
+<li>Given a <em>training set</em> of <em>pairs</em> of examples <span class="math inline">\((x_{i}, y_{i})\)</span></li>
+<li>Return a <em>function</em> <span class="math inline">\(f: X \rightarrow Y\)</span></li>
+<li>On an <em>unseen test</em> example <span class="math inline">\(x\)</span>, output <span class="math inline">\(f(x)\)</span></li>
+<li>The goal is to do well on unseen test data
+<ul>
+<li>Usually do not care about performance on training data</li>
+</ul></li>
+</ul>
+<h3 id="focus-of-ml-research">Focus of ML Research</h3>
+<ul>
+<li>Representation and Interpretation</li>
+<li>Generalization</li>
+<li>Complexity</li>
+<li>Efficiency</li>
+<li>Applications</li>
+</ul>
+<h3 id="collaboration-with-focal">Collaboration with focal</h3>
+<p><a href="agastya@focal.systems" class="uri">agastya@focal.systems</a></p>
+<h2 id="lecture-01-perceptron-_september-12-2017_">Lecture 01: Perceptron, <em>September 12, 2017</em></h2>
+<h3 id="spam-filtering-example">Spam Filtering Example</h3>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>and</th>
+<th>viagra</th>
+<th>the</th>
+<th>of</th>
+<th>nigeria</th>
+<th>y</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\({\bf x}^{1}\)</span></td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>+1</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\({\bf x}^{2}\)</span></td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>-1</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\({\bf x}^{3}\)</span></td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>+1</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\({\bf x}^{4}\)</span></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>-1</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\({\bf x}^{5}\)</span></td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>+1</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\({\bf x}^{6}\)</span></td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>-1</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><em>Training set</em> <span class="math inline">\((X = [x_{1}, x_{2}, ..., x_{n}], y = {y_{1}, y_{2}, ..., y_{n}})\)</span>
+<ul>
+<li><span class="math inline">\(x_{i}\)</span> in <span class="math inline">\(X = \mathbb{R}^{d}\)</span>: instance <span class="math inline">\(i\)</span> with <span class="math inline">\(d\)</span> dimensional features</li>
+<li><span class="math inline">\(y_{i}\)</span> in <span class="math inline">\(Y = \{-1, 1\}\)</span>: instance <span class="math inline">\(i\)</span> is spam or ham?</li>
+</ul></li>
+<li>Good <em>feature representation</em> is of uttermost importance</li>
+</ul>
+<h3 id="batch-vs-online">Batch vs. Online</h3>
+<ul>
+<li><strong>Batch Learning</strong>
+<ul>
+<li>Interested in performance <em>test</em> set <span class="math inline">\(X&#39;\)</span></li>
+<li>Training set <span class="math inline">\((X, y)\)</span> is just a means</li>
+<li>Statistical assumption on <span class="math inline">\(X\)</span> and <span class="math inline">\(X&#39;\)</span></li>
+</ul></li>
+<li><strong>Online learning</strong>
+<ul>
+<li>Data <em>comes one by one</em> (streaming)</li>
+<li>Need to predict <span class="math inline">\(y\)</span> before knowing its true value</li>
+<li>Interested in making as few mistakes as possible</li>
+<li>“Friendliness” of the sequence <span class="math inline">\((x_{1}, y_{1}), (x_{2}, y_{2}),...\)</span></li>
+</ul></li>
+<li>Online to Batch conversion</li>
+</ul>
+<h3 id="linear-threshold-function">Linear Threshold Function</h3>
+<p>Find <span class="math inline">\(({\bf w}, b)\)</span> such that for all <span class="math inline">\(i\)</span>: <span class="math display">\[y_{i} = \text{sign}(\langle {\bf w}, {\bf x}^{i}\rangle + b)\]</span></p>
+<ul>
+<li><span class="math inline">\({\bf w}\)</span> in <span class="math inline">\(R^{d}\)</span>: weight vector for the <em>separating hyperplane</em></li>
+<li><span class="math inline">\(b\)</span> in <span class="math inline">\(R\)</span>: offset (threshold, bias) of the separating hyperplane</li>
+<li>sign: threshold function</li>
+</ul>
+<p><span class="math display">\[
+sign(t) =
+\begin{cases}
+    1, &amp; t &gt; 0 \\
+    -1, &amp; t \leq 0
+\end{cases}
+\]</span></p>
+<p>For <span class="math inline">\(t = 0\)</span>, it does not matter what <span class="math inline">\(sign(t)\)</span> returns as long as its consistent.</p>
+<h3 id="simplification">Simplification</h3>
+<p><span class="math display">\[\langle{\bf w}, {\bf x}\rangle + b = \bigg\langle \underbrace{\begin{pmatrix} {\bf w} \\ b \end{pmatrix}}_{\rlap{\text{also denoted as }w}\phantom{eeeeeeee}}, \begin{pmatrix} {\bf x} \\ 1 \end{pmatrix} \bigg\rangle\]</span></p>
+<p>Padding constant 1 to the end of each <span class="math inline">\(\bf {x}\)</span></p>
+<p><span class="math display">\[y \cdot \text{sign}(\langle {\bf w}, {\bf x}\rangle) = \text{sign}(\langle {\bf w}, y{\bf x})\]</span></p>
+<p>Pre-multiply each <span class="math inline">\({\bf x}\)</span> with its label <span class="math inline">\(y\)</span></p>
+<p>Find <span class="math inline">\({\bf w}\)</span> such that <span class="math inline">\(A^{\intercal}{\bf w} &gt; 0\)</span></p>
+<ul>
+<li><span class="math inline">\(A = [{\bf a}^{1}, ..., {\bf a}^{n}]\)</span></li>
+<li><span class="math inline">\({\bf a}^{i} = \begin{pmatrix} y_{i}{\bf x}^{i} \\ y_{i} \end{pmatrix}\)</span></li>
+</ul>
+<h3 id="perceptron-rosenblatt58">Perceptron [Rosenblatt’58]</h3>
+<p>Nonlinear activation function</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;\phantom{eee}~x_{1} \xrightarrow{w_{1}} \\
+&amp;\phantom{eee}~x_{2} \xrightarrow{w_{2}} \\
+&amp;\phantom{eee}~x_{3} \xrightarrow{w_{3}} \Sigma \longrightarrow \geq 0? \xrightarrow{\text{Nonlinear activation function}} \\
+&amp;\underbrace{x_{4} \xrightarrow{w_{4}}}_{\text{Linear superposition}}
+\end{aligned}
+\]</span></p>
+<h3 id="the-perceptron-algorithm">The Perceptron Algorithm</h3>
+<p>Input: <span class="math inline">\(A\in \mathbb{R}^{(d+1)\times n}\)</span>, threshold <span class="math inline">\(\delta \geq 0\)</span>, initialize <span class="math inline">\({\bf w}_{0} \in \mathbb{R}^{d+1}\)</span> arbitrarily</p>
+<ol style="list-style-type: decimal">
+<li><strong>repeat</strong></li>
+<li>    select some column <span class="math inline">\({\bf a}\)</span> of <span class="math inline">\(A\)</span></li>
+<li>    <strong>if</strong> <span class="math inline">\(\langle {\bf a}, {\bf w_{t}} \rangle \leq \delta\)</span> <strong>then</strong></li>
+<li>        <span class="math inline">\({\bf w}_{t+1} = {\bf w}_{t} + {\bf a}\)</span> <code>// update only when making a mistake</code></li>
+<li>        <span class="math inline">\(t \leftarrow t + 1\)</span></li>
+<li><strong>until</strong> <span class="math inline">\(convergence\)</span></li>
+</ol>
+<p>Typically <span class="math inline">\(\delta = 0\)</span>, <span class="math inline">\({\bf w}_{0} = {\bf 0}\)</span></p>
+<p><span class="math display">\[\langle {\bf a}, {\bf w} \rangle = y(\langle x, {\bf w} \rangle + b) &lt; 0 \text{ iff. } \underbrace{y}_{\text{truth}} \neq \underbrace{\text{sign}(\langle x, {\bf w} \rangle + b)}_{\text{prediction}}\]</span></p>
+<p><strong>Lazy</strong> update: if it ain’t broken, don’t fix it.</p>
+<p><span class="math display">\[\langle {\bf a}, {\bf w}_{t + 1} \rangle = \langle {\bf a}, {\bf w}_{t} + {\bf a} \rangle = \langle {\bf a}, {\bf w}_{t} \rangle + ||a||^{2}_{2} &gt; \langle {\bf a}, {\bf w}_{t} \rangle\]</span></p>
+<h4 id="does-it-work">Does It Work</h4>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>and</th>
+<th>viagra</th>
+<th>the</th>
+<th>of</th>
+<th>nigeria</th>
+<th>y</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\({\bf x}^{1}\)</span></td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>+1</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\({\bf x}^{2}\)</span></td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>-1</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\({\bf x}^{3}\)</span></td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>+1</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\({\bf x}^{4}\)</span></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>-1</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\({\bf x}^{5}\)</span></td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>+1</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\({\bf x}^{6}\)</span></td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>-1</td>
+</tr>
+</tbody>
+</table>
+<p><span class="math display">\[
+{\bf w} \leftarrow {\bf w} + y{\bf x}
+\]</span></p>
+<p><span class="math display">\[
+b \leftarrow b + y
+\]</span></p>
+<ul>
+<li><span class="math inline">\(w_{0} = \begin{pmatrix} 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \end{pmatrix}\)</span>, <span class="math inline">\(b_{0} = 0\)</span>, prediction on <span class="math inline">\({\bf x}^{1}\)</span> is <em>undefined</em></li>
+<li><span class="math inline">\(w_{1} = \begin{pmatrix} 1 &amp; 1 &amp; 0 &amp; 1 &amp; 1 \end{pmatrix}\)</span>, <span class="math inline">\(b_{1} = 1\)</span>, predict 1 on <span class="math inline">\({\bf x}^{2}\)</span>, <em>wrong</em></li>
+<li><span class="math inline">\(w_{2} = \begin{pmatrix} 1 &amp; 1 &amp; -1 &amp; 0 &amp; 1 \end{pmatrix}\)</span>, <span class="math inline">\(b_{2} = 0\)</span>, prediction on <span class="math inline">\({\bf x}^{3}\)</span> i <em>undefined</em></li>
+<li><span class="math inline">\(w_{3} = \begin{pmatrix} 1 &amp; 2 &amp; 0 &amp; 0 &amp; 1 \end{pmatrix}\)</span>, <span class="math inline">\(b_{3} = 1\)</span>, predict 1 on <span class="math inline">\({\bf x}^{4}\)</span>, <em>wrong</em></li>
+<li><span class="math inline">\(w_{4} = \begin{pmatrix} 0 &amp; 2 &amp; 0 &amp; -1 &amp; 1 \end{pmatrix}\)</span>, <span class="math inline">\(b_{4} = 0\)</span>, predict 1 on <span class="math inline">\({\bf x}^{5}\)</span>, <em>correct</em></li>
+<li><span class="math inline">\(w_{4} = \begin{pmatrix} 0 &amp; 2 &amp; 0 &amp; -1 &amp; 1 \end{pmatrix}\)</span>, <span class="math inline">\(b_{4} = 0\)</span>, predict -1 on <span class="math inline">\({\bf x}^{6}\)</span>, <em>correct</em></li>
+</ul>
+<h3 id="perception-convergence-theorem">Perception Convergence Theorem</h3>
+<hr>
+<p><strong>Thm.</strong> (Block’62; Novikoff’62)<br>
+<em>Assume there exists some <span class="math inline">\({\bf w}\)</span> such that <span class="math inline">\(A^{\intercal}{\bf w} &gt; 0\)</span></em>, then the perception algorithm converges to some <span class="math inline">\(w^{*}\)</span>. If each column of <span class="math inline">\(A\)</span> is selected indefinitely often, then <span class="math inline">\(A^{\intercal}{\bf w}^{*} &gt; \delta\)</span>.</p>
+<p><strong>Proof</strong><br>
+Note that <span class="math inline">\(||w||_{p} = \left( \sum_{i} |w_{i}|^{p} \right)^{1/p}\)</span></p>
+<p><span class="math inline">\(\forall \gamma &gt; 0\)</span>, <span class="math inline">\(\exists~w^{*}\)</span> such that <span class="math inline">\(A^{\intercal}w^{*} \geq \gamma &gt; 0\)</span>.</p>
+<p><span class="math display">\[
+\begin{aligned}
+\langle w_{t + 1}, w^{*} \rangle
+&amp;= \langle w_{t} + a, w^{*} \rangle
+= \langle w_{t}, w^{*} \rangle + \langle a, w^{*} \rangle \\
+&amp;\geq \langle w_{t}, w^{*} \rangle + \gamma \\
+&amp;\geq \cdots \geq \underbrace{\langle w_{0}, w^{*} \rangle}_{0} + (t)\gamma
+\end{aligned}
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+|w_{t+1}||_{2}^{2}
+&amp;= || w_{t} + a ||^{2}_{2}
+= \langle w_{t} + a, w_{t} + a \rangle
+= ||w_{t}||^{2}_{2} + 2\underbrace{\langle w_{t}, a \rangle}_{\leq~\delta~=~0} + ||a||^{2}_{2} \\
+&amp;\leq ||w_{t}||^{2}_{2} + ||a||^{2}_{2} \\
+&amp;\leq ||w_{t}||^{2}_{2} + R^{2} \leq ||w_{t}||^{2}_{2} + (t+1)R^{2}
+\end{aligned}
+\]</span></p>
+<hr>
+<p><strong>Cor.</strong><br>
+Let <span class="math inline">\(\delta = 0\)</span> and <span class="math inline">\(w_{0} = 0\)</span>. Then percetpion converges after at most <span class="math inline">\((\frac{R}{\gamma})^{2}\)</span> steps, where <span class="math display">\[R = \underset{i}{\max} ||A_{:i}||_{2},~~~\gamma = \underset{w:||w||_{2} \leq 1}{\max} \underset{i}{\min} \langle w, A_{:i} \rangle\]</span></p>
+<hr>
+<h4 id="the-margin">The Margin</h4>
+<p><span class="math display">\[
+\begin{aligned}
+\min_{{\bf w}^{*}:~A^{\intercal}{\bf w}^{*}~\geq~\gamma{\bf 1}} \frac{||{\bf w}^{*}||^{2}_{2}}{\gamma^{2}} &amp;= \min_{{\bf w}:~A^{\intercal}{\bf w}~\geq~{\bf 1}} ||{\bf w}||^{2}_{2} \\
+&amp;= \min_{({\bf w}, t):~||{\bf w}||_{2}\leq t,~A^{\intercal}{\bf w} \geq {\bf 1}} t^{2} \\
+&amp;= \min_{({\bf w}, t):~||{\bf w}||_{2}\leq 1,~A^{\intercal}{\bf w} \geq \frac{1}{t}{\bf 1}} t^{2} \\
+&amp;= \min_{({\bf w}, t):~||{\bf w}||_{2}\leq 1,~A^{\intercal}{\bf w} &gt; 0} \frac{1}{\displaystyle \min_{{\bf a} \in A} \langle {\bf a}, {\bf w} \rangle} \\
+&amp;= \left(\frac{1}{\displaystyle \max_{{\bf w}:~||{\bf w}||_{2} \leq 1} \min_{{\bf a} \in A} \langle {\bf a}, {\bf w} \rangle}\right)^{2}
+\end{aligned}
+\]</span></p>
+<p>Where the margin <span class="math inline">\(\gamma\)</span> is <span class="math inline">\(\displaystyle \max_{{\bf w}:~||{\bf w}||_{2} \leq 1} \min_{{\bf a} \in A} \langle {\bf a}, {\bf w} \rangle\)</span></p>
+<h3 id="what-does-the-bound-mean">What Does the Bound Mean</h3>
+<hr>
+<p><strong>Cor.</strong><br>
+Let <span class="math inline">\(\delta = 0\)</span> and <span class="math inline">\({\bf w}_{0} = {\bf 0}\)</span>. Then perceptron converges after at most <span class="math inline">\((R/\gamma)^{2}\)</span> steps, where <span class="math display">\[
+R = \max_{i} ||A_{:i}||_{2},~\gamma = \max_{{\bf w}:~||{\bf w}||_{2} \leq 1} \min_{i} \langle {\bf w}, A_{:i} \rangle
+\]</span></p>
+<hr>
+<p>Treating <span class="math inline">\(R\)</span> and <span class="math inline">\(\gamma\)</span> as constants, then the number of mistakes are independent of <span class="math inline">\(n\)</span> and <span class="math inline">\(d\)</span>!.<br>
+Otherwise may need exponential time… Can we <em>improve</em> the bound?</p>
+<h4 id="but">But</h4>
+<p>Pro: the larger the margin, the faster perceptron converges.</p>
+<p>Con: But perceptron stops at an arbitrary linear separator…</p>
+<p>Which one do you prefer? <span class="math display">\[
+\min_{A^{\intercal}{\bf w} \geq 1} \frac{1}{2}||{\bf w}||_{2}^{2}
+\approx
+\min_{y_{i}(\langle {\bf w}, {\bf x}^{i} \rangle + b) \geq 1} \frac{1}{2}||{\bf w}||_{2}^{2}
+\]</span></p>
+<h3 id="what-if-non-separable">What If Non-Separable</h3>
+<p>Find a better feature representation.</p>
+<p>Use a deeper model.</p>
+<p>Soft margin <span class="math display">\[
+\forall {\bf w}^{*}, \forall\gamma &gt; 0,~\text{and}~\forall{\bf a} \in {\bf A}: \langle {\bf a}, {\bf w}^{*} \rangle \geq \gamma - (\gamma - \langle {\bf a}, {\bf w}^{*} \rangle) +
+\]</span></p>
+<h3 id="perceptron-boundedness-theorem">Perceptron Boundedness Theorem</h3>
+<p>Perceptron convergence requires the <em>existence</em> of a separating hyperplane.<br>
+    How to check this assumption in practice?<br>
+    What if it fails? (It will)</p>
+<hr>
+<p><strong>Thm</strong> (Minsky and Papert’67; Block and Levin’70)<br>
+The iterates of the perceptron algorithm are always bounded. In particular, if there is no separating hyperplane, then perceptron cycles.</p>
+<hr>
+<h3 id="when-to-stop-perceptron">When to Stop Perceptron</h3>
+<p>Online learning: never.</p>
+<p>Batch Learning</p>
+<ul>
+<li>Maximum number of iteration reached or run out of time</li>
+<li>Training error stops changing</li>
+<li>Validation error stops decreasing</li>
+<li>Weights stopped changing much, if using a diminishing step size <span class="math inline">\(\eta_{t}\)</span>, i.e., <span class="math inline">\({\bf w}_{t+1} \leftarrow {\bf w}_{t} + \eta_{t}y_{i}{\bf x}^{i}\)</span></li>
+</ul>
+<h3 id="multi-class-perceptron">Multi-class Perceptron</h3>
+<p>One vs. all</p>
+<ul>
+<li>Class c as positive</li>
+<li>All other classes as negative</li>
+<li>Highest activation wins: <span class="math inline">\(\text{pred} = \text{argmax}_{c}{\bf w}_{c}^{\intercal}{\bf x}\)</span></li>
+</ul>
+<p>One vs. one</p>
+<ul>
+<li>Class c as positive</li>
+<li>Class c’ as negative</li>
+<li>Voting</li>
+</ul>
+<h3 id="the-winnow-algorithm-littlestone98">The Winnow Algorithm (Littlestone’98)</h3>
+<p>Input: <span class="math inline">\(A\in \mathbb{R}^{(d&#39;)\times n}\)</span>, threshold <span class="math inline">\(\delta \geq 0\)</span>, step size <span class="math inline">\(\eta &gt; 0\)</span>, initialize <span class="math inline">\({\bf w}_{0} \in \color{red}{int}\Delta_{d&#39;-1}\)</span></p>
+<ol style="list-style-type: decimal">
+<li><strong>repeat</strong></li>
+<li>    select some column <span class="math inline">\({\bf a}\)</span> of <span class="math inline">\(A\)</span></li>
+<li>    <strong>if</strong> <span class="math inline">\(\langle {\bf a}, {\bf w_{t}} \rangle \leq \delta\)</span> <strong>then</strong></li>
+<li>        <span class="math inline">\({\bf w}_{t+1} = {\bf w}_{t} \odot \exp(\eta {\bf a})\)</span> <code>// update only when making a mistake</code></li>
+<li>        <span class="math inline">\({\bf w}_{t+1} \leftarrow \frac{{\bf w}_{t+1}}{||{\bf w}_{t+1}||_{1}}\)</span> <code>// normalize</code></li>
+<li>        <span class="math inline">\(t \leftarrow t + 1\)</span></li>
+<li><strong>until</strong> <span class="math inline">\(convergence\)</span></li>
+</ol>
+<p>Multiplicative vs. additive</p>
+<hr>
+<p><strong>Thm.</strong> (Littlestone’88)<br>
+Assume there exists some <em>non-negative</em> <span class="math inline">\({\bf w}\)</span> such that <span class="math inline">\(A^{\intercal}{\bf w} &gt; 0\)</span>, then winnow converges to some <span class="math inline">\({\bf w}^{*}\)</span>. If each column of <span class="math inline">\(A\)</span> is selected indefinitely often, then <span class="math inline">\(A^{\intercal}{\bf w}^{*} &gt; \delta\)</span>.</p>
+<hr>
+<h2 id="lecture-02-linear-regression-_september-14-2017_">Lecture 02: Linear Regression, <em>September 14, 2017</em></h2>
+<h3 id="how-much-should-i-bid-for">How Much Should I Bid For</h3>
+<ul>
+<li>Interpolation vs. Extrapolation</li>
+<li>Linear vs. Non-linear</li>
+</ul>
+<h4 id="laffer-curve">Laffer Curve</h4>
+<p>A curve that represents the relationship between tax revenue and tax rate.<br>
+A downward parabola curve, with an revenue maximizing tax rate <span class="math inline">\(t^{*}\)</span>.</p>
+<h3 id="regression">Regression</h3>
+<p>Given a pair <span class="math inline">\((X, Y)\)</span>, find function <span class="math inline">\(f\)</span> such that <span class="math display">\[f(X) \approx Y\]</span></p>
+<ul>
+<li><span class="math inline">\(X\)</span>: feature vector, <span class="math inline">\(d\)</span>-dimensional real vector</li>
+<li><span class="math inline">\(Y\)</span>: response, <span class="math inline">\(m\)</span>-dimensional real vector</li>
+</ul>
+<p>Two problems:</p>
+<ol style="list-style-type: decimal">
+<li><span class="math inline">\((X, Y)\)</span> is uncertain: samples from an <em>unknown distribution</em></li>
+<li>How to measure the error: need a <em>loss</em> function</li>
+</ol>
+<h3 id="risk-minimization">Risk Minimization</h3>
+<p>Minimize the expected loss, aka <em>risk</em> <span class="math display">\[
+\begin{aligned}
+\min_{f: X \rightarrow Y} \underbrace{{\bf E}[L(f(X), Y)]}_{} &amp; &amp; L: y \times y \rightarrow {\bf R}_{+} \\
+&amp; &amp; L(y, y) \equiv 0
+\end{aligned}
+\]</span></p>
+<p>Which loss to use?<br>
+Not always clear, convenience dominates for now</p>
+<p>Least squares: <span class="math inline">\(\displaystyle \min_{f} {\bf E}||f(X) - Y||_{2}^{2}\)</span></p>
+<h3 id="the-regression-function">The Regression Function</h3>
+<p><span class="math display">\[{\bf E}||f(X) - Y||_{2}^{2} = {\bf E}||f(X) - {\bf E}(Y|X)||_{2}^{2} + \underbrace{{\bf E}||{\bf E}(Y|X) - Y||_{2}^{2}}_{\text{Inherent noise variance}}\]</span></p>
+<p>Regression function: <span class="math display">\[f^{*}(X) = m(X) = {\bf E}(Y|X)\]</span> where <span class="math inline">\(m\)</span> is the mean function.</p>
+<p>Many ways to estimate <span class="math inline">\(m(X)\)</span></p>
+<p>Simplest: Let’s assume it is linear (affine)!</p>
+<h3 id="linear-regression">Linear Regression</h3>
+<p><em>Assumption</em>: <span class="math inline">\(m(X) = {\bf E}(Y|X) = XA + {\bf b}\)</span></p>
+<p>Goal: <span class="math inline">\(\displaystyle \min_{A, {\bf b}} {\bf E}||XA + {\bf b} - Y||_{2}^{2}\)</span><br>
+Where <span class="math inline">\({\bf E}\)</span> is an unknown distribution.</p>
+<p>Law of Large Numbers: <span class="math inline">\(\displaystyle \frac{1}{n}\sum_{i = 1}^{n}Z_{i} \rightarrow {\bf E}(Z)\)</span></p>
+<p>Reality:<br>
+    <span class="math inline">\(\displaystyle \min_{A, {\bf b}}\underbrace{\frac{1}{n}\sum_{i=1}^{n}||X_{i}A + {\bf b} - Y_{i}||_{2}^{2}}_{\text{empirical risk}}\)</span></p>
+<h4 id="simplification-again">Simplification, again</h4>
+<p><span class="math display">\[
+\begin{aligned}
+&amp; \min_{A, {\bf b}} \frac{1}{n}\sum_{i=1}^{n}||X_{i}A + {\bf b} - Y_{i}||_{2}^{2} \\
+\Rightarrow W \leftarrow \begin{pmatrix} A \\ {\bf b} \end{pmatrix} \\
+X_{i} \leftarrow (X_{i}, 1) \\
+&amp; \min_{W} \frac{1}{n}\sum_{i=1}^{n}||X_{i}W - Y_{i}||_{2}^{2} \\
+\Rightarrow X = \begin{bmatrix} X_{1} \\ X_{2} \\ \vdots \\ X_{n} \end{bmatrix}
+Y = \begin{bmatrix} Y_{1} \\ Y_{2} \\ \vdots \\ Y_{n} \end{bmatrix} \\
+&amp; \min_{W \in {\bf R}^{(d+1)\times m}}||XW - Y||_{F}^{2}
+\end{aligned}
+\]</span></p>
+<h4 id="finally">Finally</h4>
+<p><span class="math display">\[
+\min_{W \in {\bf R}^{(d+1)\times m}}\overbrace{||XW - Y||_{F}^{2}}^{\text{sum of square residuals}}
+\]</span></p>
+<p><span class="math inline">\(XW \rightarrow\)</span> hyperplane (again!), parameterized by <span class="math inline">\(W\)</span>.<br>
+<span class="math inline">\(Y \rightarrow\)</span> true responses.</p>
+<p>In transpose form: <span class="math inline">\(WX^{\intercal} - Y^{\intercal}\)</span></p>
+<h4 id="why-least-squares">Why Least Squares</h4>
+<hr>
+<p><strong>Thm.</strong> (Sondermann’86; Friedland and Torokhti’07; Yu and Schuurmans’11)<br>
+Among all minimizers of <span class="math inline">\(\displaystyle \min_{W}||AWB - C||_{F}\)</span>, <span class="math inline">\(W=A^{+}CB^{+}\)</span> is the one that has minimal F-norm.</p>
+<hr>
+<p><strong>Pseudo-inverse</strong> <span class="math inline">\(A^{+}\)</span> is the <em>unqiue</em> matrix <span class="math inline">\(G\)</span> such that <span class="math display">\[AGA = A,~GAG = G,~(AG)^{\intercal} = AG,~(GA)^{\intercal} = GA\]</span></p>
+<p><strong>Singular Value Decomposition</strong> <span class="math inline">\(A = USV^{\intercal}\)</span>, <span class="math inline">\(A^{+} = VS^{-1}U^{\intercal}\)</span></p>
+<h5 id="optimizatino-detour">Optimizatino Detour</h5>
+<p><span class="math display">\[\min_{x} f(x)\]</span></p>
+<hr>
+<p><strong>Format’s Theorem</strong><br>
+Necessarily <span class="math inline">\(Df(x) = 0\)</span></p>
+<hr>
+<p>(Préchet) <strong>Derivative at <span class="math inline">\(x\)</span></strong>. <span class="math display">\[\lim_{0\neq\delta\rightarrow 0}\frac{|f(x + \delta) - f(x) - Df(x)\delta|}{|\delta|} = 0\]</span></p>
+<p>Example.<br>
+<span class="math inline">\(f({\bf x}) = {\bf x}^{\intercal}A{\bf x} + {\bf x}^{\intercal}{\bf b} + c\)</span><br>
+<span class="math inline">\(Df({\bf x}) = (A + A^{\intercal}){\bf x} + {\bf b}\)</span></p>
+<h4 id="solving-least-squares">Solving Least Squares</h4>
+<p>Note, <span class="math inline">\(m = 1\)</span> <span class="math inline">\(X \in \mathbb{R}^{n \times (d+1)}\)</span><br>
+<span class="math inline">\(W \in \mathbb{R}^{(d+1)\times m}\)</span><br>
+<span class="math inline">\(Y \in \mathbb{R}^{r \times m}\)</span><br>
+<span class="math inline">\(X^{\intercal}XW \in \mathbb{R}^{(d+1)\times m}\)</span><br>
+<span class="math inline">\(A^{\intercal}Y \in \mathbb{R}^{(d+1)\times m}\)</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+\min_{W \in {\bf R}^{(d+1)\times m}}||XW - Y||_{F}^{2} &amp;= W^{\intercal}(X^{\intercal}X)W - 2W^{\intercal}X^{\intercal}Y + Y^{\intercal}{Y} \\
+&amp;\Downarrow \\
+X^{\intercal}XW &amp;= X^{\intercal}Y ~~~ \text{Normal Equation}
+\end{aligned}
+\]</span></p>
+<p>$X^{\intercal}X# may not be invertible, but there is always a solution. Even invertible, <em>never ever compute</em> <span class="math inline">\(W = (X^{\intercal}X)^{-1}X^{\intercal}Y\)</span> !<br>
+Instead, solve the linear system.</p>
+<h4 id="prediction">Prediction</h4>
+<p>Once we have <span class="math inline">\(W\)</span>, we can predict <span class="math display">\[\hat{Y} = X_{\text{test}}W\]</span></p>
+<p>How to evaluate? <span class="math display">\[(Y_{\text{test}} - \hat{Y})^{2}\]</span></p>
+<p>Sometimes we evaluate using a different</p>
+<h3 id="robustness">Robustness</h3>
+<p><strong>Huber’s Loss</strong> <span class="math display">\[
+H(\hat{y}, y) =
+\begin{cases}
+\frac{1}{2}(\hat{y} - y^{2}), &amp; |\hat{y} - y| \leq \delta \\
+\delta(|\hat{y} - y| - \frac{1}{2}\delta), &amp; |\hat{y} - y| \geq \delta
+\end{cases}
+\]</span></p>
+<h3 id="multi-task-learning">Multi-task Learning</h3>
+<p><span class="math display">\[X^{\intercal}XW = X^{\intercal}Y\]</span></p>
+<p>Everything we’ve shown still holds if <span class="math inline">\(Y\)</span> is <span class="math inline">\(m\)</span>-dimensional.<br>
+But, can solve each column of <span class="math inline">\(Y\)</span> <em>independently</em> <span class="math display">\[X^{\intercal}XW_{;j} = X^{\intercal}Y_{:j}\]</span> Things are more interesting if we had <em>regularization</em>.</p>
+<h3 id="regularization">Regularization</h3>
+<h4 id="iii-posedness">III-Posedness</h4>
+<p>Let <span class="math inline">\(x_{1} = 0\)</span>, <span class="math inline">\(x_{2} = \epsilon\)</span>, <span class="math inline">\(y_{1} = 1\)</span>, <span class="math inline">\(y_{2} = -1\)</span></p>
+<p><span class="math display">\[
+X =
+\begin{bmatrix}
+0 &amp; 1 \\
+\epsilon &amp; 1
+\end{bmatrix}
+~~ Y =
+\begin{bmatrix}
+1 \\
+-1
+\end{bmatrix}
+\]</span></p>
+<p><span class="math display">\[
+w = X^{-1}y =
+\begin{bmatrix}
+\frac{2}{\epsilon} \\
+1
+\end{bmatrix}
+\]</span></p>
+<p>Slight disturbance leads to chaotic behaviour.</p>
+<h4 id="tiknohov-regularization-hoerl-and-kennard70">Tiknohov Regularization (Hoerl and Kennard’70)</h4>
+<p>Ridge regression: <span class="math display">\[
+\min_{W \in {\bf R}^{(d+1)\times m}} ||XW - Y||_{F}^{2} + \lambda||W||_{F}^{2}
+\]</span> <span class="math display">\[\Longrightarrow (X^{\intercal}X + \lambda I)W = X^{\intercal}Y\]</span> where <span class="math inline">\(\lambda\)</span> is the reg. constant (hyperparameter).</p>
+<p>With positive lambda, slight perturbation in input leads to <em>proportional</em> (with regards to <span class="math inline">\(\frac{1}{\lambda}\)</span>) perturbation in output.</p>
+<h4 id="data-augmentation">Data Augmentation</h4>
+<p><span class="math display">\[
+\begin{aligned}
+\min_{W \in {\bf R}^{(d+1)\times m}} &amp;||XW - Y||_{F}^{2} + \lambda||W||_{F}^{2} \\
+&amp;\Updownarrow \\
+\min_{W \in {\bf R}^{(d+1)\times m}} &amp;||\widetilde{X}W - \widetilde{Y}||_{F}^{2}
+\end{aligned}
+\]</span></p>
+<p><span class="math display">\[
+\widetilde{X} =
+\begin{bmatrix}
+X \\
+\sqrt{\lambda}I
+\end{bmatrix}
+~~ \widetilde{Y} =
+\begin{bmatrix}
+Y \\
+0
+\end{bmatrix}
+\]</span></p>
+<h4 id="sparsity">Sparsity</h4>
+<p>Ridge regression weight is always dense,</p>
+<ul>
+<li>Computationally heavy</li>
+<li>Interpretationally cumbersome</li>
+</ul>
+<p>Lasso (Tibshirani’96)</p>
+<p><span class="math display">\[
+\min_{||W||_{1} \leq C}||XW - Y||_{F}^{2}
+\]</span></p>
+<h4 id="regularization-vs-constraint">Regularization vs. Constraint</h4>
+<p><span class="math display">\[
+\begin{aligned}
+\min_{W}\ell(W) &amp;+ \lambda \cdot r(W) &amp;&amp; \text{computationally appealing}\\
+\text{always true } \Downarrow ~&amp;~ \Uparrow \text{mild conditions} \\
+\min_{W:r(W) \leq C} &amp;\ell(W) &amp;&amp; \text{theoretically appealing}
+\end{aligned}
+\]</span></p>
+<h3 id="cross-validation">Cross-Validation</h3>
+<p>See written notes.</p>
+<h2 id="lecture-03-multi-layer-perceptron-_september-14-2017_">Lecture 03: Multi-layer Perceptron, <em>September 14, 2017</em></h2>
+
+      </div>
+      <div class="md-sidebar-toc"><ul>
+<li><a href="#cs-489698-introduction-to-machine-learning">CS 489/698 - Introduction to Machine Learning</a>
+<ul>
+<li><a href="#lecture-00-introduction-_september-07-2017_">Lecture 00: Introduction, <em>September 07, 2017</em></a>
+<ul>
+<li><a href="#course-overview">Course Overview</a>
+<ul>
+<li><a href="#what-is-machine-learning">What is Machine Learning</a></li>
+<li><a href="#learning-categories">Learning Categories</a>
+<ul>
+<li><a href="#supervised">Supervised</a></li>
+<li><a href="#reinforcement">Reinforcement</a></li>
+<li><a href="#unsupervised">Unsupervised</a></li>
+</ul>
+</li>
+<li><a href="#supervised-formally">Supervised, formally</a></li>
+</ul>
+</li>
+<li><a href="#focus-of-ml-research">Focus of ML Research</a></li>
+<li><a href="#collaboration-with-focal">Collaboration with focal</a></li>
+</ul>
+</li>
+<li><a href="#lecture-01-perceptron-_september-12-2017_">Lecture 01: Perceptron, <em>September 12, 2017</em></a>
+<ul>
+<li><a href="#spam-filtering-example">Spam Filtering Example</a></li>
+<li><a href="#batch-vs-online">Batch vs. Online</a></li>
+<li><a href="#linear-threshold-function">Linear Threshold Function</a></li>
+<li><a href="#simplification">Simplification</a></li>
+<li><a href="#perceptron-rosenblatt58">Perceptron [Rosenblatt'58]</a></li>
+<li><a href="#the-perceptron-algorithm">The Perceptron Algorithm</a>
+<ul>
+<li><a href="#does-it-work">Does It Work</a></li>
+</ul>
+</li>
+<li><a href="#perception-convergence-theorem">Perception Convergence Theorem</a>
+<ul>
+<li><a href="#the-margin">The Margin</a></li>
+</ul>
+</li>
+<li><a href="#what-does-the-bound-mean">What Does the Bound Mean</a>
+<ul>
+<li><a href="#but">But</a></li>
+</ul>
+</li>
+<li><a href="#what-if-non-separable">What If Non-Separable</a></li>
+<li><a href="#perceptron-boundedness-theorem">Perceptron Boundedness Theorem</a></li>
+<li><a href="#when-to-stop-perceptron">When to Stop Perceptron</a></li>
+<li><a href="#multi-class-perceptron">Multi-class Perceptron</a></li>
+<li><a href="#the-winnow-algorithm-littlestone98">The Winnow Algorithm (Littlestone'98)</a></li>
+</ul>
+</li>
+<li><a href="#lecture-02-linear-regression-_september-14-2017_">Lecture 02: Linear Regression, <em>September 14, 2017</em></a>
+<ul>
+<li><a href="#how-much-should-i-bid-for">How Much Should I Bid For</a>
+<ul>
+<li><a href="#laffer-curve">Laffer Curve</a></li>
+</ul>
+</li>
+<li><a href="#regression">Regression</a></li>
+<li><a href="#risk-minimization">Risk Minimization</a></li>
+<li><a href="#the-regression-function">The Regression Function</a></li>
+<li><a href="#linear-regression">Linear Regression</a>
+<ul>
+<li><a href="#simplification-again">Simplification, again</a></li>
+<li><a href="#finally">Finally</a></li>
+<li><a href="#why-least-squares">Why Least Squares</a>
+<ul>
+<li><a href="#optimizatino-detour">Optimizatino Detour</a></li>
+</ul>
+</li>
+<li><a href="#solving-least-squares">Solving Least Squares</a></li>
+<li><a href="#prediction">Prediction</a></li>
+</ul>
+</li>
+<li><a href="#robustness">Robustness</a></li>
+<li><a href="#multi-task-learning">Multi-task Learning</a></li>
+<li><a href="#regularization">Regularization</a>
+<ul>
+<li><a href="#iii-posedness">III-Posedness</a></li>
+<li><a href="#tiknohov-regularization-hoerl-and-kennard70">Tiknohov Regularization (Hoerl and Kennard'70)</a></li>
+<li><a href="#data-augmentation">Data Augmentation</a></li>
+<li><a href="#sparsity">Sparsity</a></li>
+<li><a href="#regularization-vs-constraint">Regularization vs. Constraint</a></li>
+</ul>
+</li>
+<li><a href="#cross-validation">Cross-Validation</a></li>
+</ul>
+</li>
+<li><a href="#lecture-03-multi-layer-perceptron-_september-14-2017_">Lecture 03: Multi-layer Perceptron, <em>September 14, 2017</em></a></li>
+</ul>
+</li>
+</ul>
+</div>
+      <a id="sidebar-toc-btn">≡</a>
+    </body>
+    
+    
+    
+    <script>
+(function bindTaskListEvent() {
+  var taskListItemCheckboxes = document.body.getElementsByClassName('task-list-item-checkbox')
+  for (var i = 0; i < taskListItemCheckboxes.length; i++) {
+    var checkbox = taskListItemCheckboxes[i]
+    var li = checkbox.parentElement
+    if (li.tagName !== 'LI') li = li.parentElement
+    if (li.tagName === 'LI') {
+      li.classList.add('task-list-item')
+    }
+  }
+}())    
+</script>
+    
+<script>
+
+var sidebarTOCBtn = document.getElementById('sidebar-toc-btn')
+sidebarTOCBtn.addEventListener('click', function(event) {
+  event.stopPropagation()
+  if (document.body.hasAttribute('html-show-sidebar-toc')) {
+    document.body.removeAttribute('html-show-sidebar-toc')
+  } else {
+    document.body.setAttribute('html-show-sidebar-toc', true)
+  }
+})
+</script>
+      
+  </html>
