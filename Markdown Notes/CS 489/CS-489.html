@@ -699,7 +699,7 @@ Necessarily <span class="math inline">\(Df(x) = 0\)</span></p>
 X^{\intercal}XW &amp;= X^{\intercal}Y ~~~ \text{Normal Equation}
 \end{aligned}
 \]</span></p>
-<p>$X^{\intercal}X# may not be invertible, but there is always a solution. Even invertible, <em>never ever compute</em> <span class="math inline">\(W = (X^{\intercal}X)^{-1}X^{\intercal}Y\)</span> !<br>
+<p><span class="math inline">\(X^{\intercal}X\)</span> may not be invertible, but there is always a solution. Even invertible, <em>never ever compute</em> <span class="math inline">\(W = (X^{\intercal}X)^{-1}X^{\intercal}Y\)</span> !<br>
 Instead, solve the linear system.</p>
 <h4 id="prediction">Prediction</h4>
 <p>Once we have <span class="math inline">\(W\)</span>, we can predict <span class="math display">\[\hat{Y} = X_{\text{test}}W\]</span></p>
@@ -785,7 +785,73 @@ Y \\
 \]</span></p>
 <h3 id="cross-validation">Cross-Validation</h3>
 <p>See written notes.</p>
-<h2 id="lecture-03-multi-layer-perceptron-_september-14-2017_">Lecture 03: Multi-layer Perceptron, <em>September 14, 2017</em></h2>
+<h2 id="lecture-03-logistic-regression-_september-19-2017_">Lecture 03: Logistic Regression, <em>September 19, 2017</em></h2>
+<p>Often times in Machine Learning, it’s either <em>Regression</em> or <em>Classification</em>.</p>
+<h3 id="classification">Classification</h3>
+<p>Higher “complexity” datasets need higher “capacity” models.<br>
+Formally, higher <em>VC-Dimensionality</em>.</p>
+<h3 id="stochastic-gradient-descent-sgd">Stochastic Gradient Descent (SGD)</h3>
+<p><span class="math display">\[w := w - \eta\bigtriangledown Q_{i}(w)\]</span></p>
+<h3 id="perceptron-review">Perceptron Review</h3>
+<p>Limited in capacity, cannot separate if data is mixed.<br>
+It also finds the first line that separates (classifies) the data regardless of how it touches the support vectors.</p>
+<h3 id="bernoulli-model">Bernoulli Model</h3>
+<p>Let <span class="math inline">\(P(Y=1|X={\bf x}) = p({\bf x}; {\bf w})\)</span>, parameterized by <span class="math inline">\(\bf w\)</span>.</p>
+<p>Conditional likelihood on <span class="math inline">\(\{({\bf x_{1}}, y_{1}), \ldots, ({\bf x_{n}}, y_{n})\}\)</span>: <span class="math display">\[P(Y_{1} = y_{1}, \ldots, Y_{n} = y_{n}|X_{1} = {\bf x_{1}}, \ldots, X_{n} = {\bf x_{n}})\]</span> Simplifies if independence holds, (assuming <span class="math inline">\(y_{1}\)</span> is <span class="math inline">\(\{0, 1\}\)</span>-valued) <span class="math display">\[\prod_{i=1}^{n}P(Y_{i}=y_{i}|X_{i} = {\bf x_{i}}) = \prod_{i=1}^{n}p({\bf x_{i}}; {\bf w})^{y_{i}}(1 - p({\bf x_{i}}; {\bf w}))^{1 - y_{i}}\]</span></p>
+<h4 id="naive-solution">Naive Solution</h4>
+<h2 id="lecture-04-multi-layer-perceptron_september-21-2017_">Lecture 04: Multi-Layer Perceptron,<em>September 21, 2017</em></h2>
+<p>Perceptron: finds a dividing hyperplane to classify a data set into two.</p>
+<p>Logistic Regression: provides a soft confidence metrics to classify data; not hard dividing hyperplane.<br>
+Still a linear transformation.</p>
+<h3 id="failure-of-perceptron">Failure of Perceptron</h3>
+<h4 id="the-xor-problem">The XOR Problem</h4>
+<p>$$X={(0,0), (0,1), (1,0), (1,1)},~y={}</p>
+<h5 id="fixing-the-problem">Fixing the Problem</h5>
+<p>The perceptron model (hyperplanes) underfits the data (<code>xor</code> function).</p>
+<p>Fix representation, richer model.<br>
+Fix model, richer representation.</p>
+<p>Neural Network: still use hyperplane, but <em>learn</em> representation</p>
+<h3 id="neural-network">Neural Network</h3>
+<h4 id="two-layer-perceptron">Two-Layer Perceptron</h4>
+<p>Nonlinearity: non-linear function.</p>
+<p><span class="math display">\[{\bf z} = U{\bf x} + {\bf c} ~~\text{1\textsuperscript{st}}\]</span> <span class="math display">\[{\bf h} = f({\bf z})\]</span> <span class="math display">\[\hat{y} = \langle {\bf h}, {\bf w} \rangle + b\]</span></p>
+<h4 id="weights-training">Weights Training</h4>
+<p><span class="math display">\[\hat{y} = q(x; \theta)\]</span></p>
+<p><span class="math inline">\(\hat{y}\)</span> is the prediction.<br>
+<span class="math inline">\(q\)</span> is the neural network.<br>
+<span class="math inline">\(x; \theta\)</span> is <span class="math inline">\(x\)</span> parameterized by <span class="math inline">\(\theta\)</span>.<br>
+<span class="math inline">\(\theta\)</span> is all of the weights.</p>
+<h4 id="gradient-descent">Gradient Descent</h4>
+<p><span class="math display">\[\min_{\Theta}L(\Theta) := \frac{1}{n}\sum_{i=1}^{n}\ell\left[{\bf q}({\bf x}_{i}; \Theta), {\bf y}_{i}\right]\]</span></p>
+<p><span class="math inline">\(\displaystyle \Theta_{t+1} \leftarrow \Theta_{t} - \eta_{t}\bigtriangledown L(\Theta_{t})\)</span></p>
+<p>Need to subtract the gradient because we are minimizing <span class="math inline">\(L(\Theta)\)</span>.</p>
+<h4 id="activation-function">Activation Function</h4>
+<p>Sigmoid <span class="math display">\[f(t)=\sigma(t) = \frac{1}{1+e^{-t}} = \frac{e^{t}}{1+e^{t}}\]</span> Great if we want a number between 0 and 1; often used to classification.<br>
+Saturate curve.</p>
+<p>Tanh <span class="math display">\[f(t) = \tanh(t) = \frac{e^{t} - e^{-t}}{e^{t} + e^{-t}}\]</span> Great if we we want a number between -1 and 1.<br>
+Smooth curve.</p>
+<p>Rectified Linear <span class="math display">\[f(t) = t_{+} := \max(t, 0)\]</span> Non-smooth curve.</p>
+<h3 id="backpropagation">Backpropagation</h3>
+<p><em>Chain rule</em> for derivatives: <span class="math display">\[f(x) = g[h(x)] \rightarrow f&#39;(x) = g&#39;[h(x)]\times h&#39;(x)\]</span></p>
+<p>Efficiently computes the derivative in Neural Network.</p>
+<p>Two passes; complexity</p>
+<h4 id="backprop-through-a-computation-graph">Backprop Through a Computation Graph</h4>
+<h3 id="code-basics">Code Basics</h3>
+<ul>
+<li>Shape <span class="math inline">\(\rightarrow\)</span> shape of the matrix
+<ul>
+<li><code>a = np.array([[1,2],[3,4],[5,7])</code></li>
+<li><code>np.shape(a)</code> <span class="math inline">\(\Rightarrow\)</span> <code>(3, 2)</code></li>
+</ul></li>
+</ul>
+<h4 id="types-of-nodes-in-computation-graph">Types of Nodes in Computation Graph</h4>
+<ul>
+<li>Constants</li>
+<li>Variables</li>
+<li>Placeholders</li>
+<li>Unary Operations</li>
+<li>Binary Operations</li>
+</ul>
 
       </div>
       <div class="md-sidebar-toc"><ul>
@@ -876,7 +942,49 @@ Y \\
 <li><a href="#cross-validation">Cross-Validation</a></li>
 </ul>
 </li>
-<li><a href="#lecture-03-multi-layer-perceptron-_september-14-2017_">Lecture 03: Multi-layer Perceptron, <em>September 14, 2017</em></a></li>
+<li><a href="#lecture-03-logistic-regression-_september-19-2017_">Lecture 03: Logistic Regression, <em>September 19, 2017</em></a>
+<ul>
+<li><a href="#classification">Classification</a></li>
+<li><a href="#stochastic-gradient-descent-sgd">Stochastic Gradient Descent (SGD)</a></li>
+<li><a href="#perceptron-review">Perceptron Review</a></li>
+<li><a href="#bernoulli-model">Bernoulli Model</a>
+<ul>
+<li><a href="#naive-solution">Naive Solution</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#lecture-04-multi-layer-perceptron_september-21-2017_">Lecture 04: Multi-Layer Perceptron,<em>September 21, 2017</em></a>
+<ul>
+<li><a href="#failure-of-perceptron">Failure of Perceptron</a>
+<ul>
+<li><a href="#the-xor-problem">The XOR Problem</a>
+<ul>
+<li><a href="#fixing-the-problem">Fixing the Problem</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#neural-network">Neural Network</a>
+<ul>
+<li><a href="#two-layer-perceptron">Two-Layer Perceptron</a></li>
+<li><a href="#weights-training">Weights Training</a></li>
+<li><a href="#gradient-descent">Gradient Descent</a></li>
+<li><a href="#activation-function">Activation Function</a></li>
+</ul>
+</li>
+<li><a href="#backpropagation">Backpropagation</a>
+<ul>
+<li><a href="#backprop-through-a-computation-graph">Backprop Through a Computation Graph</a></li>
+</ul>
+</li>
+<li><a href="#code-basics">Code Basics</a>
+<ul>
+<li><a href="#types-of-nodes-in-computation-graph">Types of Nodes in Computation Graph</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
