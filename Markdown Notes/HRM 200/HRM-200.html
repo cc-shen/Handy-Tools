@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <title>HRM-200</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      
+        <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({"extensions":["tex2jax.js"],"jax":["input/TeX","output/HTML-CSS"],"messageStyle":"none","tex2jax":{"processEnvironments":false,"processEscapes":true,"inlineMath":[["$","$"],["\\(","\\)"]],"displayMath":[["$$","$$"],["\\[","\\]"]]},"TeX":{"extensions":["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"]},"HTML-CSS":{"availableFonts":["TeX"]}});
+        </script>
+        <script type="text/javascript" async src="file:////Users/Charles/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.2.9/node_modules/@shd101wyy/mume/dependencies/mathjax/MathJax.js"></script>
+        
+      
+      
+      
+      
+      
+      
+
+      <style> 
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none} 
+       
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview   ">
+      <h1 id="hrm-200-introduction-to-human-resource-management">HRM 200 - Introduction to Human Resource Management</h1>
+<p>Term: Fall 2017<br>
+Instructor: William Peckham</p>
+<h2 id="chapter-1-the-strategic-role-of-human-resources-management">Chapter 1, The Strategic Role of Human Resources Management</h2>
+<p><strong>Human Resources Management</strong> (HRM)<br>
+    The management of people in organizations to drive successful organizational performance and achievement of organization’s strategic goals.</p>
+<p><strong>Human Capital</strong><br>
+    The knowledge, education, training, skills, and expertise of an organization’s workforce.</p>
+<div class="figure">
+<img src="../HRM%20200/Assets/figure-1.1.png?0.7011244281958233">
+
+</div>
+<h3 id="a-brief-history-of-hrm">A Brief History of HRM</h3>
+<p><strong>Scientific Management</strong><br>
+    Concern for production; driven by Frederick Taylor.<br>
+    Scientifically analyzing manufacturing processes to reduce costs and compensating employees based on performance.</p>
+<p><strong>Human Resources Movement</strong><br>
+    Concern for people and productivity.</p>
+<h3 id="human-resources-movement-evolutionary-phases">Human Resources Movement: Evolutionary Phases</h3>
+<p>Phase 1 - early 1900s</p>
+<ul>
+<li>Personnel adminstration</li>
+<li>Hiring, firing, payroll/benefits processing</li>
+</ul>
+<p>Phase 2 - 1930s to 1950s</p>
+<ul>
+<li>Union Liaison, compliance with new laws</li>
+<li>Orientation, performance appraisal, employee relations</li>
+<li>Dealt with impact of <em>human relations movement</em> in the 40s-50s</li>
+</ul>
+<p>Phase 3 - 1960s to 1980s</p>
+<ul>
+<li>Human resources management</li>
+<li>Outsourcing of many administrative functions
+<ul>
+<li>Practice of contracting with outside vendors to handle specified business functions on a permanent basis</li>
+</ul></li>
+<li>Emphasis on contribution and proactive management of people</li>
+</ul>
+<p>Phase 4 - 1990s to present</p>
+<ul>
+<li>Every line manager must possess basic HR skills</li>
+<li>Help achieve strategic objectives</li>
+<li>New roles: activist, change steward, talent manager/organizational designer, operational executor and business ally</li>
+<li>“HR Business Partner”</li>
+</ul>
+<p>Human-capital life cycle: selection and assimilation into the organization, and development of capabilities while working in the organization, and transition out of the organization.</p>
+<h3 id="operational-and-strategic-aspects-of-hrm">Operational and Strategic Aspects of HRM</h3>
+<p><strong>Defn.</strong> (Authority)<br>
+Right to make decisions, direct others’ work, and give orders.</p>
+<p><strong>Defn.</strong> (Line Authority)<br>
+The right ot issue orders to other managers or employees.</p>
+<p><strong>Defn.</strong> (Staff Authority)<br>
+The right to advise other managers or employees.</p>
+<p><strong>Defn.</strong> (Line Manager)<br>
+Manager who is authorized to direct the work of subordinates and is responsible for accomplishing the organization’s tasks.</p>
+<p><strong>Defn.</strong> (Staff Manager)<br>
+Manager who assists and advises line managers.</p>
+<p><strong>Defn.</strong> (Employee Engagement)<br>
+Emotional and intellectual involvement of employees in their work, such as intensity, focus, and involvement in his or her job and organization.</p>
+<h3 id="reorganization-the-hrm-function">Reorganization the HRM Function</h3>
+<h4 id="evidence-based-hrm">Evidence-based HRM</h4>
+<ul>
+<li>Using best available evidence in making decisions about HR practices.<br>
+</li>
+<li>Actual measurements, existing data, research studies.</li>
+</ul>
+<h4 id="measuring-the-value-of-hr-metrics">Measuring the Value of HR: Metrics</h4>
+<p>Traditional measures focused on activity and cost.<br>
+Examples: number of candidates interviewed, cost per hire.</p>
+<p>Today’s measures focus on productivity, quality, sales, market share, and profits (business operations).<br>
+Examples: turnover/retention, employee performance, engagement scores, time-to-fill, etc.<br>
+<em>Balanced scorecard</em>: a measurement system that translates organization’s strategy into a comprehensive set of financial and operational performance measures.</p>
+<h3 id="growing-professionalism-in-hrm">Growing Professionalism in HRM</h3>
+<p><strong>Characteristics of a profession</strong>:</p>
+<ul>
+<li>A common body of knowledge</li>
+<li>Performance standards</li>
+<li>Professional association</li>
+<li>External perception as a professional</li>
+<li>Code of ethics</li>
+<li>Required training credentials</li>
+<li>Ongoing skill development</li>
+<li>Maintenance of professional competence</li>
+</ul>
+<p><img src="../HRM%20200/Assets/figure-1.3.png?0.0011630740781483073"><br>
+<img src="../HRM%20200/Assets/figure-1.4.png?0.1329927684973098"><br>
+<img src="../HRM%20200/Assets/table-1.2.png?0.2731104014757222"></p>
+<h3 id="environmental-influences-on-hrm">Environmental Influences on HRM</h3>
+<table>
+<thead>
+<tr class="header">
+<th>External Influences</th>
+<th>Internal Influences</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Economic conditions</td>
+<td>Organizational culture</td>
+</tr>
+<tr class="even">
+<td>Labour market issues</td>
+<td>Organizational climate</td>
+</tr>
+<tr class="odd">
+<td>Technology</td>
+<td>Management practices</td>
+</tr>
+<tr class="even">
+<td>Government</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Globalization</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Environmental concerns</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="external-influences">External Influences</h4>
+<h5 id="economic-conditions">Economic Conditions</h5>
+<p>Employment levels.<br>
+Productivity levels.<br>
+Growth of the primary, secondary, and tertiary (service) sectors.</p>
+<h5 id="labour-market-issues">Labour Market Issues</h5>
+<p>Increasing workforce diversity: visible and ethnic minorities; women; Aboriginal population; people with disabilities.</p>
+<p>Generational differences:</p>
+<ul>
+<li>Traditionalists (pre-1946)</li>
+<li>Baby Boomers (1946 to 1964)</li>
+<li>Generation X (1965 to 1980)</li>
+<li>Generation Y (1981 to 2000)</li>
+<li>Generation Z (2000s+)</li>
+</ul>
+<div class="figure">
+<img src="../HRM%20200/Assets/table-1.4.png?0.14506089698944336">
+
+</div>
+<p>Higher overall level of education, however higher level of functional illiteracy.</p>
+<p>Increased non-standard or contingent workers,</p>
+<ul>
+<li>Part-time</li>
+<li>Term/Temporary/Standby</li>
+<li>Home</li>
+<li>Self-employed</li>
+</ul>
+<h5 id="technology">Technology</h5>
+<p>New technologies: Twitter, Facebook, videoconferencing.</p>
+<p>Concerns over data control, accuracy, right to privacy, and ethics.</p>
+<p>Computerized monitoring of e-mail, voice mail, telephone conversations, computer usage, and behaviour.</p>
+<h5 id="government">Government</h5>
+<p>Ensure policies and practices comply with new and changing laws covering:</p>
+<ul>
+<li>Human rights</li>
+<li>Employment standards</li>
+<li>Labour relations</li>
+<li>Occupational health and safety</li>
+<li>Workers’ compensation</li>
+</ul>
+<h5 id="globalization">Globalization</h5>
+<p>Global trends:</p>
+<ul>
+<li>Firms extend business operations abroad</li>
+<li>Emergence of a single global market</li>
+<li>Increased international competition</li>
+<li>Multinational corporations: conduct business around the world, seek cheap skilled labour</li>
+</ul>
+<p>HR professionals must become familiar with employment legislation in other countries and manage ethical dilemmas.</p>
+<h5 id="environmental-concerns">Environmental Concerns</h5>
+<ul>
+<li>Sustainability</li>
+<li>Climate change</li>
+<li>Global warming</li>
+<li>Pollution</li>
+<li>Carbon footprints</li>
+<li>Extinction of wildlife species</li>
+<li>Ecosystem fragility</li>
+</ul>
+<h4 id="internal-influences">Internal Influences</h4>
+<h5 id="organizational-culture">Organizational Culture</h5>
+<p>Core values, beliefs and assumptions.<br>
+Often conveyed through an organization’s mission statement.<br>
+Positive culture is desired.</p>
+<p>Facebook’s Core Values:</p>
+<ol style="list-style-type: decimal">
+<li>Be Bold</li>
+<li>Focus on Impact</li>
+<li>Move Fast</li>
+<li>Be Open</li>
+<li>Build Social Value</li>
+</ol>
+<h5 id="organizational-climate">Organizational Climate</h5>
+<p>Prevailing atmosphere in an organization.<br>
+Friendly/Unfriendly, open/secretive, rigid/flexible, innovative/stagnant, competitive/team-oriented.<br>
+Influenced by leadership, HR polices, communication style.</p>
+<h5 id="management-practices">Management Practices</h5>
+<p>Bureaucratic organizations being replaced with flatter structures.<br>
+Increased employee empowerment.</p>
+<h3 id="the-future-of-hr">The Future of HR</h3>
+<p>3.1 billion workers, out of 6.1 billion population.<br>
+31 million people in the UK workforce.<br>
+93% growth comes from worker by 2016.<br>
+66.8% Internet users use social network.<br>
+35% of hourly employees still use timecards.<br>
+UK workers collectively take 240 million sick days per year.<br>
+30% of the employers have fired employees for surfing the web, but those who surf the web are 9% more productive than those who don’t.</p>
+<h2 id="chapter-2-the-changing-local-emphasis">Chapter 2, The Changing Local Emphasis</h2>
+<h3 id="legal-framework-for-employment-in-canada">Legal Framework for Employment in Canada</h3>
+<pre class="language-text" data-lang="text">  Employer:                       Employee:
+    Right to modify                 Right to be protected
+    employee work terms             from harmful business
+    for legitimate                  practices
+    business needs                    |
+        |____________     ____________|
+                    |     |
+                  Government:
+                    Balance needs of
+                    employer and employee</pre>
+<h3 id="jurisdiction">Jurisdiction</h3>
+<ul>
+<li>Federal Laws
+<ul>
+<li>Federally regulated employers (federal civil service, Crown corporations and agencies, transportation, banking and communications)</li>
+</ul></li>
+<li>Provincial/Territorial employment laws
+<ul>
+<li>All other employers (90% of Canadian workers)</li>
+</ul></li>
+</ul>
+<h3 id="hierarchy-of-employment-legislation-in-canada">Hierarchy of Employment Legislation in Canada</h3>
+<ul>
+<li>Canadian Charter of Rights and Freedoms
+<ul>
+<li>Basic rights</li>
+</ul></li>
+<li>Human Rights Legislation
+<ul>
+<li>Protection from discrimination</li>
+</ul></li>
+<li>Employment Standards Legislation
+<ul>
+<li>Minimum terms and conditions of employment</li>
+</ul></li>
+<li>Ordinary Laws
+<ul>
+<li>Content or context specific</li>
+</ul></li>
+<li>Labour Relations Act (Collective Bargaining Agreement)</li>
+<li>Employment Contract</li>
+</ul>
+<h3 id="tort-law">Tort Law</h3>
+<p>Primarily judge-based law.<br>
+Precedent and jurisprudence set by one judge through his or her assessment of a case.<br>
+Establishes how similar cases will be interpreted.</p>
+<h3 id="legislation-protecting-the-general-population">Legislation Protecting the General Population</h3>
+<ul>
+<li>Canadian Charter of Rights and Freedoms
+<ul>
+<li>Freedoms:
+<ul>
+<li>Conscience and religion</li>
+<li>Thought, belief, expression and opinion</li>
+<li>Peaceful assembly</li>
+<li>Association</li>
+</ul></li>
+<li>Section 15 - Equality Rights
+<ul>
+<li>Right to equal protection and benefit of the law without discrimination</li>
+</ul></li>
+</ul></li>
+<li>Human Rights Legislation
+<ul>
+<li>Jurisdictions specific legislation</li>
+<li>Prohibits intentional and unintentional discrimination in employment situations
+<ul>
+<li>Also in the delivery of goods and services</li>
+</ul></li>
+</ul></li>
+</ul>
+<p><strong>Defn.</strong> (Discrimination)<br>
+“… a distinction, exclusion or preference based on one of the prohibited grounds that has the effect of nullifying or impairing the right of a person to full and equal recognition and exercise of his or her human rights and freedoms.”</p>
+<div class="figure">
+<img src="../HRM%20200/Assets/figure-2.3.png?0.6657774770628053">
+
+</div>
+<p><strong>Defn.</strong> (Intentional Discrimination)<br>
+    Direct<br>
+    Differential or unequal treatment<br>
+    Indirect (3<sup>rd</sup>) party)<br>
+    By association</p>
+<p><strong>Defn.</strong> (Unintentional Discrimination)<br>
+    <em>Constructive</em> or <em>systemic</em> discrimination<br>
+    Embedded in policies with adverse impact on specific groups</p>
+<div class="figure">
+<img src="../HRM%20200/Assets/figure-2.4.png?0.5432837027157265">
+
+</div>
+<h4 id="bona-fide-occupational-requirement-bfor">Bona Fide Occupational Requirement (BFOR)</h4>
+<p>Justifiable reason for discrimination.<br>
+Based on business necessity (safe and efficient operations), e.g. vision standards for bus driver.</p>
+<h4 id="reasonable-accommodation">Reasonable Accommodation</h4>
+<p>Requirement for Reasonable Accommodation</p>
+<ul>
+<li>Adjustment of employment policies/practices so that no individual is denied benefits of is disadvantaged</li>
+<li>Based on prohibited grounds in human rights legislation</li>
+<li>e.g. work station redesign for wheelchair</li>
+</ul>
+<p>Undue Hardship</p>
+<ul>
+<li>Financial costs make accommodation impossible</li>
+</ul>
+<h4 id="disability">Disability</h4>
+<ul>
+<li>Basis determined by courts
+<ul>
+<li>Differential treatment</li>
+<li>Enumerated ground (protected by legislation)</li>
+<li>Substantive sense (is burden imposed or benefit withheld?)</li>
+</ul></li>
+<li>Accommodation
+<ul>
+<li>Respect dignity</li>
+<li>Discrimination must be legally defensible</li>
+<li>Most appropriate accommodation should be undertaken</li>
+</ul></li>
+</ul>
+<div class="figure">
+<img src="../HRM%20200/Assets/figure-2.6.png?0.48609344319016756">
+
+</div>
+<h4 id="harassment">Harassment</h4>
+<p>“<em>Unwelcome behaviour that demeans, humiliates or embarrasses a person and that a reasonable person should have known would be unwelcome</em>.”</p>
+<div class="figure">
+<img src="../HRM%20200/Assets/figure-2.7.png?0.7252482379411311">
+
+</div>
+<p>Employment Responsibility</p>
+<ul>
+<li>Protect employees from harassment</li>
+<li>Includes harassment by clients or customers</li>
+</ul>
+<h5 id="sexual-harassment">Sexual Harassment</h5>
+<p>“<em>Offensive or humiliating behaviour that is related to a person’s sex, as well as behaviour of a sexual nature that creates an intimidating, unwelcome, hostile, or offensive work environment or that could reasonably be thought to put sexual conditions on a person’s job or employment opportunities</em>.”</p>
+<p><strong>Defn.</strong> (Sexual Coercion)<br>
+“<em>Harassment of a sexual nature that results in some direct consequence to the worker’s employment status or some gain in or loss of tangible job benefits</em>.”</p>
+<p><strong>Defn.</strong> (Sexual Annoyance)<br>
+“<em>Sexually related conduct that is hostile, intimidating, or offensive to the employee but has no direct link to tangible job benefits or loss thereof</em>.”</p>
+<h5 id="new-policies">New Policies</h5>
+<p><strong>Bill 132, Sexual Violence and Harassment Action Plan Act (supporting Survivors and Challenging Sexual Violence and Harassment) 2016</strong><br>
+Enforced in 2016.</p>
+<h5 id="harassment-policies">Harassment Policies</h5>
+<p>Employers should, to reduce liability:</p>
+<ul>
+<li>Establish sound harassment policies</li>
+<li>Communicate policies to all employees</li>
+<li>Enforce policies in a fair and consistent manner</li>
+<li>Take an active role in maintaining a working environment that is free of harassment</li>
+</ul>
+<p>Elements of an effective harassment policy:</p>
+<ol style="list-style-type: decimal">
+<li>A clear workplace anti-harassment policy statement</li>
+<li>Information for victims (definitions, examples)</li>
+<li>Employees’ rights and responsibilities</li>
+<li>Employers’ and managers’ responsibilities</li>
+<li>Anti-harassment policy procedures</li>
+<li>Penalities for retaliation against a complainant</li>
+<li>Guidelines for appeals</li>
+<li>Other options such as union grievance procedures and human rights complaints</li>
+<li>How the policy will be monitored and adjusted</li>
+</ol>
+<h5 id="enforcement-of-harassment">Enforcement of Harassment</h5>
+<ul>
+<li>Responsibility lies with human rights commission in each jurisdiction</li>
+<li>Costs are borne by the commission</li>
+<li>Human rights tribunal resolves conflict through mediation</li>
+<li>Remedies:
+<ul>
+<li>Systemic</li>
+<li>Restitutional</li>
+</ul></li>
+</ul>
+<h3 id="legislation-specific-to-the-workplace">Legislation Specific to the Workplace</h3>
+<h4 id="employment-equity-act">Employment Equity Act</h4>
+<p>Based on Charter of Rights and Freedoms.<br>
+Applies to federally regulated employers only.<br>
+Promotes equality, removes employment barriers.<br>
+Four designed groups:</p>
+<ol style="list-style-type: decimal">
+<li>Women
+<ul>
+<li>under-representation in certain fields</li>
+<li>glass ceiling</li>
+</ul></li>
+<li>Visible minorities
+<ul>
+<li>under-employed</li>
+</ul></li>
+<li>Persons with disabilities
+<ul>
+<li>under-representation in all areas</li>
+<li>lower pay</li>
+</ul></li>
+<li>Aboriginal people
+<ul>
+<li>concentration in low skill, low pay jobs</li>
+</ul></li>
+</ol>
+<div class="figure">
+<img src="../HRM%20200/Assets/figure-2.10.png?0.8148829270069238">
+
+</div>
+<h3 id="employmentlabour-standards-legislation">Employment/Labour Standards Legislation</h3>
+<h4 id="employment-standards-act-esa">Employment Standards Act (ESA)</h4>
+<ul>
+<li>Federal and provincial/territorial versions</li>
+<li>Establish minimum terms for:
+<ul>
+<li>Wages, overtime pay</li>
+<li>Paid holidays and vacations</li>
+<li>Maternity/Paternity leave</li>
+<li>Bereavement/Compassionate care leave</li>
+<li>Termination notice</li>
+</ul></li>
+<li>Employment contracts may exceed minimums</li>
+<li>Principle of greater benefit applies</li>
+</ul>
+<h5 id="enforcement-of-employment-standards-act">Enforcement of Employment Standards Act</h5>
+<p>Complaints filled with ministry of labour or counterpart.<br>
+Filed complaint is settled through the ministry, not civil court.<br>
+Limitation periods for filing.<br>
+Maximum claim limit for unpaid wages - this has changed.</p>
+<h4 id="bill-148-fair-workplaces-better-jobs-act-2017">Bill 148, Fair Workplaces, Better Jobs Act, 2017</h4>
+<p>Overview of Changes</p>
+<ul>
+<li>Minimum wage, <span class="math inline">\(\$11.60 \rightarrow \$14.00~(2018)\)</span></li>
+<li>Equal pay of equal work, temp/part-time = full-time</li>
+<li>Scheduling, on-call EEs receive 3 hours pay</li>
+<li>Vacation increases, 3 weeks vacation (6%) after 5 years</li>
+<li>Holiday pay, new formula (regular wages / days)</li>
+<li>Statutory leaves
+<ul>
+<li>Lots of changes (personal emergency, domestic violence, etc.)</li>
+<li>Parental leave increased by 26 weeks, totaling 61 weeks or 63 weeks (for those who did not take pregnancy leave)</li>
+</ul></li>
+</ul>
+<h3 id="respecting-employee-privacy">Respecting Employee Privacy</h3>
+<h4 id="challenges">Challenges</h4>
+<p>Employer has right to prevent liability to the company</p>
+<ul>
+<li>Eliminate time wasted on personal matters</li>
+<li>Prevent abuse of company resources</li>
+</ul>
+<p>Employees have right to:</p>
+<ul>
+<li>Control over information about themselves</li>
+<li>Freedom from interference in their personal life</li>
+</ul>
+<h4 id="internet-and-email-usage-policy">Internet and Email Usage Policy</h4>
+<p>Electronic surveillance is permitted.<br>
+Employer should create written policy.<br>
+Policy should be updated regularly to stay current with technology.</p>
+<h4 id="video-surveillance">Video Surveillance</h4>
+<p>Used to prevent employee theft and vandalism.<br>
+Employees must be made aware.<br>
+Not advised if reasonable alternatives exist.</p>
+<h2 id="chapter-3-human-resources-management-technology">Chapter 3, Human Resources Management &amp; Technology</h2>
+<h2 id="chapter-4-designing-analyzing-jobs">Chapter 4, Designing &amp; Analyzing Jobs</h2>
+<h3 id="fundamentals-of-job-analysis">Fundamentals of Job Analysis</h3>
+<p><strong>Defn.</strong> (Job Analysis)<br>
+“<em>A process by which information about jobs is systematically gathered and organized</em>.”</p>
+<p><strong>Defn.</strong> (Job)<br>
+A group of related activities/duties for one or more employees.</p>
+<p><strong>Defn.</strong> (Position)<br>
+The collection of tasks/responsibilities performed by one person.</p>
+<p><strong>Example</strong><br>
+45 positions and 4 jobs in a department with 1 supervisor, 1 clerk, 40 assemblers, and 3 tow-motor operators.</p>
+<div class="figure">
+<img src="../HRM%20200/Assets/figure-4.1.png?0.6496073377535552">
+
+</div>
+<h3 id="uses-of-job-analysis-information">Uses of Job Analysis Information</h3>
+<ul>
+<li>Human Resources Planning</li>
+<li>Recruitment and Selection</li>
+<li>Compensation</li>
+<li>Performance Management</li>
+<li>Labour Relations</li>
+<li>Training, Development, and Career Management</li>
+<li>Restructuring</li>
+</ul>
+<h3 id="steps-in-job-analysis">Steps in Job Analysis</h3>
+<ol style="list-style-type: decimal">
+<li>Review relevant background information</li>
+<li>Select jobs to be analyzed</li>
+<li>Collect data on job activities</li>
+<li>Verify/Modify data if required</li>
+<li>Write job descriptions and job specifications</li>
+<li>Communicate and update information as needed</li>
+</ol>
+<h4 id="review-relevant-background-information">1: Review Relevant Background Information</h4>
+<p>Organizational Structure</p>
+<ul>
+<li>The formal relationships among jobs in an organization</li>
+<li>Should be appropriate given strategic goals</li>
+</ul>
+<p>Organization Chart</p>
+<ul>
+<li>Clarifies chain of command; who reports to whom</li>
+<li>Does not explain communication patterns, degree of supervision, power, authority, or specific duties</li>
+</ul>
+<p><img src="../HRM%20200/Assets/figure-4.2.png?0.434693586659886"><br>
+<img src="../HRM%20200/Assets/figure-4.3.png?0.40728621006110033"><br>
+<img src="../HRM%20200/Assets/figure-4.4.png?0.6291923989386261"></p>
+<h4 id="select-jobs-to-be-analyzed">2: Select Jobs to be Analyzed</h4>
+<p>Necessary when there are a number of similar jobs.</p>
+<p><strong>Defn</strong> (Job Design)<br>
+The process of systematically organizing work into tasks that are required to perform a specific job.</p>
+<h5 id="the-evolution-of-jobs-and-job-design">The Evolution of Jobs and Job Design</h5>
+<p>Work Simplification<br>
+Assigning most of the administrative aspects of work to supervisors and managers, while giving lower-level employees narrowly defined tasks to perform according to methods established and specified by management.</p>
+<p>Job Specialization (early-mid 1900s)</p>
+<ul>
+<li>Work simplification</li>
+<li>Industrial engineering</li>
+</ul>
+<p>Industrial Engineering<br>
+Analyzing work methods; making work cycles more efficient by modifying, combining, rearranging, or eliminating tasks; and establishing time standards.</p>
+<p>Behavioural Aspects (mid 1900s)</p>
+<ul>
+<li>Job enlargement, job rotation, job enrichment, team-based job design</li>
+</ul>
+<p>Job Enlargement (Horizontal Loading)<br>
+A technique to relieve monotony and boredom that involves assigning workers additional tasks at the same level of responsibility to increase the number of tasks they have to perform.</p>
+<p>Job Rotation<br>
+A technique to relieve monotony and employee boredom that involves systematically moving employees from one job to another.</p>
+<p>Job Enrichment (Vertical Loading)<br>
+Any effort that makes an employee’s job more rewarding or satisfying by adding more meaningful tasks and duties.</p>
+<p>Ergonomic Aspects (mid-late 1900s)</p>
+<ul>
+<li>Physical needs of workers</li>
+</ul>
+<h5 id="competency-based-job-analysis">Competency-Based Job Analysis</h5>
+<p>Competencies: demonstrable characteristics that enable performance of a job.<br>
+Shift from job-specific duties to competencies in a job descriptions; emphasis on employee capabilities.<br>
+Reasons to use competency analysis:</p>
+<ol style="list-style-type: decimal">
+<li>Traditional job descriptions may actually backfire if a <em>high-performance work system</em> is the goal.</li>
+<li>Describing the job in terms of the skills, knowledge, and competencies the worker needs is <em>more strategic</em>.</li>
+<li>Measurable skills, knowledge, and competencies support the employer’s <em>performance management process</em>.</li>
+</ol>
+<p>Examples of competencies:</p>
+<ul>
+<li>General (reading, writing, mathematics)</li>
+<li>Leadership (strategic thinking, motivating)</li>
+<li>Technical competencies for specific jobs</li>
+</ul>
+<p>Use of competency analysis is becoming more common.<br>
+It encourages workers to learn and rotate among jobs.<br>
+More strategic approach to defining jobs.<br>
+Supports performance management process.</p>
+<h5 id="team-based-job-designs">Team-Based Job Designs</h5>
+<p>Job designs that focus on giving a team a whole and meaningful piece of work to do and empowering team members to decide among themselves how to accomplish the work.<br>
+They are often cross-trained and then rotated through different tasks.</p>
+<h4 id="collecting-job-analysis-information">3: Collecting Job Analysis Information</h4>
+<p>Interviews (individual, group, supervisory).<br>
+Incumbent: individual currently holding the position.</p>
+<p>Questionnaires.<br>
+<strong>PAQ</strong>, Position Analysis Questionnaire: a questionnaire used to collect quantifiable data concerning the duties and responsibilities of various jobs.<br>
+<strong>FJA</strong>, Functional Job Analysis**: quantitative method for classifying jobs based on types and amounts of responsibility for data, people, and things. Performance standards and training requirements are also identified.</p>
+<p>Observations.</p>
+<p>Participant diary/log.</p>
+<p>National Occupation Classification (NOC).</p>
+<p><img src="../HRM%20200/Assets/table-4.1.png?0.06222914436063265"><br>
+<img src="../HRM%20200/Assets/figure-4.5.png?0.676190465522331"></p>
+<h4 id="verifying-information">4: Verifying Information</h4>
+<p>Verify with</p>
+<ul>
+<li>Workers currently performing the job</li>
+<li>Supervisors</li>
+</ul>
+<p>Increases validity and reliability</p>
+<ul>
+<li>Inconsistencies/Concerns can be addressed</li>
+<li>Participants will be more honest</li>
+</ul>
+<h4 id="writing-job-descriptions-and-job-specifications">5: Writing Job Descriptions and Job Specifications</h4>
+<h5 id="job-description">Job Description</h5>
+<p>Statement of duties, responsibilities, reporting relationships, and working conditions of the job.</p>
+<h5 id="job-specifications">Job Specifications</h5>
+<p>Statement of requisite knowledge, skills, and abilities needed to perform the job.</p>
+<ul>
+<li>Answers the question “What human traits and experience are required to do this job?”</li>
+<li>All listed qualifications are bona fide occupational requirements (BFORs)</li>
+<li>Unjustifiably high educational/experience requirements may lead to systemic discrimination</li>
+<li>Qualifications of incumbents should not be confused with the minimum requirements.</li>
+<li>For entry-level jobs, identify actual physical and mental demands.</li>
+</ul>
+<h5 id="job-identification">Job Identification</h5>
+<p>The job identification section generally contains several categories of information.<br>
+The position title specifies the title of the job.<br>
+The department and location are also indicated, along with the title of the immediate supervisor.</p>
+<h5 id="job-summary">Job Summary</h5>
+<p>Describes the general nature of the job, listing only its major functions or activities.</p>
+<h5 id="relationships">Relationships</h5>
+<p>The jobholder’s relationships with others inside and outside the organization</p>
+<h5 id="duties-and-responsibilities">Duties and Responsibilities</h5>
+<p>Presents a detailed list of the job’s major duties and responsibilities.</p>
+<h5 id="authority">Authority</h5>
+<p>Define the limits of the jobholder’s authority, including his or her decision-making authority, direct supervision of other employees, and budgetary limitations.</p>
+<h5 id="performance-standardsindicators">Performance Standards/Indicators</h5>
+<p>Some job descriptions contain a performance standards/indicators section, which indicates the standards the employee is expected to achieve in each of the job description’s main duties and responsibilities.</p>
+<h5 id="physical-demands-analysis">Physical Demands Analysis</h5>
+<p>Identification of the senses used and the type, frequency, and amount of physical effort involved in a job.</p>
+<h5 id="human-rights-legislation-considerations">Human Rights Legislation Considerations</h5>
+<ul>
+<li>Not legally required but highly advisable.</li>
+<li>Essential job duties should be clearly identified.</li>
+<li>The only criteria examined should be knowledge, skills, and abilities required for the essential duties of the job.</li>
+<li>When an employee cannot perform an essential duty because of reasons related to a prohibited ground, reasonable accommodation to the point of undue hardship is required.</li>
+</ul>
+<h4 id="communication-and-preparedness-for-revisions">6: Communication and Preparedness for Revisions</h4>
+<ul>
+<li>Communicate to all relevant stakeholders</li>
+<li>Anticipate modifications
+<ul>
+<li>Restructuring</li>
+<li>New product development</li>
+<li>Technological changes</li>
+<li>Competitors</li>
+</ul></li>
+</ul>
+<div class="figure">
+<img src="../HRM%20200/Assets/table-4.2.png?0.15391772579093654">
+
+</div>
+<h2 id="chapter-5-human-resource-planning">Chapter 5, Human Resource Planning</h2>
+<h3 id="strategic-importance-of-hrp">Strategic Importance of HRP</h3>
+<p><strong>Defn.</strong> (Human Resources Planning)<br>
+Process of forecasting future human resources requirements to ensure that the organization will have the required number of employees with the necessary skills to meet its strategic objectives.</p>
+<p>Helps organization to:</p>
+<ul>
+<li>Meet strategic goals and objectives</li>
+<li>Achieve economies in hiring new workers</li>
+<li>Make major market labour demands successfully</li>
+<li>Anticipate and avoid shortages and surpluses of human resources</li>
+<li>Control or reduce labour costs</li>
+</ul>
+<div class="figure">
+<img src="../HRM%20200/Assets/figure-5.1.png?0.30793748496854456">
+
+</div>
+<h4 id="relationship-between-hrp-and-strategic-planning">Relationship Between HRP and Strategic Planning</h4>
+<p>An HR plan does not occur independently of the other departments within an organization.</p>
+<p>The HRP must align with the overall goals of the organization as well as both the long-term and short-term strategic plans set by the organization.</p>
+<h4 id="importance-of-environmental-scanning">Importance of Environmental Scanning</h4>
+<p>External environmental factors monitored include:</p>
+<ul>
+<li>Economic conditions</li>
+<li>Market and competitive trends</li>
+<li>New or revised laws relating to HR</li>
+<li>Social concerns (health care, childcare, educational priorities)</li>
+<li>Technological changes</li>
+<li>Demographic trends</li>
+</ul>
+<h3 id="steps-in-the-hrp-process">Steps in the HRP Process</h3>
+<h4 id="step-1-forecasting-the-availability-of-candidates-supply">Step 1: Forecasting the Availability of Candidates (Supply)</h4>
+<p>Skills inventories and management inventories.<br>
+Replacement charts and replacement summaries.<br>
+Succession planning.<br>
+Markov Analysis.</p>
+<p><strong>Defn.</strong> (Skills Inventories)<br>
+Summary of current employees’ education, experience, interests, and skills.<br>
+Used to identify eligibility for transfer/promotion.</p>
+<p><strong>Defn.</strong> (Management Inventories)<br>
+Summary of management employees qualifications, skills, interests, managerial responsibilities.<br>
+Used to identify eligibility for transfer/promotion.</p>
+<p><strong>Defn.</strong> (Replacement Charts)<br>
+Depicting of who will replace whom in the event of a job opening.<br>
+Internal candidates age, present performance rating, and promotability status are listed.</p>
+<p><strong>Defn.</strong> (Replacement Summaries)<br>
+Lists of likely replacements for each position.<br>
+Indicates relative strengths/weaknesses, current position, performance, promotability, age, and experience.</p>
+<p><strong>Defn.</strong> (Succession Planning)<br>
+Ensuring supply of successor for key jobs so that careers can be effectively planned and managed.<br>
+Includes:</p>
+<ul>
+<li>Analysis of demand for managers and professionals</li>
+<li>Audit and projection of likely future supply</li>
+<li>Planning individual career paths, career counseling</li>
+<li>Accelerated promotions</li>
+<li>Planned strategic recruitment</li>
+</ul>
+<p><strong>Defn.</strong> (Markov Analysis)<br>
+A method of forecasting internal labour supply that involves tracking the pattern of employee movements through various jobs and developing a transitional probability matrix.</p>
+<div class="figure">
+<img src="../HRM%20200/Assets/figure-5.3.png?0.19736361135458247">
+
+</div>
+<h5 id="forecasting-supply-of-external-candidates">Forecasting Supply of External Candidates</h5>
+<p>Market conditions assessed:</p>
+<ul>
+<li>General economic conditions
+<ul>
+<li>Interest rates, wage rates, inflation, unemployment rates</li>
+</ul></li>
+<li>Labour market conditions
+<ul>
+<li>Demographics: education levels, age, gender, marital status</li>
+</ul></li>
+<li>Occupational market conditions
+<ul>
+<li>Relevant occupations (as applicable): e.g. engineers, skilled labour, accountants, etc.</li>
+</ul></li>
+</ul>
+<h4 id="step-2-forecasting-future-hr-needs-demand">Step 2: Forecasting Future HR Needs (Demand)</h4>
+<p>Factors to consider:</p>
+<ol style="list-style-type: decimal">
+<li><em>projected turnover</em> as a result of resignations or terminations</li>
+<li><em>quality and nature of employees</em> in relation to what management sees as the changing need of the organization</li>
+<li><em>decisions to upgrade</em> th quality of products or services or <em>enter into new markets</em>, which might change the required employee skill mix</li>
+<li><em>planned technological and administrative changes aimed at increasing productivity and reducing employee head count</em></li>
+<li>the <em>financial resources</em> available to each department</li>
+</ol>
+<h5 id="quantitative-approaches">Quantitative Approaches</h5>
+<p><strong>Defn.</strong> (Trend Analysis)<br>
+Predict future needs based on past employment levels.</p>
+<p><strong>Defn.</strong> (Ratio Analysis)<br>
+Ratio of business activity and number of employees needed, e.g. sales revenue per salesperson.</p>
+<p><strong>Defn.</strong> (Scatter Plot)<br>
+Used to determined whether two factors (business activity and staffing levels) are related.</p>
+<p><strong>Defn.</strong> (Regression Analysis)<br>
+Examines the statistical relationship between business activity and employees.</p>
+<h5 id="qualitative-approaches">Qualitative Approaches</h5>
+<p><strong>Defn.</strong> (Nominal Group Technique)<br>
+Involves a group of experts meeting face to face.<br>
+Steps include independent idea generation, clarification and open discussion, and private assessment.<br>
+Drawback includes subjectivity and the potential for group pressure to lead to a less accurate assessment than could be obtained through other means.</p>
+<p><strong>Defn.</strong> (Delphi Technique)<br>
+Judgmental forecasting method involving outside experts as well as organizational employees.<br>
+Ideas are exchanged without face-to-face interaction and feedback is used to fine-tune until consensus is reached.<br>
+Drawbacks include the fact that judgement may not efficiently use objective data, the time and costs involved, and the potential difficulty in integrating diverse opinions.</p>
+<h4 id="step-3-planning-and-implementing-hr-programs-to-balance-supply-and-demand">Step 3: Planning and Implementing HR Programs to Balance Supply and Demand</h4>
+<p><strong>Defn.</strong> (Staffing Table)<br>
+A pictorial representation of all jobs within the organization, along with the number of current incumbents and future employment requirements (monthly or yearly) for each.</p>
+<div class="figure">
+<img src="../HRM%20200/Assets/figure-5.5.png?0.8887214635027547">
+
+</div>
+<p><strong>Defn.</strong> (Labour Surplus)<br>
+The internal supply of employees exceeds the organization’s forecasted demand.</p>
+<p><strong>Defn.</strong> (Labour Shortage)<br>
+Internal supply of HR cannot meet the organization’s needs.</p>
+<p><strong>Defn.</strong> (Labour Equilibrium)<br>
+Rare, no new action, maintain existing transfer and recruitment plans.</p>
+<h5 id="responding-to-a-labour-surplus">Responding to a Labour Surplus</h5>
+<p>Hiring freeze (openings are filled by reassigning current employees and no outsiders are hired)/attrition (normal separation of employees from an organization because of resignation, retirement, or death).<br>
+Early retirement buyout programs; drawback is the packages often require a great deal of money upfront; early retirement must be voluntary (otherwise human rights legislation contravention).<br>
+Job sharing (divide duties of a single position between two or more employees).<br>
+Work sharing (work three or four days a week and receive EI benefits on non-workday(s)).<br>
+Reduced workweek (work fewer hours for less pay).<br>
+Layoff (“temporary”).<br>
+Termination (can never return).<br>
+Leave of absence (allows those who may be interested in taking time away from work for a variety of reasons to have a set period of time away from their position without pay, but with a guarantee that their job will be available upon their return).</p>
+<p>Considerations:</p>
+<ul>
+<li>Survivor syndrome
+<ul>
+<li>A range of negative emotions experienced by employees remaining after a major restructuring initiative, which can include feelings of betrayal or violation, guilt, or detachment, and can result in stress symptoms, including depression, increased errors, and reduced performance</li>
+</ul></li>
+<li>Supplemental unemployment benefits (SUBs)
+<ul>
+<li>top-up of EI benefits to bring income levels closer to what an employee would receive if on the job</li>
+</ul></li>
+<li>Severance package
+<ul>
+<li>For those being terminated (to avoid wrongful dismissal lawsuits)</li>
+</ul></li>
+<li>Pay</li>
+<li>Benefits</li>
+<li>Golden parachute</li>
+<li>Outplacement assistance</li>
+</ul>
+<h5 id="responding-to-a-labour-shortage">Responding to a Labour Shortage</h5>
+<p>Internal solutions:</p>
+<ul>
+<li>Transfer
+<ul>
+<li>movement from one job to another that is relatively equal in pay, responsibility, or organizational level</li>
+</ul></li>
+<li>Promotion
+<ul>
+<li>movement from one job to another that is higher in pay, responsibility, or organizational level, usually based on merit, seniority, or a combination of both</li>
+</ul></li>
+<li>Employee retention</li>
+</ul>
+<p>External solutions:</p>
+<ul>
+<li>Recruiting</li>
+</ul>
+<h2 id="chapter-6-recruitment">Chapter 6, Recruitment</h2>
+<h3 id="strategic-importance-of-recruitment">Strategic Importance of Recruitment</h3>
+<p>The process of searching out and attracting qualified job applicants, which begins with identification of a position that requires staffing and is completed when resumes and/or completed application forms are received from an adequate number of applicants.</p>
+<p><strong>Defn.</strong> (Recruiter)<br>
+A specialist in recruitment, whose job it is to find and attract capable candidates.</p>
+<h4 id="employer-branding">Employer Branding</h4>
+<p>The image of an organization based on the benefits of being employed by that organization.<br>
+Includes experiences a candidate goes through during the recruitment process, including:</p>
+<ul>
+<li>Experience when they go to the company’s website</li>
+<li>Acknowledgement thanking candidate who sends in a resume</li>
+<li>Initial greeting by the receptionist</li>
+<li>Ability of the interviewer to articulate organization’s values and culture</li>
+</ul>
+<h5 id="three-steps">Three Steps</h5>
+<p>Define the target audience, where to find them, and what they want from an employer.</p>
+<p>Develop the employee value proposition, and the reasons why the organization is a more attractive employer.</p>
+<p>Communicate the brand by incorporating the value proposition into all recruitment efforts.</p>
+<h3 id="the-recruitment-process">The Recruitment Process</h3>
+<div class="figure">
+<img src="../HRM%20200/Assets/figure-6.1.png?0.47501110515836054">
+
+</div>
+<h3 id="developing-and-using-application-forms">Developing and Using Application Forms</h3>
+<p>Most firms use a standard application form:</p>
+<ul>
+<li>Facilitates comparison of candidates</li>
+<li>Information that the company requires is specifically requested</li>
+<li>May be used as a sample of the candidate’s own work</li>
+<li>Includes a written authorization for reference checking</li>
+<li>Includes acknowledge that the information provided is true and accurate</li>
+<li>Many application forms include an optional section regarding designated group member status</li>
+</ul>
+<h4 id="application-types">Application Types</h4>
+<p><strong>Defn.</strong> (Biographical Information Blank) BIB<br>
+A detailed job application form requesting biographical data found to be predictive of success on the job, pertaining to background, experiences, and preferences.<br>
+Responses are scored.</p>
+<p><strong>Defn.</strong> (Online Applications) Reduce risk of lost applications.<br>
+Increase exposure level of job and may reduce biases based on face-to-face meetings.</p>
+<h3 id="recruitment-avenues-recruiting-from-within-the-organization">Recruitment Avenues: Recruiting from Within the Organization</h3>
+<p><strong>Defn.</strong> (Human Capital Theory)<br>
+The accumulation of firm-specific knowledge and experience involves a joint investment by both the employee and employer.<br>
+Therefore, both parties benefit from maintaining a long-term relationship.</p>
+<p><strong>Defn.</strong> (Job Posting)<br>
+Notifying current employees about vacant positions.</p>
+<div class="figure">
+<img src="../HRM%20200/Assets/figure-6.2.png?0.9230057854442297">
+
+</div>
+<p><strong>Defn.</strong> (Human Resources Records)<br>
+Review of information on existing employees to identify candidates for openings.</p>
+<p><strong>Defn.</strong> (Skills Inventories)<br>
+Review of qualification, interest skills of existing employees.</p>
+<h4 id="limitations-of-recruiting-from-within">Limitations of Recruiting from Within</h4>
+<p>Rarely possible to fill all non-entry-level jobs with current employees.</p>
+<h3 id="recruitment-avenues-recruiting-from-outside-the-organization">Recruitment Avenues: Recruiting from Outside the Organization</h3>
+<h4 id="advantages">Advantages</h4>
+<p>A larger pool of qualified candidates.<br>
+Availability of a more diverse applicant pool.<br>
+Acquisition of new skills, knowledge, and ideas.<br>
+Elimination of employee rivalry and competition for transfers and promotions.<br>
+Hiring individuals who already have necessary skills reduces training costs.</p>
+<h4 id="planing-external-recruitment">Planing External Recruitment</h4>
+<p>Considerations:</p>
+<ul>
+<li>Type of job affects recruitment method chosen</li>
+<li>Yield ratios - percentage of applicants that proceed to next stage of selection</li>
+<li>Time lapse data - time from start of recruitment to new employee starting work</li>
+</ul>
+<div class="figure">
+<img src="../HRM%20200/Assets/figure-6.3.png?0.20965722056075142">
+
+</div>
+<div class="figure">
+<img src="../HRM%20200/Assets/figure-6.4.png?0.10922182250188817">
+
+</div>
+<ul>
+<li>Employee referrals</li>
+<li>Former employees</li>
+<li>Educational institutions</li>
+<li>Open houses, job fairs</li>
+<li>Professional and trade associations</li>
+<li>Labour organizations</li>
+<li>Military personnel</li>
+<li>Online recruiting</li>
+<li>Human Resources and Skills Development Canada (HRSDC)</li>
+<li>Executive search firms</li>
+<li>Private search firms</li>
+<li>Private employment agencies</li>
+<li>Walk-ins and write-ins</li>
+<li>Online networking sites</li>
+<li>Print advertising</li>
+</ul>
+<h4 id="recruiting-non-permanent-staff">Recruiting Non-Permanent Staff</h4>
+<h5 id="temporary-help-agencies">Temporary Help Agencies</h5>
+<p>Provide relief for employees who are ill, on vacation, taking a leave of absence, etc.<br>
+Benefits:</p>
+<ul>
+<li>Cost less than permanent employees</li>
+<li>Immediate replacement of an unsuitable temporary worker</li>
+<li>Workers are often highly motivated</li>
+</ul>
+<h5 id="contract-workers">Contract Workers</h5>
+<p>Work directly for the employer.<br>
+Specific type of work or period of time.<br>
+Benefits:</p>
+<ul>
+<li>Coverage for seasonal or unplanned peaks in business</li>
+<li>Specialized work or projects</li>
+<li>Reduced layoffs during downturns</li>
+</ul>
+<h3 id="recruiting-a-more-diverse-workforce">Recruiting a More Diverse Workforce</h3>
+<h4 id="attracting-older-workers">Attracting Older Workers</h4>
+<p>Workers at or beyond retirement age.<br>
+Typically have high job satisfaction, strong sense of loyalty and work ethic, good people skills.<br>
+Considerations:</p>
+<ul>
+<li>Remove stereotypical attitudes</li>
+<li>Develop flexible work arrangements</li>
+</ul>
+<h4 id="attracting-younger-employees">Attracting Younger Employees</h4>
+<p>High energy, enthusiasm, physical strength.<br>
+Considerations:</p>
+<ul>
+<li>Provide independence and work-life balance</li>
+<li>Give variety of experiences</li>
+</ul>
+<h4 id="recruiting-designated-group-members">Recruiting Designated Group Members</h4>
+<p>Women, visible minorities, Aboriginal people, and people with disabilities.<br>
+Assists in goal of employment equity.<br>
+Considerations:</p>
+<ul>
+<li>Alternative publications for recruitment</li>
+<li>Liaise with agencies assisting designated groups</li>
+</ul>
+
+      </div>
+      <div class="md-sidebar-toc"><ul>
+<li><a href="#hrm-200-introduction-to-human-resource-management">HRM 200 - Introduction to Human Resource Management</a>
+<ul>
+<li><a href="#chapter-1-the-strategic-role-of-human-resources-management">Chapter 1, The Strategic Role of Human Resources Management</a>
+<ul>
+<li><a href="#a-brief-history-of-hrm">A Brief History of HRM</a></li>
+<li><a href="#human-resources-movement-evolutionary-phases">Human Resources Movement: Evolutionary Phases</a></li>
+<li><a href="#operational-and-strategic-aspects-of-hrm">Operational and Strategic Aspects of HRM</a></li>
+<li><a href="#reorganization-the-hrm-function">Reorganization the HRM Function</a>
+<ul>
+<li><a href="#evidence-based-hrm">Evidence-based HRM</a></li>
+<li><a href="#measuring-the-value-of-hr-metrics">Measuring the Value of HR: Metrics</a></li>
+</ul>
+</li>
+<li><a href="#growing-professionalism-in-hrm">Growing Professionalism in HRM</a></li>
+<li><a href="#environmental-influences-on-hrm">Environmental Influences on HRM</a>
+<ul>
+<li><a href="#external-influences">External Influences</a>
+<ul>
+<li><a href="#economic-conditions">Economic Conditions</a></li>
+<li><a href="#labour-market-issues">Labour Market Issues</a></li>
+<li><a href="#technology">Technology</a></li>
+<li><a href="#government">Government</a></li>
+<li><a href="#globalization">Globalization</a></li>
+<li><a href="#environmental-concerns">Environmental Concerns</a></li>
+</ul>
+</li>
+<li><a href="#internal-influences">Internal Influences</a>
+<ul>
+<li><a href="#organizational-culture">Organizational Culture</a></li>
+<li><a href="#organizational-climate">Organizational Climate</a></li>
+<li><a href="#management-practices">Management Practices</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#the-future-of-hr">The Future of HR</a></li>
+</ul>
+</li>
+<li><a href="#chapter-2-the-changing-local-emphasis">Chapter 2, The Changing Local Emphasis</a>
+<ul>
+<li><a href="#legal-framework-for-employment-in-canada">Legal Framework for Employment in Canada</a></li>
+<li><a href="#jurisdiction">Jurisdiction</a></li>
+<li><a href="#hierarchy-of-employment-legislation-in-canada">Hierarchy of Employment Legislation in Canada</a></li>
+<li><a href="#tort-law">Tort Law</a></li>
+<li><a href="#legislation-protecting-the-general-population">Legislation Protecting the General Population</a>
+<ul>
+<li><a href="#bona-fide-occupational-requirement-bfor">Bona Fide Occupational Requirement (BFOR)</a></li>
+<li><a href="#reasonable-accommodation">Reasonable Accommodation</a></li>
+<li><a href="#disability">Disability</a></li>
+<li><a href="#harassment">Harassment</a>
+<ul>
+<li><a href="#sexual-harassment">Sexual Harassment</a></li>
+<li><a href="#new-policies">New Policies</a></li>
+<li><a href="#harassment-policies">Harassment Policies</a></li>
+<li><a href="#enforcement-of-harassment">Enforcement of Harassment</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#legislation-specific-to-the-workplace">Legislation Specific to the Workplace</a>
+<ul>
+<li><a href="#employment-equity-act">Employment Equity Act</a></li>
+</ul>
+</li>
+<li><a href="#employmentlabour-standards-legislation">Employment/Labour Standards Legislation</a>
+<ul>
+<li><a href="#employment-standards-act-esa">Employment Standards Act (ESA)</a>
+<ul>
+<li><a href="#enforcement-of-employment-standards-act">Enforcement of Employment Standards Act</a></li>
+</ul>
+</li>
+<li><a href="#bill-148-fair-workplaces-better-jobs-act-2017">Bill 148, Fair Workplaces, Better Jobs Act, 2017</a></li>
+</ul>
+</li>
+<li><a href="#respecting-employee-privacy">Respecting Employee Privacy</a>
+<ul>
+<li><a href="#challenges">Challenges</a></li>
+<li><a href="#internet-and-email-usage-policy">Internet and Email Usage Policy</a></li>
+<li><a href="#video-surveillance">Video Surveillance</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#chapter-3-human-resources-management-technology">Chapter 3, Human Resources Management &amp; Technology</a></li>
+<li><a href="#chapter-4-designing-analyzing-jobs">Chapter 4, Designing &amp; Analyzing Jobs</a>
+<ul>
+<li><a href="#fundamentals-of-job-analysis">Fundamentals of Job Analysis</a></li>
+<li><a href="#uses-of-job-analysis-information">Uses of Job Analysis Information</a></li>
+<li><a href="#steps-in-job-analysis">Steps in Job Analysis</a>
+<ul>
+<li><a href="#review-relevant-background-information">1: Review Relevant Background Information</a></li>
+<li><a href="#select-jobs-to-be-analyzed">2: Select Jobs to be Analyzed</a>
+<ul>
+<li><a href="#the-evolution-of-jobs-and-job-design">The Evolution of Jobs and Job Design</a></li>
+<li><a href="#competency-based-job-analysis">Competency-Based Job Analysis</a></li>
+<li><a href="#team-based-job-designs">Team-Based Job Designs</a></li>
+</ul>
+</li>
+<li><a href="#collecting-job-analysis-information">3: Collecting Job Analysis Information</a></li>
+<li><a href="#verifying-information">4: Verifying Information</a></li>
+<li><a href="#writing-job-descriptions-and-job-specifications">5: Writing Job Descriptions and Job Specifications</a>
+<ul>
+<li><a href="#job-description">Job Description</a></li>
+<li><a href="#job-specifications">Job Specifications</a></li>
+<li><a href="#job-identification">Job Identification</a></li>
+<li><a href="#job-summary">Job Summary</a></li>
+<li><a href="#relationships">Relationships</a></li>
+<li><a href="#duties-and-responsibilities">Duties and Responsibilities</a></li>
+<li><a href="#authority">Authority</a></li>
+<li><a href="#performance-standardsindicators">Performance Standards/Indicators</a></li>
+<li><a href="#physical-demands-analysis">Physical Demands Analysis</a></li>
+<li><a href="#human-rights-legislation-considerations">Human Rights Legislation Considerations</a></li>
+</ul>
+</li>
+<li><a href="#communication-and-preparedness-for-revisions">6: Communication and Preparedness for Revisions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#chapter-5-human-resource-planning">Chapter 5, Human Resource Planning</a>
+<ul>
+<li><a href="#strategic-importance-of-hrp">Strategic Importance of HRP</a>
+<ul>
+<li><a href="#relationship-between-hrp-and-strategic-planning">Relationship Between HRP and Strategic Planning</a></li>
+<li><a href="#importance-of-environmental-scanning">Importance of Environmental Scanning</a></li>
+</ul>
+</li>
+<li><a href="#steps-in-the-hrp-process">Steps in the HRP Process</a>
+<ul>
+<li><a href="#step-1-forecasting-the-availability-of-candidates-supply">Step 1: Forecasting the Availability of Candidates (Supply)</a>
+<ul>
+<li><a href="#forecasting-supply-of-external-candidates">Forecasting Supply of External Candidates</a></li>
+</ul>
+</li>
+<li><a href="#step-2-forecasting-future-hr-needs-demand">Step 2: Forecasting Future HR Needs (Demand)</a>
+<ul>
+<li><a href="#quantitative-approaches">Quantitative Approaches</a></li>
+<li><a href="#qualitative-approaches">Qualitative Approaches</a></li>
+</ul>
+</li>
+<li><a href="#step-3-planning-and-implementing-hr-programs-to-balance-supply-and-demand">Step 3: Planning and Implementing HR Programs to Balance Supply and Demand</a>
+<ul>
+<li><a href="#responding-to-a-labour-surplus">Responding to a Labour Surplus</a></li>
+<li><a href="#responding-to-a-labour-shortage">Responding to a Labour Shortage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#chapter-6-recruitment">Chapter 6, Recruitment</a>
+<ul>
+<li><a href="#strategic-importance-of-recruitment">Strategic Importance of Recruitment</a>
+<ul>
+<li><a href="#employer-branding">Employer Branding</a>
+<ul>
+<li><a href="#three-steps">Three Steps</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#the-recruitment-process">The Recruitment Process</a></li>
+<li><a href="#developing-and-using-application-forms">Developing and Using Application Forms</a>
+<ul>
+<li><a href="#application-types">Application Types</a></li>
+</ul>
+</li>
+<li><a href="#recruitment-avenues-recruiting-from-within-the-organization">Recruitment Avenues: Recruiting from Within the Organization</a>
+<ul>
+<li><a href="#limitations-of-recruiting-from-within">Limitations of Recruiting from Within</a></li>
+</ul>
+</li>
+<li><a href="#recruitment-avenues-recruiting-from-outside-the-organization">Recruitment Avenues: Recruiting from Outside the Organization</a>
+<ul>
+<li><a href="#advantages">Advantages</a></li>
+<li><a href="#planing-external-recruitment">Planing External Recruitment</a></li>
+<li><a href="#recruiting-non-permanent-staff">Recruiting Non-Permanent Staff</a>
+<ul>
+<li><a href="#temporary-help-agencies">Temporary Help Agencies</a></li>
+<li><a href="#contract-workers">Contract Workers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#recruiting-a-more-diverse-workforce">Recruiting a More Diverse Workforce</a>
+<ul>
+<li><a href="#attracting-older-workers">Attracting Older Workers</a></li>
+<li><a href="#attracting-younger-employees">Attracting Younger Employees</a></li>
+<li><a href="#recruiting-designated-group-members">Recruiting Designated Group Members</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+      <a id="sidebar-toc-btn">≡</a>
+    </body>
+    
+    
+    
+    <script>
+(function bindTaskListEvent() {
+  var taskListItemCheckboxes = document.body.getElementsByClassName('task-list-item-checkbox')
+  for (var i = 0; i < taskListItemCheckboxes.length; i++) {
+    var checkbox = taskListItemCheckboxes[i]
+    var li = checkbox.parentElement
+    if (li.tagName !== 'LI') li = li.parentElement
+    if (li.tagName === 'LI') {
+      li.classList.add('task-list-item')
+    }
+  }
+}())    
+</script>
+    
+<script>
+
+var sidebarTOCBtn = document.getElementById('sidebar-toc-btn')
+sidebarTOCBtn.addEventListener('click', function(event) {
+  event.stopPropagation()
+  if (document.body.hasAttribute('html-show-sidebar-toc')) {
+    document.body.removeAttribute('html-show-sidebar-toc')
+  } else {
+    document.body.setAttribute('html-show-sidebar-toc', true)
+  }
+})
+</script>
+      
+  </html>
