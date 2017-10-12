@@ -9,10 +9,11 @@
         <script type="text/x-mathjax-config">
           MathJax.Hub.Config({"extensions":["tex2jax.js"],"jax":["input/TeX","output/HTML-CSS"],"messageStyle":"none","tex2jax":{"processEnvironments":false,"processEscapes":true,"inlineMath":[["$","$"],["\\(","\\)"]],"displayMath":[["$$","$$"],["\\[","\\]"]]},"TeX":{"extensions":["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"]},"HTML-CSS":{"availableFonts":["TeX"]}});
         </script>
-        <script type="text/javascript" async src="file:////Users/Charles/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.2.8/node_modules/@shd101wyy/mume/dependencies/mathjax/MathJax.js"></script>
+        <script type="text/javascript" async src="file:////Users/Charles/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.2.9/node_modules/@shd101wyy/mume/dependencies/mathjax/MathJax.js"></script>
         
       
-
+      
+      
       
       
       
@@ -771,8 +772,7 @@ Y \\
 <li>Computationally heavy</li>
 <li>Interpretationally cumbersome</li>
 </ul>
-<p>Lasso (Tibshirani’96)</p>
-<p><span class="math display">\[
+<p>Lasso (Tibshirani’96) <span class="math display">\[
 \min_{||W||_{1} \leq C}||XW - Y||_{F}^{2}
 \]</span></p>
 <h4 id="regularization-vs-constraint">Regularization vs. Constraint</h4>
@@ -852,6 +852,125 @@ Smooth curve.</p>
 <li>Unary Operations</li>
 <li>Binary Operations</li>
 </ul>
+<h2 id="lecture-05-k-nearest-neighbours-_september-26-28-2017_">Lecture 05: K-nearest Neighbours, <em>September 26 &amp; 28, 2017</em></h2>
+<h3 id="classification-revisited">Classification Revisited</h3>
+<p><span class="math display">\[\hat{y} = \text{sign}({\bf x}^{\intercal}{\bf w} + b)\]</span></p>
+<p>Decision boundary: <span class="math inline">\({\bf x}^{\intercal}{\bf w} + b = 0\)</span></p>
+<p>Parametric: finite-dim <span class="math inline">\(\bf w\)</span>.</p>
+<p>Non-parametric: non specific form (or inf-dim <span class="math inline">\(\bf w\)</span>).</p>
+<h3 id="nearest-neighbour">1-Nearest Neighbour</h3>
+<p>Store training set <span class="math inline">\((X, {\bf y})\)</span></p>
+<p>For query (test point) <span class="math inline">\({\bf x}&#39;\)</span></p>
+<ul>
+<li>Find nearest point <span class="math inline">\(\bf x\)</span> in <span class="math inline">\(X\)</span></li>
+<li>Predict <span class="math inline">\(y&#39; = y({\bf x})\)</span></li>
+</ul>
+<p>Compute the distance and find the nearest neightbour and predict based on the nearest neighbour.</p>
+<h4 id="defining-nearest">Defining “Nearest”</h4>
+<p>Need to measure distance or similarity.</p>
+<p><span class="math inline">\(d: X \times X \rightarrow R_{+}\)</span> such that</p>
+<ul>
+<li><em>symmetry</em>: <span class="math inline">\(d(x, x&#39;) = d(x&#39;, x)\)</span></li>
+<li><em>definite</em>: <span class="math inline">\(d(x, x&#39;) = 0\)</span> iff. <span class="math inline">\(x = x&#39;\)</span></li>
+<li><em>triangle inequality</em>: <span class="math inline">\(d(a, b) \leq d(a, c) + d(c, b)\)</span></li>
+</ul>
+<p>L<sub>p</sub> distance: <span class="math inline">\(d_{p}(x, x&#39;) = ||x - x&#39;||_{p}\)</span></p>
+<ul>
+<li><span class="math inline">\(p = 2\)</span>: Euclidean distsance</li>
+<li><span class="math inline">\(p = 1\)</span>: Manhattan distance</li>
+<li><span class="math inline">\(p = inf\)</span>: Chebyshev distance
+<ul>
+<li><span class="math inline">\(||\overrightarrow{z}||_{\inf}\)</span></li>
+</ul></li>
+</ul>
+<h4 id="complexity-of-1-nn">Complexity of 1-NN</h4>
+<p>Training: 0… but <span class="math inline">\(O(nd)\)</span> space</p>
+<p>Testing: <span class="math inline">\(O(nd)\)</span> for each query point</p>
+<ul>
+<li><span class="math inline">\(n\)</span>: number of training samples</li>
+<li><span class="math inline">\(d\)</span>: number of features</li>
+</ul>
+<h3 id="normalization">Normalization</h3>
+<p>Usually, for each feature, subtract the mean and divide by standard deviation.<br>
+Or, equivalently, use a different distance metric.</p>
+<h3 id="learning-the-metric">Learning the Metric</h3>
+<p>Manhalanobias Distance, <span class="math display">\[d_{M}({\bf x}, {\bf x&#39;}) = \sqrt{({\bf x} - {\bf x&#39;}^{\intercal}M({\bf x} - {\bf x&#39;})},~~~ M \in \mathbb{S}^{d}_{+}\]</span></p>
+<p>Or equivalently let <span class="math inline">\(M = LL^{\intercal}\)</span>, <span class="math inline">\(L \in \mathbb{R}^{d\times h}\)</span>.<br>
+First, perform linear transformation <span class="math inline">\({\bf x} \mapsto L^{\intercal}{\bf x}\)</span>.<br>
+Then use the usual Euclidean distsance, <span class="math display">\[\min_{M \in \mathbb{S}^{d}_{+}} f(M) \text{ such that } d_{M}({\bf x}, {\bf x&#39;}) \text{ is small iff. } y = y&#39;\]</span></p>
+<h3 id="k-nn">K-NN</h3>
+<p>Store training set <span class="math inline">\((X, {\bf y})\)</span>.</p>
+<p>For query (test point) <span class="math inline">\({\bf x&#39;}\)</span></p>
+<ul>
+<li>Find <span class="math inline">\(k\)</span> nearest points <span class="math inline">\({\bf x}_{1}, {\bf x}_{2}, \ldots, {\bf x}_{k}\)</span> in <span class="math inline">\(X\)</span></li>
+<li>Predict <span class="math inline">\(y&#39; = y({\bf x}_{1}, {\bf x}_{2}, \ldots, {\bf x}_{k})\)</span>
+<ul>
+<li>Usually a majority vote among the labels for <span class="math inline">\({\bf x}_{1}, {\bf x}_{2}, \ldots, {\bf x}_{k}\)</span></li>
+<li>Say <span class="math inline">\(y_{1} = 1, y_{2} = 1, y_{3} = -1, y_{4}, y_{5} = -1 \rightarrow y&#39; = 1\)</span></li>
+</ul></li>
+<li>Test complexity: <span class="math inline">\(O(nd)\)</span></li>
+</ul>
+<h3 id="bayes-rule-under-iid-assumption">Bayes Rule Under iid Assumption</h3>
+<p>iid: independent and indentical distribution.</p>
+<p>Bayes error, <span class="math display">\[P^{*} = \min_{f:X\rightarrow\{\pm 1\}}{\bf P}(f(X) \neq Y)\]</span></p>
+<p>Indicator function of a subset A of a set X is a function <span class="math display">\[\displaystyle {\bf 1}_{A} = X \rightarrow \{0, 1\}\]</span> defined as <span class="math display">\[{\bf 1}_{A}(x) := \begin{cases}1 &amp;\text{if }x \in A \\0 &amp;\text{if }x \not\in A\end{cases}\]</span></p>
+<p>Bayes rule derivation, <span class="math display">\[\begin{aligned}Pr(f(X) \neq Y) &amp;= 1 - Pr(f(X) = Y) \\ &amp;= 1 - Pr(f(X) = Y, Y = 1) - Pr(f(X) = Y, Y = 1) \\ &amp;= 1 - Pr(f(X) = -1) - Pr(f(X) = 1) \\ &amp;=1 - E[Pr(f(X) = 1, Y = 1 | X)] - E[Pr(f(X) = -1, Y = -1 | X)] \\ &amp;= 1 - E[{\bf 1}_{f(X) = 1}\cdot \underbrace{Pr(Y=1|X)]}_{\eta(x)} - E[{\bf 1}_{f(X)=-1}\cdot \underbrace{Pr(Y=-1|X)}_{1 - \eta(x)}] \\ &amp;= E[\eta(X) + {\bf 1}_{f(X)=1)(1 - 2\eta(X))}]\end{aligned}\]</span></p>
+<p><span class="math inline">\(f^{*}(X) = 1 \text{ iff. } \eta(X) \geq \frac{1}{2}\)</span></p>
+<h3 id="multi-class">Multi-class</h3>
+<p><span class="math display">\[f^{*}(X) = \underset{m=1,\ldots,c}{\operatorname{argmax}}~{\bf P}(Y = m|X)\]</span> <span class="math display">\[P^{*} = {\bf E}[1 - \max_{m = 1,\ldots, c}~{\bf P}(Y = m | X)]\]</span> This is the <em>best</em> we can do <em>even when we know the distribution of</em> <span class="math inline">\((X, Y)\)</span>.</p>
+<p>How big can <span class="math inline">\(P^{*}\)</span> be?</p>
+<h4 id="at-most-twice-worse-cover-hart-67">At Most Twice Worse (Cover &amp; Hart’ 67)</h4>
+<p>See written notes.</p>
+<h3 id="nn-vs-k-nn">1-NN vs. k-NN</h3>
+<p>error(1NN) = <span class="math inline">\(\frac{1}{2^{n}}\)</span></p>
+<p>error(kNN) for <span class="math inline">\(k = 2t +1\)</span>: <span class="math inline">\(\displaystyle \frac{1}{2^{n}}\sum_{i=0}^{t}\begin{pmatrix}n \\ i\end{pmatrix}\)</span></p>
+<h3 id="curse-of-dimensionality">Curse of Dimensionality</h3>
+<hr>
+<p><strong>Thm.</strong><br>
+For any <span class="math inline">\(c &gt; 1\)</span> and <em>any</em> learning algorithm <span class="math inline">\(L\)</span>, there exists a distribution over <span class="math inline">\([0, 1]^{d} \times \{0, 1\}\)</span> such that the Bayes error is <span class="math inline">\(0\)</span> but for sample size <span class="math inline">\(n \leq \frac{(c+1)^{d}}{2}\)</span>, the error of the rule <span class="math inline">\(L\)</span> is greater than <span class="math inline">\(\frac{1}{4}\)</span>.</p>
+<hr>
+<p>k-NN is effective when we have <em>many</em> training samples.</p>
+<p>Dimensionality reduction may be helpful.</p>
+<h3 id="locally-linear-embedding-saul-roweis00">Locally Linear Embedding (Saul &amp; Roweis’00)</h3>
+<p><span class="math display">\[min_{W1=1}||{\bf x}_{i} - \sum_{j}W_{ij}{\bf x}_{j}||^{2}_{2}\]</span> <span class="math display">\[\min_{Z} \sum_{i}||{\bf z}_{i} - \sum_{j}W_{ij}{\bf z}_{j}||^{2}_{2}\]</span></p>
+<h3 id="k-nn-for-regression">k-NN for Regression</h3>
+<p>Training: store training set <span class="math inline">\((X, y)\)</span>.<br>
+Query <span class="math inline">\(x&#39;\)</span></p>
+<ul>
+<li>Find k-NNs <span class="math inline">\({\bf x}_{1}, {\bf x}_{2}, \ldots, {\bf x}_{k}\)</span> in <span class="math inline">\(X\)</span></li>
+<li>Output <span class="math inline">\(y&#39; = y({\bf x}_{1}, {\bf x}_{2}, \ldots, {\bf x}_{k}) = \frac{y_{1} + y_{2} + \cdots + y_{k}}{k}\)</span></li>
+</ul>
+<h3 id="why-1-nn-works">Why 1-NN Works</h3>
+<p>Let <span class="math inline">\(X_{1}\)</span> be the NN for query <span class="math inline">\(X\)</span>.<br>
+Assuming <span class="math inline">\(P(Y_{1}=j|X_{1}) - P(Y=j|X) \to 0\)</span> as <span class="math inline">\(n \to\)</span> inf.<br>
+Thus, the error of 1-NN, <span class="math display">\[\begin{aligned}P(Y_{1}\neq Y | X) &amp;= \sum_{i\neq j}P(Y=i|X)E[P(Y_{1}=j|X_{1})|X] \\
+&amp;\rightarrow \sum_{i\neq j}P(Y=i|X)P(Y=j|X) \\
+&amp;= 1 - \sum_{i}P^{2}(Y=i|X)\end{aligned}\]</span></p>
+<p>Two conditions: <span class="math inline">\(\sum_{i}P(Y=i|X) = 1\)</span> and <span class="math inline">\(\max_{i}P(Y=i|X) = 1 - P^{*}\)</span></p>
+<h3 id="are-all-neighbours-equal">Are All Neighbours Equal</h3>
+<p><span class="math display">\[y&#39; = \frac{y_{1} + y_{2} + \cdots + y_{k}}{k} \iff y&#39; = \underset{y}{\operatorname{argmin}}\sum_{j=1}^{n}1_{j\in kNN(x&#39;)}(y - y_{j})^{2}\]</span> Where <span class="math inline">\(j \in kNN(x&#39;)\)</span> is the Parzen Window.</p>
+<p>More generally, can weight the neighbours <span class="math display">\[y&#39; = \frac{\sum_{i=1}w_{i}y_{i}}{\sum_{i=1}^{n}w_{i}} \iff y&#39; = \underset{y}{\operatorname{argmin}}\sum_{j=1}^{n}w_{i}(y - y_{j})^{2}\]</span></p>
+<p>For instance, <span class="math inline">\(w_{i} = \exp(-d(x&#39;, x_{i})/\sigma)\)</span></p>
+<h3 id="density-estimation">Density Estimation</h3>
+<p>Given iid samples <span class="math inline">\(X_{1}, \ldots, X_{n}\)</span>, estimate density function <span class="math inline">\(X \sim p(x)\)</span>.<br>
+Kernel: function <span class="math inline">\(K: R \to R\)</span> with integral 1.<br>
+Kernel density estimation <span class="math display">\[\hat{p}(x) = \frac{1}{nh}\sum_{i=1}^{n}K\left(\frac{X_{i}-x}{h}\right)\]</span> where <span class="math inline">\(h\)</span> is the bandwidth.</p>
+<h4 id="nonparametric-regression">Nonparametric Regression</h4>
+<p>Recall the regression function, <span class="math display">\[m(x) = {\bf E}(Y|X) = \int f\frac{p(x,y)}{p(x)}\text{d}y\]</span></p>
+<p>Plugin estimator <span class="math display">\[\hat{p}(x) = \frac{1}{nh}\sum_{i=1}^{n}K\left(\frac{X_{i}-x}{h}\right)\]</span> <span class="math display">\[\hat{p}(x, y) = \frac{1}{nh^{2}}\sum_{i=1}^{n}K\left(\frac{X_{i}-x}{h}\right)K\left(\frac{Y_{i}-y}{h}\right)\]</span></p>
+<h2 id="lecture-06-hard-margin-svm-_october-3rd-2017_">Lecture 06: Hard-Margin SVM, <em>October 3rd, 2017</em></h2>
+<h3 id="perceptron-revisited">Perceptron Revisited</h3>
+<p>Two classes: <span class="math inline">\(y \in \{0, 1\}\)</span><br>
+<em>Assuming</em> linear separable, exist <span class="math inline">\({\bf w}\)</span> and <span class="math inline">\(b\)</span> such that for all <span class="math inline">\(i\)</span>, <span class="math inline">\(y_{i}({\bf w}^{\intercal}{\bf x}_{i} + b) &gt; 0\)</span>.<br>
+Find <em>any</em> such <span class="math inline">\({\bf w}\)</span> and <span class="math inline">\(b\)</span> <span class="math display">\[\begin{aligned}
+&amp; \min_{{\bf w}, b} &amp;&amp; 0 \rightarrow\text{feasibility problem}\\
+&amp; s.t. &amp;&amp; \forall i, y_{i}({\bf w}^{\intercal}{\bf x}_{i} + b) &gt; 0
+\end{aligned}\]</span></p>
+<h3 id="margin">Margin</h3>
+<p>Take <em>any</em> linear separating hyperplane <span class="math inline">\(H\)</span> for all <span class="math inline">\(i, y_{i}({\bf w}^{\intercal}{\bf x}_{i}+b) &gt; 0\)</span>.<br>
+Move <span class="math inline">\(H\)</span> until it touches some positve point, <span class="math inline">\(H_{1}\)</span>.<br>
+Move <span class="math inline">\(H\)</span> until it touches some negative point, <span class="math inline">\(H_{-1}\)</span>.</p>
+<p>We get <span class="math inline">\(\text{margin} = \text{dist}(H_{1}, H) \wedge \text{dist}(H_{-1}, H)\)</span></p>
 
       </div>
       <div class="md-sidebar-toc"><ul>
@@ -983,6 +1102,43 @@ Smooth curve.</p>
 <li><a href="#types-of-nodes-in-computation-graph">Types of Nodes in Computation Graph</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#lecture-05-k-nearest-neighbours-_september-26-28-2017_">Lecture 05: K-nearest Neighbours, <em>September 26 &amp; 28, 2017</em></a>
+<ul>
+<li><a href="#classification-revisited">Classification Revisited</a></li>
+<li><a href="#nearest-neighbour">1-Nearest Neighbour</a>
+<ul>
+<li><a href="#defining-nearest">Defining &quot;Nearest&quot;</a></li>
+<li><a href="#complexity-of-1-nn">Complexity of 1-NN</a></li>
+</ul>
+</li>
+<li><a href="#normalization">Normalization</a></li>
+<li><a href="#learning-the-metric">Learning the Metric</a></li>
+<li><a href="#k-nn">K-NN</a></li>
+<li><a href="#bayes-rule-under-iid-assumption">Bayes Rule Under iid Assumption</a></li>
+<li><a href="#multi-class">Multi-class</a>
+<ul>
+<li><a href="#at-most-twice-worse-cover-hart-67">At Most Twice Worse (Cover &amp; Hart' 67)</a></li>
+</ul>
+</li>
+<li><a href="#nn-vs-k-nn">1-NN vs. k-NN</a></li>
+<li><a href="#curse-of-dimensionality">Curse of Dimensionality</a></li>
+<li><a href="#locally-linear-embedding-saul-roweis00">Locally Linear Embedding (Saul &amp; Roweis'00)</a></li>
+<li><a href="#k-nn-for-regression">k-NN for Regression</a></li>
+<li><a href="#why-1-nn-works">Why 1-NN Works</a></li>
+<li><a href="#are-all-neighbours-equal">Are All Neighbours Equal</a></li>
+<li><a href="#density-estimation">Density Estimation</a>
+<ul>
+<li><a href="#nonparametric-regression">Nonparametric Regression</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#lecture-06-hard-margin-svm-_october-3rd-2017_">Lecture 06: Hard-Margin SVM, <em>October 3rd, 2017</em></a>
+<ul>
+<li><a href="#perceptron-revisited">Perceptron Revisited</a></li>
+<li><a href="#margin">Margin</a></li>
 </ul>
 </li>
 </ul>
