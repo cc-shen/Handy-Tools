@@ -9,7 +9,8 @@
         "Boundedness",
         "datasets",
         "hyperplane",
-        "perceptron"
+        "perceptron",
+        "uwaterloo"
     ],
     // flagWords - list of words to be always considered incorrect
     // This is useful for offensive words and common spelling errors.
