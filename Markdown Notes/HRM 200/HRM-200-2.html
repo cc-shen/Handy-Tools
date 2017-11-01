@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <title>HRM-200-2</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      
+        <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({"extensions":["tex2jax.js"],"jax":["input/TeX","output/HTML-CSS"],"messageStyle":"none","tex2jax":{"processEnvironments":false,"processEscapes":true,"inlineMath":[["$","$"],["\\(","\\)"]],"displayMath":[["$$","$$"],["\\[","\\]"]]},"TeX":{"extensions":["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"]},"HTML-CSS":{"availableFonts":["TeX"]}});
+        </script>
+        <script type="text/javascript" async src="file:////Users/Charles/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.2.9/node_modules/@shd101wyy/mume/dependencies/mathjax/MathJax.js"></script>
+        
+      
+      
+      
+      
+      
+      
+
+      <style> 
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none} 
+       
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview   ">
+      <h1 id="hrm-200-introduction-to-human-resource-management">HRM 200 - Introduction to Human Resource Management</h1>
+<p>Part 2.</p>
+<h2 id="chapter-7-selection">Chapter 7 - Selection</h2>
+<p>The process of choosing individuals to fill job openings.</p>
+<p>Strategic importance of employee selection,</p>
+<ul>
+<li>Quality of human resources determines organizational performance</li>
+<li>Inappropriate selection decisions are costly</li>
+<li>Significant legal implications</li>
+</ul>
+<p><strong>Video Summary</strong><br>
+Bad hires can cost the organization 1 to 2 times the amount they make a year.</p>
+<p><strong>Defn.</strong> (Selection Ratio)<br>
+Ratio of number of applicants hired to total number of applicants.</p>
+<h3 id="the-selection-process">The Selection Process</h3>
+<h4 id="multiple-hurdle-strategy">Multiple-Hurdle Strategy</h4>
+<ul>
+<li>An approach to selection involving a series of successive steps or hurdles</li>
+<li>Only candidates that pass a hurdle can move onto the next</li>
+</ul>
+<p>Six typical hurdles:</p>
+<ol style="list-style-type: decimal">
+<li>Preliminary applicant screening</li>
+<li>Selection testing</li>
+<li>Selection interview</li>
+<li>Background investigation/reference checking</li>
+<li>Supervisory interview and realistic job preview</li>
+<li>Hiring decision and candidate notification</li>
+</ol>
+<h4 id="designing-the-selection-process">Designing the Selection Process</h4>
+<p>Five steps:</p>
+<ol style="list-style-type: decimal">
+<li>Develop selection criteria</li>
+<li>Specify <em>musts</em> and <em>wants</em> and weight the wants</li>
+<li>Develop an evaluation form</li>
+<li>Develop interview questions (for all candidates)</li>
+<li>Develop candidate-specific questions</li>
+</ol>
+<h4 id="acquiring-employees-and-the-law">Acquiring Employees and the Law</h4>
+<p>Use selection criteria based on the job.<br>
+Do not ask questions that would violate human rights legislation.<br>
+Obtain authorization for reference checking.<br>
+Save all records and information.<br>
+Reject applications who make false statements.</p>
+<h4 id="step-1-preliminary-applicant-screening">Step 1: Preliminary Applicant Screening</h4>
+<p>Initial screening is performed by HR department.<br>
+Application forms and resumes are reviewed.<br>
+Candidates not meeting selection criteria are eliminated.<br>
+Remaining candidates matching the job specifications are given further consideration.<br>
+Increasingly popularity in use of technology.</p>
+<h4 id="step-2-selection-testing">Step 2: Selection Testing</h4>
+<p>Screening device used by approximately two-thirds of Canadian organizations.<br>
+Assesses specific job-related skills, general intelligence, personality characteristics, mental abilities, interest, and preferences.<br>
+Efficient, standardized methods for screening large numbers of applicants.<br>
+Must be reliable and valid.</p>
+<h5 id="reliability">Reliability</h5>
+<p>The degree to which selection procedures yield comparable data over time.<br>
+In other words, the degree of <strong>dependability</strong>, <strong>consistency</strong>, or <strong>stability</strong> of the measures used.<br>
+Will the test withstand the test of time?</p>
+<h5 id="validity">Validity</h5>
+<p>The accuracy with which a predictor <strong>measures</strong> what is intended to measure.</p>
+<h6 id="types-of-validity">Types of Validity</h6>
+<ul>
+<li>Differential Validity
+<ul>
+<li>Confirmations that the selection tool accurately predicts the performance of all possible employee subgroups</li>
+</ul></li>
+<li>Criterion-Related Validity
+<ul>
+<li>Extent to which a selection tool predicts or correlates with important elements of work behaviour</li>
+</ul></li>
+<li>Content Validity
+<ul>
+<li>Extent to which a selection tool (e.g. a test) adequately samples the knowledge and skills needed to perform the job</li>
+</ul></li>
+<li>Construct Validity
+<ul>
+<li>Extent to which a selection tool measures a theoretical construct or trait deemed necessary to perform the job successfully</li>
+</ul></li>
+</ul>
+<h5 id="types-of-tests-used-in-selection">Types of Tests Used in Selection</h5>
+<ul>
+<li>Cognitive Abilities
+<ul>
+<li>Intelligence tests</li>
+<li>Emotional intelligence tests</li>
+<li>Specific cognitive abilities</li>
+</ul></li>
+<li>Motor/Physical Abilities</li>
+<li>Personality and Interests</li>
+<li>Achievement Tests</li>
+<li>Work Sampling</li>
+<li>Management Assessment Centres</li>
+<li>Situational Testing</li>
+<li>Micro-Assessments</li>
+<li>Physical Examinations, Substance Abuse Testing, Polygraphs</li>
+</ul>
+<h4 id="step-3-the-selection-interview">Step 3: The Selection Interview</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Interviewer Objectives</th>
+<th>Applicant Objectives</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>assess qualifications</td>
+<td>present positive image</td>
+</tr>
+<tr class="even">
+<td>observe behaviour</td>
+<td>sell their skills and attributes</td>
+</tr>
+<tr class="odd">
+<td>predict future performance</td>
+<td>gather information about job and organization</td>
+</tr>
+<tr class="even">
+<td>communicate information about job, promote organization</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>determine how well applicant would fit in</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h5 id="types-of-interviews">Types of Interviews</h5>
+<p>Degree of Structure,<br>
+Unstructured, structured, or mixed/semi-structured.</p>
+<p>Content,<br>
+Situational, behavioural.</p>
+<p>Administering the Interview,<br>
+One-on-one or panel; sequentially or all at once; face-to-face or technology enabled.</p>
+<h5 id="common-interviewing-mistakes">Common Interviewing Mistakes</h5>
+<ul>
+<li>Poor planning
+<ul>
+<li>Poor interview structures</li>
+</ul></li>
+<li>Snap judgments
+<ul>
+<li>Irrelevant judgement that should not affect the scoring</li>
+</ul></li>
+<li>Negative emphasis
+<ul>
+<li>Score lower and lower due to initial poor response</li>
+</ul></li>
+<li>Halo effect
+<ul>
+<li>Score higher and higher due to initial great response</li>
+</ul></li>
+<li>Poor job knowledge
+<ul>
+<li>Should know enough to assess correctly</li>
+</ul></li>
+<li>Contrast error
+<ul>
+<li>Each candidate should be assessed based on the criteria, not between other candidates</li>
+</ul></li>
+<li>Influence of nonverbal behaviour
+<ul>
+<li>Scoring based on nonverbal behaviour, avoid those kind of discriminations (possible disabilities or cultural influences)</li>
+</ul></li>
+<li>Leading
+<ul>
+<li>Ask a question and pointing a candidate to what you want to hear</li>
+</ul></li>
+<li>Similarity bias
+<ul>
+<li>Favouring candidates who share similarities</li>
+</ul></li>
+</ul>
+<p><strong>Video summaries</strong><br>
+Review candidate information.<br>
+Do not bad mouth past employee.<br>
+Answer candidate questions, refrain from personal questions.</p>
+<h5 id="conducting-an-effective-interview">Conducting an Effective Interview</h5>
+<p>Planning the interview.<br>
+Establishing rapport.<br>
+Asking questions.<br>
+Closing the interview.<br>
+Evaluating the candidate.</p>
+<h4 id="step-4-background-investigationreference-checking">Step 4: Background Investigation/Reference Checking</h4>
+<p>Verify accuracy of information provided.<br>
+Includes:</p>
+<ul>
+<li>Criminal record check</li>
+<li>Verification of educational qualifications</li>
+<li>Verification of previous employment</li>
+<li>Performance-related references from past supervisors</li>
+<li>Credit check may also be included</li>
+</ul>
+<p>Considerations:</p>
+<ul>
+<li>Obtain written permission</li>
+<li>Possible public sources (e.g. Facebook)</li>
+<li>Qualified privilege</li>
+<li>Negligent misrepresentation</li>
+</ul>
+<h5 id="step-5-supervisory-interview-and-realistic-job-preview">Step 5: Supervisory Interview and Realistic Job Preview</h5>
+<p>Supervisor,</p>
+<ul>
+<li>is best qualified to assess job knowledge/skills</li>
+<li>can answer job-specific questions</li>
+<li>must feel comfortable with new hire</li>
+<li>can assess fit with current team members</li>
+</ul>
+<p><strong>Defn.</strong> Realistic Job Preview (RJP)<br>
+Provides applicants with realistic information, both positive and negative, about the job.</p>
+<h5 id="step-6-hiring-decision-and-candidate-notification">Step 6: Hiring Decision and Candidate Notification</h5>
+<p>Compile information from all technique used.<br>
+Evaluate information about each candidate.<br>
+Immediate supervisor usually makes final hiring decision.<br>
+Make offer that specifies terms and conditions of employment.<br>
+Give candidates time to think about the offer.<br>
+Notify all finalists who were not selected.</p>
+<h2 id="chapter-8-on-boarding-and-training">Chapter 8: On-boarding and Training</h2>
+<h3 id="becoming-a-learning-organization">Becoming a Learning Organization</h3>
+<h4 id="learning-organization">Learning Organization</h4>
+<p>An organization skilled at creating, acquiring, and transferring knowledge and at modifying its behaviour to reflect new knowledge and insights.</p>
+<h4 id="orientation">Orientation</h4>
+<p>A long-term, continuous socialization process in which employee and employer expectations or obligations are considered.</p>
+<p>Helps to clarify the organization’s expectations of an employee regarding his or her job, thus helping to reduce the new employee’s first-day jitters and <strong>reality shock</strong> (also referred as cognitive dissonance).</p>
+<p><strong>Defn.</strong> (Reality Shock)<br>
+The discrepancy between what the new employee expected from his or her new job and its realities.</p>
+<h4 id="training">Training</h4>
+<p>Short-term, discrete efforts in which organizations impart information and instructions in an effort to help the recipient gain the required skills or knowledge to perform the job at adequate levels.</p>
+<h4 id="employee-on-boarding-orientation">Employee On-boarding (Orientation)</h4>
+<p>Procedure for providing new employees with basic background information about: the firm, the job.</p>
+<h4 id="purpose-of-on-boarding">Purpose of On-boarding</h4>
+<p>Part of ongoing socialization process.<br>
+Helps reduce first day jitters and reality shock.<br>
+Foundation for ongoing performance management.<br>
+Improved productivity.<br>
+Improved retention levels and reduced recruitment costs.</p>
+<h4 id="socialization">Socialization</h4>
+<p>Ongoing process of instilling in all employees the prevailing attitudes, standards, values, and patterns of behaviour that are expected by the organization.</p>
+<h4 id="content-of-orientation-programs">Content of Orientation Programs</h4>
+<ul>
+<li>Internal publications (handbooks, newsletters, company history)</li>
+<li>Facility tour and staff introductions</li>
+<li>Job-related documents and explanation of duties, responsibilities</li>
+<li>Expected training to be received</li>
+<li>Performance appraisal criteria</li>
+</ul>
+<h4 id="responsibility-for-orientation">Responsibility for Orientation</h4>
+<p>HR specialist,</p>
+<ul>
+<li>Explains corporate information</li>
+<li>Follows up over time</li>
+</ul>
+<p>Supervisor,</p>
+<ul>
+<li>Explains nature of the job</li>
+<li>Introductions of colleagues, etc.</li>
+</ul>
+<p>Buddy or mentor,</p>
+<ul>
+<li>Assists with day-to-day items</li>
+</ul>
+<h4 id="executive-integration">Executive Integration</h4>
+<p>Identify position specifications.<br>
+Provide realistic information to candidates.<br>
+Assess candidate’s previous success with integration.<br>
+Announce hiring with enthusiasm.<br>
+Stress importance of listening and demonstrating competency.<br>
+Assist new executives with cultural norms and change.</p>
+<h4 id="problems-with-orientation-programs">Problems with Orientation Programs</h4>
+<ul>
+<li>Too much information in a short time can overwhelm employee.</li>
+<li>Too many forms to fill out.</li>
+<li>Little or no orientation is provided.</li>
+<li>HR information can be too broad; supervisor’s information can be too detailed</li>
+</ul>
+<h4 id="evaluation-of-orientation-programs">Evaluation of Orientation Programs</h4>
+<p>Employee Reactions: evaluate usefulness, job performance.</p>
+<p>Socialization Effects: assess progress towards understanding norms.</p>
+<p>Cost/Benefit Analysis: compare costs of program (e.g. materials, time) to benefits (e.g. fewer errors, rate of productivity).</p>
+<h3 id="the-training-process">The Training Process</h3>
+<p><strong>Training</strong><br>
+Process of teaching employees the basic skills/competencies that they need to perform their jobs.<br>
+Part of organization’s strategic plan.<br>
+Considered investment in human capital.</p>
+<p><strong>Development</strong><br>
+Long-term preparation for future jobs.</p>
+<h4 id="necessity-of-training">Necessity of Training</h4>
+<p>A recent federal government report concluded that Canada’s ability to remain globally competitive and manage technological change effectively is highly contingent on our ability to upgrade and renew the skills of our labour force.<br>
+Increased training can strength employee commitment.</p>
+<h4 id="training-and-learning">Training and Learning</h4>
+<p>Training is essentially a learning process.<br>
+To train employees, therefore, it is useful to know something about how people learn.<br>
+People have three main learning styles:</p>
+<ul>
+<li><em>auditory</em>, learning through talking and listening</li>
+<li><em>visual</em>, learning through pictures and print</li>
+<li><em>kinesthetic</em>, tactile learning through a whole-body experience</li>
+</ul>
+<p>Training effectiveness can be enhanced by identifying learning styles and personalizing the training accordingly.</p>
+<h4 id="legal-aspects-of-training">Legal Aspects of Training</h4>
+<p>Ensure admissions procedures are valid.<br>
+Training not unfairly discriminatory.</p>
+<p><strong>Negligent Training</strong><br>
+Occurs when an employer fails to adequately train an employee who subsequently harms a third party.</p>
+<h4 id="step-1-training-needs-analysis">Step 1: Training Needs Analysis</h4>
+<p><strong>Task Analysis</strong> (new employees)<br>
+Break down job into tasks and skills.<br>
+Determine where each task and skill is best learned.</p>
+<p><strong>Performance Analysis</strong> (current employees)<br>
+Verify any performance deficiencies and determine whether they are best resolved through training or other means.</p>
+<p><strong>Establish Training Objectives</strong><br>
+Specify what the trainee should be able to accomplish after completing the training.<br>
+Provide focus for trainee and trainer.<br>
+Provide a benchmark for evaluation of the training program.</p>
+<h4 id="step-2-instructional-design">Step 2: Instructional Design</h4>
+<p>Prepare curriculum.<br>
+Ensure training materials suppose learning objectives.<br>
+Ensure the quality and effectiveness of program elements.</p>
+<h5 id="traditional-training-techniques">Traditional Training Techniques</h5>
+<ul>
+<li>On-the-job training</li>
+<li>Apprenticeship training</li>
+<li>Informal learning</li>
+<li>Job instruction training</li>
+<li>Classroom training</li>
+<li>Audiovisual techniques</li>
+<li>Programmed learning</li>
+<li>Vestibule or simulated training</li>
+</ul>
+<h5 id="e-learning">E-Learning</h5>
+<ul>
+<li>Learning administered via computer, web-based technology</li>
+<li>Flexible, personalized and cost effective</li>
+<li>Types:
+<ul>
+<li>Computer based training (CBT)</li>
+<li>Online training</li>
+<li>Electronic performance support systems (EPSS)</li>
+</ul></li>
+</ul>
+<h4 id="step-3-validation">Step 3: Validation</h4>
+<p>A step often overlooked.<br>
+Ensures objectives are accomplished.<br>
+Pilot study or run-through using representative audience.<br>
+Collect feedback and assess participants.<br>
+Make revisions based on results.</p>
+<h4 id="step-4-implementation">Step 4: Implementation</h4>
+<p>Roll out or schedule delivery by professional trainers.<br>
+Train-the-trainer workshops may be required.<br>
+Ensure trainers are familiar with content and presentation methods.</p>
+<h4 id="step-5-evaluation-of-training">Step 5: Evaluation of Training</h4>
+<ul>
+<li>Reaction
+<ul>
+<li>Were trainees satisfied?</li>
+</ul></li>
+<li>Learning
+<ul>
+<li>Did trainees learn what was intended?</li>
+</ul></li>
+<li>Behaviour
+<ul>
+<li>Was training transferred to the job?</li>
+</ul></li>
+<li>Results
+<ul>
+<li>Did training deliver intended results in the organization?</li>
+</ul></li>
+</ul>
+<h3 id="training-for-special-purposes">Training for Special Purposes</h3>
+<ul>
+<li>Literacy and essential skills
+<ul>
+<li>Functional literacy declining</li>
+</ul></li>
+<li>Customer service
+<ul>
+<li>Customer service certification program</li>
+</ul></li>
+<li>Global business and diversity
+<ul>
+<li>Global literacies: personal, social, business, cultural</li>
+</ul></li>
+<li>Teamwork
+<ul>
+<li>e.g. Outward Bound</li>
+</ul></li>
+<li>First-time supervisors
+<ul>
+<li>Increasing turnovers</li>
+</ul></li>
+</ul>
+<h2 id="chapter-9-career-and-management-development">Chapter 9 - Career and Management Development</h2>
+<h3 id="career-planning-and-development">Career Planning and Development</h3>
+<h4 id="career-planning">Career Planning</h4>
+<p>The deliberate process through which someone becomes aware of personal skills, interests, knowledge, motivations, and other characteristics.<br>
+Acquires information about opportunities and choices.<br>
+Identifies career-related goals and establish action plans to attain specific goals.</p>
+<h4 id="career-development">Career Development</h4>
+<p>Lifelong series of activities (such as workshops) that contribute to a person’s career exploration, establishment, success, and fulfillment.</p>
+<h4 id="occupational-orientation">Occupational Orientation</h4>
+<p>The theory that there are six basic personal orientations that determine the sorts of careers to which people are drawn.</p>
+<h3 id="new-approaches-to-career-development">New Approaches to Career Development</h3>
+<ul>
+<li>More frequent job transitions</li>
+<li>Linear career paths lose definition</li>
+<li>Primary stakeholder is the person</li>
+<li>More dynamic and holistic approach to career development</li>
+<li>Focus on lifelong learning and flexibility</li>
+</ul>
+<p>Identify skills and aptitudes,</p>
+<ul>
+<li>General aptitude test battery (GATB)</li>
+</ul>
+<p>Identify career anchors,</p>
+<ul>
+<li>Concern or value a person will not give up</li>
+</ul>
+<h3 id="career-anchors-edgar-schein">Career Anchors - Edgar Schein</h3>
+<ol style="list-style-type: decimal">
+<li>Technical/functional</li>
+<li>Managerial competence</li>
+<li>Creativity</li>
+<li>Autonomy and independence</li>
+<li>Security</li>
+<li>Service/dedication</li>
+<li>Pure challenge</li>
+<li>Lifestyle</li>
+</ol>
+<h3 id="focus-on-life-trajectories">Focus on Life Trajectories</h3>
+<p>Shift in thinking from,</p>
+<ul>
+<li>Traits and states to context</li>
+<li>Prescriptive to process</li>
+<li>Linear to non-linear</li>
+<li>Scientific facts to narrative evaluations</li>
+<li>Describing to modelling</li>
+</ul>
+<h3 id="roles-in-career-development">Roles in Career Development</h3>
+<h4 id="the-individual">The Individual</h4>
+<p>Individual must accept responsibility for career.<br>
+Requires,</p>
+<ul>
+<li>Self-motivation</li>
+<li>Independent learning</li>
+<li>Effective time and money management</li>
+<li>Self-promotion</li>
+</ul>
+<p>Networking is the foundation of effective career management</p>
+<div class="figure">
+<img src="../HRM%20200/Assets-2/figure-9.1.png?0.3508153467624835">
+
+</div>
+<h4 id="the-manager">The Manager</h4>
+<ul>
+<li>Should provide timely and objective performance feedback.</li>
+<li>Offer developmental assignments and support.</li>
+<li>Participate in career development discussions.</li>
+<li>Act as a coach, appraiser, advisor, and referral agent.</li>
+<li>Provide career-oriented training and development opportunities</li>
+<li>Offer career information and programs</li>
+<li>Offer a variety of career options</li>
+</ul>
+<h3 id="managing-transfers">Managing Transfers</h3>
+<p>Employees seek:</p>
+<ul>
+<li>Greater responsibility of advancement</li>
+<li>Personal enrichment</li>
+<li>More interesting job</li>
+<li>Greater convenience</li>
+</ul>
+<p>Employers want to:</p>
+<ul>
+<li>Fill vacant positions</li>
+<li>FInd better fit for an employee</li>
+</ul>
+<h4 id="managing-transfer-trends">Managing Transfer Trends</h4>
+<p>Routine transfers (for job exposure, to fill vacancies) are on the decline due ot cost and disruption to family life.</p>
+<p><span class="math inline">\(\frac{2}{3}\)</span> of transfers are refused by employees due to family/spousal concerns.</p>
+<p>Employers are offering spousal support.</p>
+<h4 id="making-promotion-decisions">Making Promotion Decisions</h4>
+<ol style="list-style-type: decimal">
+<li>Is seniority or competence the rule?</li>
+<li>How is competence measured?</li>
+<li>Is the process formal or informal?</li>
+<li>Vertical, horizontal, or other?</li>
+</ol>
+<h3 id="management-development">Management Development</h3>
+<p>Any attempt to improve current or future management performance by imparting knowledge, changing attitudes, or increasing skills.</p>
+<h4 id="importance-of-management-development">Importance of Management Development</h4>
+<p>Baby Boomers entering retirement.</p>
+<p>Increased demand for next generation to assume senior management.</p>
+<p>Management development,</p>
+<ul>
+<li>attracts talent</li>
+<li>helps organization achieve employer-of-choice status</li>
+</ul>
+<h4 id="management-development-process">Management Development Process</h4>
+<p>Assessing HR needs to achieve strategic objectives.<br>
+Creating a talent pool.<br>
+Developing managers.</p>
+<h4 id="management-development-techniques">Management Development Techniques</h4>
+<ul>
+<li>Developmental job rotation.</li>
+<li>Coaching/understudy approach.</li>
+<li>Action learning.</li>
+<li>Outside seminars.</li>
+<li>College/university-related programs</li>
+<li>In-house development centres</li>
+<li>Behaviour modelling</li>
+<li>Mentoring</li>
+</ul>
+<h3 id="succession-planning">Succession Planning</h3>
+<p>A process through which senior-level and critical strategic job openings are planned for and eventually filled.</p>
+<p>Steps:</p>
+<ol style="list-style-type: decimal">
+<li>Establish strategic direction of organization</li>
+<li>Identify core skills and competencies needed in critical jobs</li>
+<li>Identify employees who have, or can acquire, the skills and provide developmental opportunities</li>
+</ol>
+<h3 id="leadership-development">Leadership Development</h3>
+<p>Canada facing shortage of leadership talent.</p>
+<p>Banff Centre leadership program,</p>
+<ul>
+<li>Requirements for successful leadership:
+<ul>
+<li>knowledge</li>
+<li>competency</li>
+<li>character</li>
+</ul></li>
+<li>Six categories of leadership competencies:
+<ol style="list-style-type: decimal">
+<li>Self-mastery</li>
+<li>Futuring/vision</li>
+<li>Sense-making/thinking</li>
+<li>Design of intelligent action</li>
+<li>Aligning people to action/leading</li>
+<li>Adaptive learning</li>
+</ol></li>
+</ul>
+<h2 id="chapter-10-performance-management">Chapter 10 - Performance Management</h2>
+<p><strong>Performance Management</strong><br>
+The process encompassing all activities related to improving employee performance, productivity, and effectiveness.<br>
+… includes goal setting, pay for performance, training and development, career management, and disciplinary action.</p>
+<h3 id="performance-management-process">Performance Management Process</h3>
+<h4 id="step-1-define-performance-expectations">Step 1: Define Performance Expectations</h4>
+<p><strong>Task Performance</strong><br>
+Direct contribution to job-related processes.</p>
+<p><strong>Contextual Performance</strong><br>
+Indirect contribution to the organization’s social responsibility values.</p>
+<p><strong>Legal Considerations</strong><br>
+Correlate performance expectations to job activities.</p>
+<h4 id="step-2-provide-ongoing-feedback-and-coaching">Step 2: Provide Ongoing Feedback and Coaching</h4>
+<p>Important to have open two-way communication.<br>
+Employee responsible for monitoring own performance and asking for help.<br>
+Manager responsible for communicating changing strategies and objectives if applicable.</p>
+<h4 id="step-3-conduct-performance-appraisal-and-evaluation-discussions">Step 3: Conduct Performance Appraisal and Evaluation Discussions</h4>
+<p>Formal Appraisal Methods:</p>
+<ul>
+<li>Graphic Rating Scale
+<ul>
+<li>A scale that lists a number of traits and a range of performance for each</li>
+<li>The employee is given a rating that best describes the level of performance for each trait</li>
+</ul></li>
+<li>Alternation Ranking</li>
+<li>Paired Comparison
+<ul>
+<li>For each trait, list all possible pairs of employees</li>
+<li>For each pair, indicate <span class="math inline">\(+\)</span> for the higher ranked employee, <span class="math inline">\(-\)</span> for the lower ranked</li>
+<li>Rank employees by trait based on number of <span class="math inline">\(+\)</span> scores</li>
+</ul></li>
+<li>Forced Distribution
+<ul>
+<li>Predetermined percentages of ratees are placed in various performance categories</li>
+<li>Example,
+<ul>
+<li>15% high performers</li>
+<li>20% high-average performers</li>
+<li>30% average performance</li>
+<li>20% low-average performers</li>
+<li>15% low performers</li>
+</ul></li>
+</ul></li>
+<li>Critical Incident
+<ul>
+<li>Keep a record of uncommonly good or undesirable examples of an employee’s work-related behaviour and reviewing the list with the employee at predetermined times</li>
+</ul></li>
+<li>Narrative Forms
+<ul>
+<li>Free form report of performance</li>
+<li>May take form of performance improvement plan</li>
+</ul></li>
+<li>Behaviourally Anchored Rating Scales (BARS)
+<ul>
+<li>An appraisal method that aims to combine the benefits of narratives, critical incidents, and quantified ratings by anchoring a quantified scale with specific narrative examples of good and poor performance <img src="../HRM%20200/Assets-2/figure-10.4.png?0.12196756547026855"><br>
+</li>
+<li>Advantages
+<ul>
+<li>More accurate measure</li>
+<li>Clearer standards</li>
+<li>Assists in providing feedback</li>
+<li>Independent dimensions</li>
+<li>Consistency</li>
+</ul></li>
+<li>Disadvantage
+<ul>
+<li>Time-consuming</li>
+</ul></li>
+</ul></li>
+<li>Management by Objectives (MBO)
+<ol style="list-style-type: decimal">
+<li>Set the organization’s goals</li>
+<li>Set department goals</li>
+<li>Discuss department goals</li>
+<li>Define expected results (individual goals)</li>
+<li>Performance reviews: measure results</li>
+<li>Provide feedback</li>
+</ol></li>
+</ul>
+<h5 id="use-of-technology-in-performance-appraisals">Use of Technology in Performance Appraisals</h5>
+<ul>
+<li>Enables managers to automate record keeping and report writing</li>
+<li>Provides overall performance management process</li>
+<li>Provides employees with clear development path</li>
+<li>Advanced reporting capabilities</li>
+<li>Electronic performance monitoring (EPM)</li>
+</ul>
+<h5 id="performance-appraisal-problems-and-solutions">Performance Appraisal Problems and Solutions</h5>
+<ul>
+<li>Validity and reliability</li>
+<li>Rating scale problems:
+<ul>
+<li>Unclear performance standards</li>
+<li>Halo effect</li>
+<li>Central tendency</li>
+<li>Leniency or strictness</li>
+<li>Appraisal bias</li>
+<li>Recency effect</li>
+<li>Similar-to-me bias</li>
+</ul></li>
+</ul>
+<h5 id="who-should-do-the-appraising">Who Should Do the Appraising</h5>
+<ul>
+<li>Supervisors</li>
+<li>Self</li>
+<li>Peers</li>
+<li>Committees</li>
+<li>Subordinates</li>
+<li>360-degree appraisal (all of the above)</li>
+</ul>
+<p>360-Degree Appraisal Advice</p>
+<ul>
+<li>Have performance criteria developed by people familiar with the job</li>
+<li>Be clear about who will have access to reports</li>
+<li>Provide training for all participants</li>
+<li>Ensure confidentiality</li>
+<li>Evaluate 360-degree system for fine-tuning</li>
+</ul>
+<div class="figure">
+<img src="../HRM%20200/Assets-2/figure-10.5.png?0.12747590152793986">
+
+</div>
+<h5 id="formal-appraisal-discussions">Formal Appraisal Discussions</h5>
+<p>Supervisor and employee:</p>
+<ul>
+<li>Review appraisal, and plan to remedy deficiencies and reinforce strengths</li>
+</ul>
+<p>Types of interviews:</p>
+<ul>
+<li>Satisfactory–promotable: development plans</li>
+<li>Satisfactory–not promotable: maintain performance</li>
+<li>Unsatisfactory–correctable: action plan to correct performance</li>
+</ul>
+<p>How to conduct the interview:</p>
+<ol style="list-style-type: decimal">
+<li>Be direct and specific
+<ul>
+<li>Use objective work data</li>
+</ul></li>
+<li>Do not get personal
+<ul>
+<li>Compare against standards</li>
+</ul></li>
+<li>Encourage the person to talk
+<ul>
+<li>Use open-ended questions, listen</li>
+</ul></li>
+<li>Develop an action plan
+<ul>
+<li>Agree on future steps</li>
+</ul></li>
+</ol>
+<p>How to handle criticism and defensive employees:</p>
+<ol style="list-style-type: decimal">
+<li>Recognize that defensive behaviour is normal</li>
+<li>Never attack a person’s defenses</li>
+<li>Postpone action</li>
+<li>Recognize human limitations</li>
+</ol>
+<p>Ensuring the discussion leads to improved performance:</p>
+<ol style="list-style-type: decimal">
+<li>Notify of unacceptable performance, explain minimum expectations</li>
+<li>Ensure that expectations are reasonable</li>
+<li>Explain role of warnings in the process of establishing just case</li>
+<li>Take prompt corrective measures</li>
+<li>Avoid sending mixed messages</li>
+<li>Provide a reasonable amount of time for improvement</li>
+<li>Provide support to facilitate improvement</li>
+</ol>
+<h4 id="step-4-determine-performance-rewardsconsequences">Step 4: Determine Performance Rewards/Consequences</h4>
+<ul>
+<li>Provide performance awards,
+<ul>
+<li>merit pay</li>
+<li>extra pay</li>
+</ul></li>
+<li>Importance aspects used to determine the appropriate reward/consequence
+<ul>
+<li>achievement of goals</li>
+<li>how the employee meets the defined standards</li>
+</ul></li>
+</ul>
+<h4 id="step-5-conduct-development-and-career-opportunity-discussions">Step 5: Conduct Development and Career Opportunity Discussions</h4>
+<ul>
+<li>Manager and employee discuss opportunities for development</li>
+<li>Based on current job requirements or future development</li>
+<li>Business needs must be balanced with the employee’s preferences</li>
+</ul>
+<h3 id="legal-and-ethical-issues-in-performance-management">Legal and Ethical Issues in Performance Management</h3>
+<p>Determine required characteristics through job analysis.<br>
+Use characteristics in rating system.<br>
+Ensure ratees and raters know performance standards.<br>
+Use clearly defined dimensions of performance.<br>
+Avoid abstract trait names.<br>
+Use subjective ratings as only one component.</p>
+<h4 id="legal-and-ethical-issues">Legal and Ethical Issues</h4>
+<p>Train supervisors.<br>
+Allow raters regular contact with ratee.<br>
+Have more than one rater, if possible.<br>
+Use formal appeal mechanism.<br>
+Document evaluations and reasons for termination.<br>
+Provide corrective guidance to lower performers.</p>
+<h2 id="chapter-15-managing-employee-separations">Chapter 15 - Managing Employee Separations</h2>
+<p>Who leaves, how they are treated during the exit, what the cause or nature of the exit is, and how remaining employees perceive this all impacts the long-term sustainability of the organization.</p>
+<p>The role of HRM is often overlooked in managing employee engagement and communication during a time of employee separations.</p>
+<h3 id="managing-turnover">Managing Turnover</h3>
+<p>Voluntary turnover, decision made by employee</p>
+<ul>
+<li>Quit</li>
+<li>Retirement</li>
+<li>Resignation</li>
+</ul>
+<p>Involuntary turnover, decision made by employer</p>
+<ul>
+<li>Dismissal</li>
+<li>Layoff</li>
+</ul>
+<div class="figure">
+<img src="../HRM%20200/Assets-2/table-15.1.png?0.6959968524361384">
+
+</div>
+<h4 id="cost-of-turnover">Cost of Turnover</h4>
+<ul>
+<li>Separation cost
+<ul>
+<li>separation interview, administration, separation or severance pay</li>
+<li>separation interview: possibly cost to meet in person to terminate, or collect survey on employee that leaves</li>
+</ul></li>
+<li>Vacancy cost
+<ul>
+<li>temporary workers, overtime, loss of sales due to vacancy</li>
+</ul></li>
+<li>Replacement costs
+<ul>
+<li>recruiting/hiring replacement</li>
+</ul></li>
+<li>Training costs
+<ul>
+<li>for replacement</li>
+</ul></li>
+<li>In Canada, turnover cost is about 1.5 to 2.5 times the salary of the employee</li>
+</ul>
+<h4 id="voluntary-turnover">Voluntary Turnover</h4>
+<p>Unanticipated challenges for replacing employee.<br>
+Reasons for voluntary turnover:</p>
+<ul>
+<li>Sub-optimal hiring practices</li>
+<li>Difficult managerial style</li>
+<li>Lack of recognition</li>
+<li>Lack of competitive compensation systems</li>
+<li>Toxic workplace environments</li>
+</ul>
+<h4 id="involuntary-turnover">Involuntary Turnover</h4>
+<p>Reasons for involuntary turnover:</p>
+<ul>
+<li>Unacceptable job performance</li>
+<li>Economic/financial pressures</li>
+<li>New strategic direction</li>
+</ul>
+<p>Should be fair, after all reasonable steps taken to rehabilitate employment relationship.</p>
+<h3 id="why-people-quit-their-job-video">Why People Quit Their Job (Video)</h3>
+<ul>
+<li>Not always money, often quit their boss (i.e. bad managers)</li>
+<li>Fair pay is a factor in job satisfaction</li>
+<li>Colleagues can cause employees to quit</li>
+<li>Work-life balance is crucial</li>
+<li>Is the current <em>job</em> helping employees reach their <em>career</em> goals
+<ul>
+<li>Keep employees engaged, intellectually challenged</li>
+</ul></li>
+</ul>
+<h3 id="fair-and-just-disciplinary-process">Fair and Just Disciplinary Process</h3>
+<p>Foundations:</p>
+<ol style="list-style-type: decimal">
+<li>Rules and regulations
+<ul>
+<li>clear expectations of acceptable behaviour</li>
+</ul></li>
+<li>Progressive discipline
+<ul>
+<li>warning, suspension, termination</li>
+</ul></li>
+<li>Appeals process
+<ul>
+<li>allow employee to present case</li>
+</ul></li>
+</ol>
+<h4 id="dismissal-for-just-cause">Dismissal for Just Cause</h4>
+<ul>
+<li>Dismissal
+<ul>
+<li>involuntary termination of employment</li>
+</ul></li>
+<li>Dismissal for just cause
+<ul>
+<li>termination based on poor behaviour</li>
+<li>no severance or additional notice period required</li>
+</ul></li>
+<li>Insubordination
+<ul>
+<li>disregard or disobedience of authority</li>
+<li>often provides grounds for just cause</li>
+</ul></li>
+</ul>
+<h4 id="questions-for-just-cause">7 Questions for Just Cause</h4>
+<ol style="list-style-type: decimal">
+<li>Was employee forewarned of disciplinary consequences or actions?</li>
+<li>Were management’s requirements of the employee reasonable?</li>
+<li>Was reasonable effect made to establish unsatisfactory performance?</li>
+<li>Was investigation fair and objective?</li>
+<li>Was there sufficient evidence or proof of guilt?</li>
+<li>Was employee treated same as others?</li>
+<li>Did dismissal fit misconduct?</li>
+</ol>
+<h4 id="layoff">Layoff</h4>
+<p>Temporary withdrawal of employment to workers.<br>
+Conditions:</p>
+<ol style="list-style-type: decimal">
+<li>No work available</li>
+<li>Situation expected to be temporary</li>
+<li>Management intention to recall employees</li>
+</ol>
+<p>Alternatives:</p>
+<ul>
+<li>Pay reduction</li>
+<li>Use of vacation time</li>
+<li>Contingent workers</li>
+<li>Work sharing</li>
+</ul>
+<h4 id="providing-reasonable-notice">Providing Reasonable Notice</h4>
+<p>Required when terminating an employee if just case does not exist.<br>
+Considerations:</p>
+<ul>
+<li>Rule of thumb is 3 to 4 weeks per year service</li>
+<li>Failure to provide notice may result in wrongful dismissal</li>
+<li>Large group terminations require more notice</li>
+<li>Avoid “bad faith conduct”</li>
+<li>Wrongful acts may result in punitive damages</li>
+</ul>
+<p>Qualification for severance pay:</p>
+<ul>
+<li>Employee worked for 5+ years</li>
+<li>Employer has a payroll of 2.5m+ in Ontario <em>or</em> severed more than 50 employees in a 6 months period due to part or all of business permanently closed</li>
+</ul>
+<p>Amount of severance pay, multiply regular wages for a regular work week by the sum of the number of completed years of employment and number of completed months of employment divided by 12 for a year that is not completed.<br>
+The maximum amount of severance pay required to be paid under the ESA is 26 weeks.</p>
+<h4 id="wrongful-dismissal">Wrongful Dismissal</h4>
+<p>An employee dismissal that does not comply with the law or does not comply with a written or implied contractual arrangement.</p>
+<p>Employee can allege wrongful dismissal if,</p>
+<ul>
+<li>notice is not provided</li>
+<li>notice is not considered reasonable</li>
+</ul>
+<p>Financial damages:</p>
+<ul>
+<li>Bad-faith damages</li>
+<li>Punitive damages</li>
+</ul>
+<h4 id="avoiding-wrongful-dismissal-suits">Avoiding Wrongful Dismissal Suits</h4>
+<ol style="list-style-type: decimal">
+<li>Use termination clause and probationary period in employment contracts</li>
+<li>Document all disciplinary action</li>
+<li>Do not allege just case for dismissal unless it can be proven</li>
+<li>Time the termination so that it does not conflict with special occasions</li>
+<li>Clearly state a settlement offer in writing</li>
+<li>Schedule the termination interview in a private location at a discrete time of day</li>
+<li>Include two managers in the termination meeting</li>
+</ol>
+<h4 id="constructive-dismissal">Constructive Dismissal</h4>
+<p>Employer makes unilateral changes in the employment contact that are unacceptable to the employee.<br>
+Employee is eligible for reasonable notice.<br>
+Examples:</p>
+<ul>
+<li>Demotion</li>
+<li>Reduction in pay and benefits</li>
+<li>Forced resignation
+<ul>
+<li>Technically involuntary (e.g. terrible work environment)</li>
+</ul></li>
+</ul>
+<h3 id="the-termination-interview">The Termination Interview</h3>
+<ol style="list-style-type: decimal">
+<li>Plan the interview</li>
+<li>Get to the point</li>
+<li>Describe the situation briefly</li>
+<li>Listen</li>
+<li>Review all elements of the severance package</li>
+<li>Identify the next step</li>
+</ol>
+<h3 id="employee-engagement">Employee Engagement</h3>
+<p>Emotional and intellectual involvement of employees in their work.</p>
+<p>Creates vested interest in company’s success, willingness, and motivation to exceed job performance requirements.</p>
+<p>Effective communication is important to employee engagement.</p>
+<div class="figure">
+<img src="../HRM%20200/Assets-2/figure-15.1.png?0.21836565498716531">
+
+</div>
+<h3 id="fairness-in-employee-separations">Fairness in Employee Separations</h3>
+<ul>
+<li>Distributive justice
+<ul>
+<li>Fairness of a decision outcome</li>
+</ul></li>
+<li>Procedural justice
+<ul>
+<li>Fairness of the process used to make a decision</li>
+</ul></li>
+<li>Interactional justice
+<ul>
+<li>Fairness in interpersonal interactions by treating others with dignity and respect</li>
+</ul></li>
+</ul>
+<h3 id="suggestion-programs">Suggestion Programs</h3>
+<p>Offer rewards for employee suggestions on improvement.<br>
+Benefits:</p>
+<ul>
+<li>Monitor employees feelings/concerns</li>
+<li>Provide alternate channel of communication</li>
+<li>Minor employee issues can be addressed early</li>
+</ul>
+<h3 id="employee-opinion-surveys">Employee Opinion Surveys</h3>
+<p>Should be conducted regularly and communicated to employees.<br>
+Address areas such as job satisfaction, co-worker cohesion, quality focus, employee commitment.<br>
+Blogging is becoming more common; recommend a blogging policy to encourage but guide employees.</p>
+<h3 id="communication-from-management">Communication from Management</h3>
+<p>Share data on performance and operations prospects.<br>
+Traditionally:</p>
+<ul>
+<li>Newsletters</li>
+<li>Verbal presentations</li>
+</ul>
+<p>More recently:</p>
+<ul>
+<li>Video, email, intranets</li>
+<li>Blogs from senior management</li>
+</ul>
+
+      </div>
+      <div class="md-sidebar-toc"><ul>
+<li><a href="#hrm-200-introduction-to-human-resource-management">HRM 200 - Introduction to Human Resource Management</a>
+<ul>
+<li><a href="#chapter-7-selection">Chapter 7 - Selection</a>
+<ul>
+<li><a href="#the-selection-process">The Selection Process</a>
+<ul>
+<li><a href="#multiple-hurdle-strategy">Multiple-Hurdle Strategy</a></li>
+<li><a href="#designing-the-selection-process">Designing the Selection Process</a></li>
+<li><a href="#acquiring-employees-and-the-law">Acquiring Employees and the Law</a></li>
+<li><a href="#step-1-preliminary-applicant-screening">Step 1: Preliminary Applicant Screening</a></li>
+<li><a href="#step-2-selection-testing">Step 2: Selection Testing</a>
+<ul>
+<li><a href="#reliability">Reliability</a></li>
+<li><a href="#validity">Validity</a>
+<ul>
+<li><a href="#types-of-validity">Types of Validity</a></li>
+</ul>
+</li>
+<li><a href="#types-of-tests-used-in-selection">Types of Tests Used in Selection</a></li>
+</ul>
+</li>
+<li><a href="#step-3-the-selection-interview">Step 3: The Selection Interview</a>
+<ul>
+<li><a href="#types-of-interviews">Types of Interviews</a></li>
+<li><a href="#common-interviewing-mistakes">Common Interviewing Mistakes</a></li>
+<li><a href="#conducting-an-effective-interview">Conducting an Effective Interview</a></li>
+</ul>
+</li>
+<li><a href="#step-4-background-investigationreference-checking">Step 4: Background Investigation/Reference Checking</a>
+<ul>
+<li><a href="#step-5-supervisory-interview-and-realistic-job-preview">Step 5: Supervisory Interview and Realistic Job Preview</a></li>
+<li><a href="#step-6-hiring-decision-and-candidate-notification">Step 6: Hiring Decision and Candidate Notification</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#chapter-8-on-boarding-and-training">Chapter 8: On-boarding and Training</a>
+<ul>
+<li><a href="#becoming-a-learning-organization">Becoming a Learning Organization</a>
+<ul>
+<li><a href="#learning-organization">Learning Organization</a></li>
+<li><a href="#orientation">Orientation</a></li>
+<li><a href="#training">Training</a></li>
+<li><a href="#employee-on-boarding-orientation">Employee On-boarding (Orientation)</a></li>
+<li><a href="#purpose-of-on-boarding">Purpose of On-boarding</a></li>
+<li><a href="#socialization">Socialization</a></li>
+<li><a href="#content-of-orientation-programs">Content of Orientation Programs</a></li>
+<li><a href="#responsibility-for-orientation">Responsibility for Orientation</a></li>
+<li><a href="#executive-integration">Executive Integration</a></li>
+<li><a href="#problems-with-orientation-programs">Problems with Orientation Programs</a></li>
+<li><a href="#evaluation-of-orientation-programs">Evaluation of Orientation Programs</a></li>
+</ul>
+</li>
+<li><a href="#the-training-process">The Training Process</a>
+<ul>
+<li><a href="#necessity-of-training">Necessity of Training</a></li>
+<li><a href="#training-and-learning">Training and Learning</a></li>
+<li><a href="#legal-aspects-of-training">Legal Aspects of Training</a></li>
+<li><a href="#step-1-training-needs-analysis">Step 1: Training Needs Analysis</a></li>
+<li><a href="#step-2-instructional-design">Step 2: Instructional Design</a>
+<ul>
+<li><a href="#traditional-training-techniques">Traditional Training Techniques</a></li>
+<li><a href="#e-learning">E-Learning</a></li>
+</ul>
+</li>
+<li><a href="#step-3-validation">Step 3: Validation</a></li>
+<li><a href="#step-4-implementation">Step 4: Implementation</a></li>
+<li><a href="#step-5-evaluation-of-training">Step 5: Evaluation of Training</a></li>
+</ul>
+</li>
+<li><a href="#training-for-special-purposes">Training for Special Purposes</a></li>
+</ul>
+</li>
+<li><a href="#chapter-9-career-and-management-development">Chapter 9 - Career and Management Development</a>
+<ul>
+<li><a href="#career-planning-and-development">Career Planning and Development</a>
+<ul>
+<li><a href="#career-planning">Career Planning</a></li>
+<li><a href="#career-development">Career Development</a></li>
+<li><a href="#occupational-orientation">Occupational Orientation</a></li>
+</ul>
+</li>
+<li><a href="#new-approaches-to-career-development">New Approaches to Career Development</a></li>
+<li><a href="#career-anchors-edgar-schein">Career Anchors - Edgar Schein</a></li>
+<li><a href="#focus-on-life-trajectories">Focus on Life Trajectories</a></li>
+<li><a href="#roles-in-career-development">Roles in Career Development</a>
+<ul>
+<li><a href="#the-individual">The Individual</a></li>
+<li><a href="#the-manager">The Manager</a></li>
+</ul>
+</li>
+<li><a href="#managing-transfers">Managing Transfers</a>
+<ul>
+<li><a href="#managing-transfer-trends">Managing Transfer Trends</a></li>
+<li><a href="#making-promotion-decisions">Making Promotion Decisions</a></li>
+</ul>
+</li>
+<li><a href="#management-development">Management Development</a>
+<ul>
+<li><a href="#importance-of-management-development">Importance of Management Development</a></li>
+<li><a href="#management-development-process">Management Development Process</a></li>
+<li><a href="#management-development-techniques">Management Development Techniques</a></li>
+</ul>
+</li>
+<li><a href="#succession-planning">Succession Planning</a></li>
+<li><a href="#leadership-development">Leadership Development</a></li>
+</ul>
+</li>
+<li><a href="#chapter-10-performance-management">Chapter 10 - Performance Management</a>
+<ul>
+<li><a href="#performance-management-process">Performance Management Process</a>
+<ul>
+<li><a href="#step-1-define-performance-expectations">Step 1: Define Performance Expectations</a></li>
+<li><a href="#step-2-provide-ongoing-feedback-and-coaching">Step 2: Provide Ongoing Feedback and Coaching</a></li>
+<li><a href="#step-3-conduct-performance-appraisal-and-evaluation-discussions">Step 3: Conduct Performance Appraisal and Evaluation Discussions</a>
+<ul>
+<li><a href="#use-of-technology-in-performance-appraisals">Use of Technology in Performance Appraisals</a></li>
+<li><a href="#performance-appraisal-problems-and-solutions">Performance Appraisal Problems and Solutions</a></li>
+<li><a href="#who-should-do-the-appraising">Who Should Do the Appraising</a></li>
+<li><a href="#formal-appraisal-discussions">Formal Appraisal Discussions</a></li>
+</ul>
+</li>
+<li><a href="#step-4-determine-performance-rewardsconsequences">Step 4: Determine Performance Rewards/Consequences</a></li>
+<li><a href="#step-5-conduct-development-and-career-opportunity-discussions">Step 5: Conduct Development and Career Opportunity Discussions</a></li>
+</ul>
+</li>
+<li><a href="#legal-and-ethical-issues-in-performance-management">Legal and Ethical Issues in Performance Management</a>
+<ul>
+<li><a href="#legal-and-ethical-issues">Legal and Ethical Issues</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#chapter-15-managing-employee-separations">Chapter 15 - Managing Employee Separations</a>
+<ul>
+<li><a href="#managing-turnover">Managing Turnover</a>
+<ul>
+<li><a href="#cost-of-turnover">Cost of Turnover</a></li>
+<li><a href="#voluntary-turnover">Voluntary Turnover</a></li>
+<li><a href="#involuntary-turnover">Involuntary Turnover</a></li>
+</ul>
+</li>
+<li><a href="#why-people-quit-their-job-video">Why People Quit Their Job (Video)</a></li>
+<li><a href="#fair-and-just-disciplinary-process">Fair and Just Disciplinary Process</a>
+<ul>
+<li><a href="#dismissal-for-just-cause">Dismissal for Just Cause</a></li>
+<li><a href="#questions-for-just-cause">7 Questions for Just Cause</a></li>
+<li><a href="#layoff">Layoff</a></li>
+<li><a href="#providing-reasonable-notice">Providing Reasonable Notice</a></li>
+<li><a href="#wrongful-dismissal">Wrongful Dismissal</a></li>
+<li><a href="#avoiding-wrongful-dismissal-suits">Avoiding Wrongful Dismissal Suits</a></li>
+<li><a href="#constructive-dismissal">Constructive Dismissal</a></li>
+</ul>
+</li>
+<li><a href="#the-termination-interview">The Termination Interview</a></li>
+<li><a href="#employee-engagement">Employee Engagement</a></li>
+<li><a href="#fairness-in-employee-separations">Fairness in Employee Separations</a></li>
+<li><a href="#suggestion-programs">Suggestion Programs</a></li>
+<li><a href="#employee-opinion-surveys">Employee Opinion Surveys</a></li>
+<li><a href="#communication-from-management">Communication from Management</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+      <a id="sidebar-toc-btn">≡</a>
+    </body>
+    
+    
+    
+    <script>
+(function bindTaskListEvent() {
+  var taskListItemCheckboxes = document.body.getElementsByClassName('task-list-item-checkbox')
+  for (var i = 0; i < taskListItemCheckboxes.length; i++) {
+    var checkbox = taskListItemCheckboxes[i]
+    var li = checkbox.parentElement
+    if (li.tagName !== 'LI') li = li.parentElement
+    if (li.tagName === 'LI') {
+      li.classList.add('task-list-item')
+    }
+  }
+}())    
+</script>
+    
+<script>
+
+var sidebarTOCBtn = document.getElementById('sidebar-toc-btn')
+sidebarTOCBtn.addEventListener('click', function(event) {
+  event.stopPropagation()
+  if (document.body.hasAttribute('html-show-sidebar-toc')) {
+    document.body.removeAttribute('html-show-sidebar-toc')
+  } else {
+    document.body.setAttribute('html-show-sidebar-toc', true)
+  }
+})
+</script>
+      
+  </html>
