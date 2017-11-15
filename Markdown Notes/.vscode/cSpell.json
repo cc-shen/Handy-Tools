@@ -6,11 +6,19 @@
     "language": "en",
     // words - list of words to be always considered correct
     "words": [
+        "behaviours",
+        "Boardbanding",
         "Boundedness",
         "datasets",
+        "DPSP",
+        "EAPs",
+        "HCSA",
         "hyperplane",
         "perceptron",
-        "uwaterloo"
+        "PTSD",
+        "RRSP",
+        "uwaterloo",
+        "WHMIS"
     ],
     // flagWords - list of words to be always considered incorrect
     // This is useful for offensive words and common spelling errors.
