@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <title>HRM-200-3</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      
+        <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({"extensions":["tex2jax.js"],"jax":["input/TeX","output/HTML-CSS"],"messageStyle":"none","tex2jax":{"processEnvironments":false,"processEscapes":true,"inlineMath":[["$","$"],["\\(","\\)"]],"displayMath":[["$$","$$"],["\\[","\\]"]]},"TeX":{"extensions":["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"]},"HTML-CSS":{"availableFonts":["TeX"]}});
+        </script>
+        <script type="text/javascript" async src="file:////Users/Charles/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.3.0/node_modules/@shd101wyy/mume/dependencies/mathjax/MathJax.js"></script>
+        
+      
+      
+      
+      
+      
+      
+
+      <style> 
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+ 
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview   ">
+      <h1 id="hrm-200-introduction-to-human-resource-management">HRM 200 - Introduction to Human Resource Management</h1>
+<p>Part 3</p>
+<h2 id="chapter-11-strategic-pay-plans">Chapter 11 - Strategic Pay Plans</h2>
+<p><strong>Employee compensation</strong> includes all forms of pay going to employees and arising from their employment.<br>
+It has two main components,</p>
+<ul>
+<li>Direct financial payments
+<ul>
+<li>wages, salaries, incentives, commissions, and bonuses</li>
+</ul></li>
+<li>Indirect financial payments
+<ul>
+<li>financial benefits, i.e. employer-paid insurance and vacation</li>
+</ul></li>
+</ul>
+<h3 id="aligning-total-rewards-with-strategy">Aligning Total Rewards with Strategy</h3>
+<p>Compensation plan should first advance the firm’s strategic aims–management should produce an aligned reward strategy.<br>
+This means creating a package that produces the employee behaviours the firm needs to achieve its competitive strategy.</p>
+<p>Question: <em>Do our compensation policies support our strategic aims?</em></p>
+<ul>
+<li>What are our strategic aims?</li>
+<li>What employee behaviours and skills do we need to achieve our strategic aims?</li>
+<li>What compensation policies and practices–salary, incentive plans, and benefits–will help to produce the employee behaviours we need to achieve our strategic aims?</li>
+</ul>
+<h3 id="five-components-of-total-rewards">Five Components of Total Rewards</h3>
+<ol style="list-style-type: decimal">
+<li>Compensation</li>
+<li>Benefits</li>
+<li>Work-life programs</li>
+<li>Performance and recognition</li>
+<li>Development and career opportunities</li>
+</ol>
+<p>Total reward consist of both monetary and non-monetary benefits.<br>
+Total reward should align with strategic goals and business goals of the organization.</p>
+<h3 id="impact-of-rewards">Impact of Rewards</h3>
+<p>Rewards are to attract, retain, motivate and engage employees.<br>
+<em>Engagement</em> refers to a positive emotional connection to the employer and a clear understanding of the strategic significance of the job, which results in discretionary effort on the part of the employee.</p>
+<h3 id="basic-considerations-in-determining-pay-rates">Basic Considerations in Determining Pay Rates</h3>
+<ul>
+<li>Legal considerations
+<ul>
+<li>Employment/Labour Standards Act</li>
+<li>Pay Equity Acts</li>
+<li>Human Rights Acts</li>
+<li>Canada/Quebec Pension Plan</li>
+<li>Other legislation (worker’s comp., EI)</li>
+</ul></li>
+<li>Union influences</li>
+<li>Compensation policies</li>
+<li>Equity and its impact on pay rates</li>
+</ul>
+<h3 id="establishing-pay-rates">Establishing Pay Rates</h3>
+<h4 id="stage-1-job-evaluation">Stage 1: Job Evaluation</h4>
+<p>A systematic comparison to determine relative worth of jobs within a firm.</p>
+<ul>
+<li>Benchmark job
+<ul>
+<li>Critical to operations or commonly found in other organizations</li>
+</ul></li>
+<li>Compensable factors
+<ul>
+<li>Fundamental, compensable element of a job</li>
+</ul></li>
+</ul>
+<p><strong>Job Evaluation Methods</strong><br>
+Classification/Grading Method</p>
+<ul>
+<li>Categories jobs into groups</li>
+<li>Grade/group description: outline the level of compensable factors required by each job</li>
+</ul>
+<p>Point Method</p>
+<ul>
+<li>Identify compensable factors</li>
+<li>Determine the degree to which each factor is present in each job</li>
+</ul>
+<p>Point Method Steps</p>
+<ol style="list-style-type: decimal">
+<li>Preliminary steps</li>
+<li>Determine factor weights and degrees</li>
+<li>Assign points for each degree of each sub-factor</li>
+<li>Evaluate the jobs</li>
+</ol>
+<h4 id="stage-2-conduct-wagesalary-survey">Stage 2: Conduct Wage/Salary Survey</h4>
+<ul>
+<li>Aimed at determining prevailing wage rates
+<ul>
+<li>Determine rates for benchmark jobs</li>
+<li>Determine market rates for jobs</li>
+<li>Collect data on benefits, recognition programs, etc.</li>
+</ul></li>
+<li>Avoid upward bias</li>
+<li>Informal surveys good for easily recognized jobs</li>
+<li>Formal surveys are most comprehensive</li>
+</ul>
+<h4 id="stage-3-combine-job-evaluation-and-salary-survey-to-determine-pay">Stage 3: Combine Job Evaluation and Salary Survey to Determine Pay</h4>
+<p><strong>Wage Curve</strong><br>
+A graphic description of the relationship between the value of the job and the average wage paid for this job.</p>
+<p><strong>Pay Ranges</strong><br>
+A series of steps of levels within a pay grade, usually based on years of service.</p>
+<p><strong>Boardbanding</strong><br>
+Reducing the number of salary grades and ranges into just a few wide levels or “bands”, each of which then contains a relatively wide range of jobs and salary levels.<br>
+Advantage is the greater flexibility in employee compensation.</p>
+<div class="figure">
+<img src="../HRM%20200/Assets-3/figure-11.4.png?0.756311764442164">
+
+</div>
+<h3 id="pay-for-knowledge">Pay for Knowledge</h3>
+<ul>
+<li>Competency-based pay
+<ul>
+<li>managers, professionals</li>
+</ul></li>
+<li>Skill-based pay
+<ul>
+<li>manufacturing employees</li>
+</ul></li>
+</ul>
+<p>Pay-for-knowledge program should include:</p>
+<ul>
+<li>Competencies/skills directly important to job performance</li>
+<li>New competencies that replace competencies that are no longer important</li>
+<li>On-the-job training, not “in the classroom”</li>
+</ul>
+<h3 id="pay-for-executive-managerial-and-professional-jobs">Pay for Executive, Managerial and Professional Jobs</h3>
+<p>Developing a compensation plan to pay executive, managerial, and professional employees is similar in many respects to developing a plan for other employees.</p>
+<p>The basic aims of the plan are the same in that goal is to attract good employees and maintain their commitment.</p>
+<p>Executives, managers, and professionals are almost always paid based on their performance as well as on the basis of static job demands, like working conditions.</p>
+<h3 id="five-elements-of-compensating-executives-and-managers">Five Elements of Compensating Executives and Managers</h3>
+<ol style="list-style-type: decimal">
+<li>Salary</li>
+<li>Benefits</li>
+<li>Short-term incentives</li>
+<li>Long-term incentives</li>
+<li>Perquisites</li>
+</ol>
+<h3 id="compensating-professional-employees">Compensating Professional Employees</h3>
+<ul>
+<li>Engineers, scientists, accountants, lawyers, etc.</li>
+<li>Compensable factors not easily measured: creativity, problem solving</li>
+<li>Difficult to measure economic impact to organization</li>
+<li>Market-pricing approach commonly used</li>
+</ul>
+<h3 id="pay-equity">Pay Equity</h3>
+<p>Wage gap has narrowed but remains at 30%.<br>
+Gap attributed to systemic discrimination.</p>
+<p>Aim is to provide equal pay to male and female-dominated job classes of equal value.<br>
+Must ensure no gender bias in job evaluation.<br>
+Long-term solution is to eliminate male and female-dominated jobs.</p>
+<div class="figure">
+<img src="../HRM%20200/Assets-3/table-11.3.png?0.7607245605102368">
+
+</div>
+<h2 id="chapter-12-pay-for-performance-and-financial-incentives">Chapter 12 - Pay-for-Performance and Financial Incentives</h2>
+<h3 id="money-and-motivation">Money and Motivation</h3>
+<p><strong>Fixed Pay</strong><br>
+Compensation independent of performance level, includes base pay, allowances.</p>
+<p><strong>Variable Pay</strong><br>
+Any plan that ties pay to productivity or profitability.<br>
+May be in addition to base pay.</p>
+<p><strong>TED Talk</strong>: <a href="https://www.ted.com/talks/dan_pink_on_motivation">The puzzle of motivation</a><br>
+Reward narrows our focus to concentrate, sometimes the solution is outside the narrowed view.<br>
+Once the task called for “even rudimentary cognitive skills”, a larger reward led to “poorer performance”.</p>
+<h4 id="types-of-incentive-plans">Types of Incentive Plans</h4>
+<ul>
+<li>Operations employees</li>
+<li>Senior managers and executives</li>
+<li>Salespeople</li>
+<li>Other managers and professional employees</li>
+<li>Organization-wide</li>
+</ul>
+<h3 id="incentives-for-all-employees">Incentives for All Employees</h3>
+<p><strong>Merit Pay or Merit Raise</strong><br>
+Any salary increase awarded to an employee based on individual performance.<br>
+Usually an ongoing increase to base pay.<br>
+Link to performance acts as motivator.<br>
+Success depends on validity of performance appraisal system.</p>
+<p><strong>Employee Share Purchase/Stock Ownership Plan</strong><br>
+A trust holds shares of company stock purchased for or issued to employees.<br>
+The trust distributes the stock to employees as prescribed by the plan.</p>
+<p><strong>Profit-sharing Plans</strong><br>
+Most or all employees share in the company’s profits.</p>
+<p><strong>Gain-sharing Plans</strong><br>
+Engages employees to achieve productivity objectives and share the gains.<br>
+Works in stable organizations with predictable goals and measures of performance.</p>
+<h3 id="incentives-for-operations-employees">Incentives for Operations Employees</h3>
+<h4 id="piecework-plans">Piecework Plans</h4>
+<p>Oldest and most commonly used plan.<br>
+Based on production standard.</p>
+<ul>
+<li>Straight piecework plan
+<ul>
+<li>Employee is paid per produced output</li>
+</ul></li>
+<li>Guaranteed piecework plan
+<ul>
+<li>Has a built in safety net (possibly fluctuating output) with more reward if over the threshold, static if below</li>
+</ul></li>
+<li>Differential piecework plan
+<ul>
+<li>Similar to guaranteed piecework plan</li>
+<li>There is expectation on output, productivity over the expectation is rewarded with additional percentage of the produced outcome</li>
+</ul></li>
+</ul>
+<p>Advantages:</p>
+<ul>
+<li>Simple</li>
+<li>Appears equitable</li>
+<li>Directly tied to performance</li>
+</ul>
+<p>Disadvantages:</p>
+<ul>
+<li>Some employers arbitrarily raise standards</li>
+<li>Difficult to adjust for changes in hourly rates</li>
+<li>Resistance to revising the standard</li>
+<li>Quality may be compromised</li>
+</ul>
+<h4 id="team-or-group-incentives">Team or Group Incentives</h4>
+<p>Production standard is set for a specific work group.<br>
+Incentives paid if the group exceeds the standard.</p>
+<p>Implementing team or group incentives:</p>
+<ol style="list-style-type: decimal">
+<li>Set standards for each member of the group
+<ul>
+<li>Members paid based on highest performer</li>
+<li>Members paid based on lowest performer</li>
+</ul></li>
+<li>Set standards for the group as whole
+<ul>
+<li>All members paid equally</li>
+</ul></li>
+<li>Use a group defined measure of performance</li>
+</ol>
+<h3 id="incentives-for-senior-managers-and-executives">Incentives for Senior Managers and Executives</h3>
+<p>Short term incentives–annual bonus,</p>
+<ul>
+<li>Who is eligible?</li>
+<li>How much to pay?</li>
+<li>Individual rewards?</li>
+</ul>
+<p>Long term incentives–capital accumulation,</p>
+<ul>
+<li>Stock options</li>
+<li>Performance share units plan</li>
+<li>Appropriate link to strategy</li>
+</ul>
+<h3 id="incentives-for-salespeople">Incentives for Salespeople</h3>
+<h4 id="salary-plan">Salary Plan</h4>
+<p>Fixed salary.</p>
+<p>Advantages:</p>
+<ul>
+<li>Works for prospecting and account servicing</li>
+<li>Salespeople know their income in advance</li>
+<li>Easy to reassign salespeople</li>
+<li>Enhances long-term perspective</li>
+</ul>
+<p>Disadvantages:</p>
+<ul>
+<li>High performance not recognized/rewarded</li>
+<li>Salary usually based on seniority, demotivating for high performing sales people</li>
+</ul>
+<h4 id="commission-plan">Commission Plan</h4>
+<p>Pay in direct proportion to sales generated.</p>
+<p>Advantages:</p>
+<ul>
+<li>Greatest incentive, attracts high performing salespeople</li>
+<li>Sales cost proportion to sales level</li>
+<li>Easy to understand/compute</li>
+</ul>
+<p>Disadvantages:</p>
+<ul>
+<li>Focus on sales, not customer relationship</li>
+<li>Variances in income among salespeople</li>
+<li>Salespeople may neglect other duties</li>
+</ul>
+<h4 id="combination-plan">Combination Plan</h4>
+<p>Base salary plus commission.</p>
+<p>Advantages:</p>
+<ul>
+<li>Earnings floor</li>
+<li>Allows compensation for administrative work</li>
+<li>Reward for higher performance</li>
+</ul>
+<p>Disadvantages:</p>
+<ul>
+<li>May be a compromise</li>
+<li>Often confusing to calculate</li>
+</ul>
+<h3 id="developing-effective-incentive-plans">Developing Effective Incentive Plans</h3>
+<p>Considerations:</p>
+<ul>
+<li>Performance pay cannot replace good management</li>
+<li>Firms get what they pay for</li>
+<li>“Pay is not a motivator”</li>
+<li>Rewards rupture relationships</li>
+<li>Rewards may undermine responsiveness</li>
+</ul>
+<h3 id="how-to-implement-incentive-plans">How to Implement Incentive Plans</h3>
+<ol style="list-style-type: decimal">
+<li>Pay for performance</li>
+<li>Link incentives to activities that engage employees</li>
+<li>Link incentives to measurable, valuable competencies</li>
+<li>Match incentives to organizational culture</li>
+<li>Keep group incentives clear and simple</li>
+<li>Over-communicate</li>
+<li>The greatest incentive is the work itself</li>
+</ol>
+<h3 id="employee-recognition-programs">Employee Recognition Programs</h3>
+<p>Emerging as a critical component of incentive plans.<br>
+Traditionally, recognition has been for long service.<br>
+Movement toward recognition throughout the career.<br>
+Particularly effective in smaller entrepreneurial companies.<br>
+Effective in achieving improved attitudes, increased workloads, and productivity.</p>
+<h2 id="chapter-13-employee-benefits-and-services">Chapter 13 - Employee Benefits and Services</h2>
+<h3 id="employee-benefits">Employee Benefits</h3>
+<p>Indirect financial payments given to employees.<br>
+May include supplementary health and life insurance, vacation, pension, education plans, and discounts on company products.</p>
+<p>Becoming larger part of total compensation.<br>
+Useful in attracting talent.<br>
+Increasingly important for aging workforce.</p>
+<p><strong>Video</strong> (HR Reporter Canada)<br>
+Balance managing cost while making benefits attractive for employee retention.<br>
+Higher benefits help support organization’s business strategy (road map).<br>
+Want cost-effectiveness of benefits, what’s the rate of escalation of the cost?<br>
+Employee satisfaction on benefits is key, organization want to know if employee leave due to poor benefits.<br>
+Can also measure effectiveness by utilization, want benefits that employees will be interested in.<br>
+Organization need to embrace flexibility for plan benefits and employee satisfaction.</p>
+<h3 id="government-mandated-benefits">Government-Mandated Benefits</h3>
+<ul>
+<li>Employment Insurance (EI)
+<ul>
+<li>Federal program to provide income benefits if a person is unable to work through no fault of his or her own</li>
+<li>Eligibility</li>
+<li>Benefit period</li>
+<li>Funding</li>
+<li>Supplemental Unemployment Benefit (SUB)</li>
+</ul></li>
+<li>Pay on termination of employment
+<ul>
+<li>Does <em>not</em> apply to those on short-term contract or fired for just cause</li>
+<li>Amount of payment varies according to jurisdiction and circumstances
+<ul>
+<li>Pay in lieu of reasonable notice</li>
+<li>Severance pay (Ontario and federal jurisdiction only)</li>
+<li>Pay for mass layoffs (some jurisdictions)</li>
+</ul></li>
+</ul></li>
+<li>Leaves of absence
+<ul>
+<li>Unpaid time off</li>
+<li>Conditions vary by jurisdiction</li>
+<li>Employer must guarantee same or similar job when employee returns</li>
+<li>Common types includes,
+<ul>
+<li>Maternity/parental leave</li>
+<li>Parental/adoption leave</li>
+<li>Bereavement leave</li>
+<li>Compassionate care leave</li>
+</ul></li>
+</ul></li>
+<li>Canada/Quebec Pension Plan (CPP/QPP)
+<ul>
+<li>Programs that provide basic level of security on retirement</li>
+<li>Benefits based on individual contributions made</li>
+<li>Three types of benefits
+<ul>
+<li>Retirement income</li>
+<li>Survivor or death benefits</li>
+<li>Disability benefits</li>
+</ul></li>
+</ul></li>
+<li>Workers’ compensation
+<ul>
+<li>“No fault” insurance plan</li>
+<li>Income and medical benefits to victims of work-related accidents or illnesses, regardless of fault</li>
+<li>Funded collectively by employers</li>
+<li>Administered by jurisdictional workers’ compensation boards</li>
+</ul></li>
+<li>Vacations
+<ul>
+<li>Minimum amount of paid vacation must be provided to employees</li>
+</ul></li>
+<li>Holiday
+<ul>
+<li>Varies by jurisdiction</li>
+<li>Minimum 5 days, maximum 9</li>
+</ul></li>
+<li>Paid breaks
+<ul>
+<li>Uninterrupted break within a work day, e.g. 30 minutes break on a shift over 5 hours</li>
+</ul></li>
+</ul>
+<h3 id="voluntary-employer-sponsored-benefits">Voluntary Employer-Sponsored Benefits</h3>
+<ul>
+<li>Life insurance
+<ul>
+<li>Group plans offer lower rates and inclusion of all employees</li>
+<li>Additional benefits include,
+<ul>
+<li>Accidental death coverage</li>
+<li>Dismemberment coverage</li>
+<li>Critical illness insurance</li>
+</ul></li>
+</ul></li>
+<li>Supplementary healthcare/medical insurance
+<ul>
+<li>Supplements provincial healthcare plans</li>
+<li>Group rates slower than individual rates</li>
+<li>Employee usually pays a yearly deductible amount</li>
+<li>Usually includes prescription drugs, private/semi-private hospital rooms, other health costs not covered by provincial plans</li>
+<li>May include dental, vision care, hearing aids</li>
+</ul></li>
+<li>Short-term disability
+<ul>
+<li>Provides income to employees when absent due to non-work related injury or illness</li>
+<li>Requires medical certificate</li>
+<li>Usually covered by insurance company</li>
+</ul></li>
+<li>Sick leave plans
+<ul>
+<li>Provides income for 2 or 3 days</li>
+<li>Usually a specified amount of sick days per year</li>
+</ul></li>
+<li>Long-term disability
+<ul>
+<li>Income to employees for absence due to non-work related long-term injury or illness</li>
+<li>Usually 50% to 75% of pay</li>
+<li>Accelerating trend in claims</li>
+<li>Disability management</li>
+<li>Mental health issues are leading cause of disability claims</li>
+</ul></li>
+<li>Sabbaticals
+<ul>
+<li>Time off to rejuvenate or pursue personal goals</li>
+<li>Usually unpaid</li>
+<li>Helps retain employees and avoid burnout</li>
+</ul></li>
+<li>Retirement benefits
+<ul>
+<li>Defined benefit pension plan
+<ul>
+<li>Benefits formula based on earnings and years of service</li>
+</ul></li>
+<li>Defined contribution pension plan
+<ul>
+<li>Benefits based on amount of contribution and value of fund</li>
+</ul></li>
+<li>Group RRSP
+<ul>
+<li>Employer sets up RRSP fund</li>
+</ul></li>
+<li>Deferred Profit Sharing Plan (DPSP)
+<ul>
+<li>Portion of profits is put into fund</li>
+</ul></li>
+</ul></li>
+</ul>
+<h4 id="reducing-health-benefit-costs">Reducing Health Benefit Costs</h4>
+<p>Increase amounts paid by employees.<br>
+Restrict drugs paid for by plan.<br>
+Health promotion.<br>
+Risk-assessment programs.<br>
+HealthCare Spending Account (HCSA).</p>
+<h3 id="employee-services">Employee Services</h3>
+<ul>
+<li>Flexible work schedule
+<ul>
+<li>Flextime</li>
+<li>Telecommuting</li>
+<li>Compressed workweeks</li>
+<li>Job sharing</li>
+<li>Work sharing</li>
+</ul></li>
+<li>Personal services
+<ul>
+<li>Credit unions</li>
+<li>Counselling services</li>
+<li>Employee Assistance Programs (EAPs)</li>
+<li>Other personal services (social and recreational)</li>
+</ul></li>
+<li>Job-related services
+<ul>
+<li>Subsidized childcare</li>
+<li>Eldercare</li>
+<li>Subsidized employee transportation</li>
+<li>Food services</li>
+<li>Educational subsidies</li>
+<li>Family-friendly benefits</li>
+</ul></li>
+<li>Executive Perquisites (Perks)
+<ul>
+<li>Management loans</li>
+<li>Salary guarantees (golden parachutes)</li>
+<li>Financial counselling</li>
+<li>Relocation benefits</li>
+<li>Outplacement assistance</li>
+<li>Company cars, chauffeured limousines</li>
+<li>Concierge service</li>
+</ul></li>
+</ul>
+<h3 id="flexible-benefits-programs">Flexible Benefits Programs</h3>
+<p>Individualized benefit plans to accommodate employee needs and preferences.</p>
+<p>Constraints:</p>
+<ul>
+<li>Employer must limit total cost for each benefits package</li>
+<li>Benefit plan must include certain items that are not optional (government mandated benefits)</li>
+</ul>
+<h3 id="benefits-administration">Benefits Administration</h3>
+<p>Approaches:</p>
+<ul>
+<li>Use of software</li>
+<li>Outsourcing</li>
+</ul>
+<p>Benefits communication:</p>
+<ul>
+<li>Must provide correct, up-to-date information</li>
+<li>Ensure compliance with legislation</li>
+<li>Intranet increasingly used</li>
+</ul>
+<h2 id="chapter-14-occupational-health-and-safety">Chapter 14 - Occupational Health and Safety</h2>
+<p>Investment in disability and wellness programs create bottom-line returns.<br>
+Workplace accidents can be prevented.</p>
+<h3 id="basic-facts-about-organizational-health-and-safety-legislation">Basic Facts About Organizational Health and Safety Legislation</h3>
+<ul>
+<li>Based on principle of joint responsibility between workers and employers.</li>
+<li>Intended to minimize work-related accidents and illness.</li>
+</ul>
+<p>Laws fall into three categories:</p>
+<ul>
+<li>General health and safety rules</li>
+<li>Rules for specific industries (e.g. mining)</li>
+<li>Rules related to specific hazards (e.g. asbestos)</li>
+</ul>
+<h4 id="employer-responsibilities">Employer Responsibilities</h4>
+<ul>
+<li>Take every precaution to ensure the health and safety of workers (due diligence)</li>
+<li>Specific duties include,
+<ul>
+<li>Filing government accident reports</li>
+<li>Maintaining records</li>
+<li>Ensuring that safety rules are enforced</li>
+<li>Posting safety notices and legislative information</li>
+</ul></li>
+</ul>
+<h4 id="employees-responsibilities-and-rights">Employees Responsibilities and Rights</h4>
+<ul>
+<li>Take reasonable care to protect their own health and safety, and that of co-workers</li>
+<li>Include wearing protective clothing and equipment, and reporting contravention of the law</li>
+</ul>
+<p>Basic rights:</p>
+<ul>
+<li>To know about workplace safety hazards</li>
+<li>To participate in the OHS process</li>
+<li>To refuse unsafe work</li>
+</ul>
+<h4 id="joint-health-and-safety-committees">Joint Health and Safety Committees</h4>
+<ul>
+<li>Non-adversarial atmosphere where management and labour can work together to ensure a safe and healthy workplace</li>
+<li>Usually consists of between 2 and 12 members, at least half of whom represent workers</li>
+<li>In small workplaces, one health and safety representative may be required</li>
+</ul>
+<h4 id="the-supervisors-role-in-safety">The Supervisor’s Role in Safety</h4>
+<ul>
+<li>Ensure that workers comply with occupational health and safety regulations</li>
+<li>Advise and instruct workers about safety</li>
+<li>Safety-minded managers must aim to instill in their workers the desire to work safely</li>
+</ul>
+<h4 id="enforcement-of-ohs-laws">Enforcement of OHS Laws</h4>
+<ul>
+<li>Periodic government inspections of workplace</li>
+<li>Penalties consist of fines and/or jail terms</li>
+<li>“corporate killing”: a criminal offence, failure to ensure an appropriate level of safety in the workplace</li>
+</ul>
+<h4 id="workplace-hazardous-materials-information-system-whmis">Workplace Hazardous Materials Information System (WHMIS)</h4>
+<p>Control of toxic substances.</p>
+<p>Three components:</p>
+<ul>
+<li>Labelling of hazardous material containers</li>
+<li>Material safety data sheets (MSDS)</li>
+<li>Employee training</li>
+</ul>
+<h4 id="ohs-and-other-legislation">OHS and Other Legislation</h4>
+<p>Other legislation covers,</p>
+<ul>
+<li>Human rights</li>
+<li>Labour relations</li>
+<li>Employment standards</li>
+</ul>
+<p>May lead to confusion:</p>
+<ul>
+<li>Is the right to wear a ceremonial knife more important than the safety of other employees?</li>
+<li>Are workplace fights or sexual harassment a safety hazard?</li>
+</ul>
+<h3 id="causes-of-accidents">Causes of Accidents</h3>
+<ul>
+<li>Chance occurrences
+<ul>
+<li>Beyond management control</li>
+</ul></li>
+<li>Unsafe conditions
+<ul>
+<li>Equipment, procedures, storage, illumination, ventilation</li>
+<li>Job itself, work schedule, psychological climate</li>
+</ul></li>
+<li>Unsafe acts
+<ul>
+<li>Carrying/lifting, operating speed, avoiding safety devices/equipment, horseplay, quarrelling, etc</li>
+</ul></li>
+</ul>
+<p><strong>Personal Characteristics</strong><br>
+Human trains related to accident repetition:</p>
+<ul>
+<li>Vision</li>
+<li>Literacy</li>
+<li>Age</li>
+<li>Perceptual versus motor skills</li>
+</ul>
+<div class="figure">
+<img src="../HRM%20200/Assets-3/figure-14.3.png?0.9196961033587014">
+
+</div>
+<h3 id="how-to-prevent-accidents">How to Prevent Accidents</h3>
+<ul>
+<li>Reduce unsafe conditions
+<ul>
+<li>Job design, remove physical hazards</li>
+<li>Ensure safety precautions are taken</li>
+</ul></li>
+<li>Reduce unsafe acts
+<ul>
+<li>Selection testing</li>
+<li>Leadership commitment</li>
+<li>Training and education</li>
+<li>Positive reinforcement</li>
+</ul></li>
+</ul>
+<h4 id="controlling-workers-compensation-costs">Controlling Workers’ Compensation Costs</h4>
+<ul>
+<li>Before the accident,
+<ul>
+<li>Accident prevention measures</li>
+</ul></li>
+<li>After the accident,
+<ul>
+<li>Provide first aid and ensure medical attention</li>
+<li>Show interest in the injured worker</li>
+<li>Document/file accident reports</li>
+<li>Encourage speedy return to work</li>
+</ul></li>
+</ul>
+<h3 id="ohs-challenges-in-canada">OHS Challenges in Canada</h3>
+<ul>
+<li>Substance abuse
+<ul>
+<li>Look for signs of impairment</li>
+<li>Make written record of observed behaviour</li>
+<li>Refer troubled employees to employee assistance program (EAP)</li>
+<li>Techniques for dealing with substance abuse,
+<ul>
+<li>Discipline</li>
+<li>Discharge</li>
+<li>In-house counselling</li>
+<li>Referral to outside agency</li>
+</ul></li>
+</ul></li>
+<li>Job-related stress
+<ul>
+<li>Environmental factors,
+<ul>
+<li>High demand job</li>
+<li>High levels of mental and physical effort</li>
+</ul></li>
+<li>Personal factors,
+<ul>
+<li>Type A personalities</li>
+<li>Patience, tolerance for ambiguity</li>
+<li>Self-esteem</li>
+<li>Health and exercise, work/sleep patterns</li>
+<li>Non-job-related problems</li>
+</ul></li>
+</ul></li>
+<li>Repetitive Strain Injuries (RSI)
+<ul>
+<li>Activity-related soft-tissue injuries</li>
+<li>Employers must,
+<ul>
+<li>Advise and train workers about RSI’s</li>
+<li>Identify and assess RSI risk factors</li>
+<li>Encourage reporting of RSI symptoms early</li>
+<li>Use ergonomic intervention</li>
+</ul></li>
+<li>Ergonomics,
+<ul>
+<li>The art of fitting work equipment to the individual</li>
+</ul></li>
+</ul></li>
+<li>Workplace toxins
+<ul>
+<li>Cancer is a leading cause of work-related deaths</li>
+<li>New chemicals and substances are introduced into the workplace without adequate testing</li>
+</ul></li>
+<li>Workplace smoking
+<ul>
+<li>Smoking is banned in most workplaces</li>
+<li>Health Canada is urging employers to implement smoking cessation programs</li>
+</ul></li>
+<li>Viral pandemic
+<ul>
+<li>Many organizatinos do not have a plan</li>
+<li>Impact of a pandemic will be absenteeism, estimated at 35%</li>
+<li>HR will be relied upon to respond to a pandemic:
+<ul>
+<li>Telecommuting</li>
+<li>Compensation for absent employees</li>
+<li>Occupational health for onsite employees</li>
+</ul></li>
+</ul></li>
+<li>Violence at work
+<ul>
+<li>Legislation covers physical violence; some jurisdictions include psychological/emotional violence</li>
+<li>Human rights law prohibit forms of harassment and bullying</li>
+<li>Employers may be liable on the basis of negligence or failure to respond to violent acts</li>
+</ul></li>
+</ul>
+<h4 id="substance-abuse-and-the-law">Substance Abuse and the Law</h4>
+<p>Human rights law (disability) vs. OHS laws (due diligence requirement).</p>
+<p>Testing is only legal if test is,</p>
+<ol style="list-style-type: decimal">
+<li>Rationally connected to performance of the job</li>
+<li>Adopted in honest and good-faith belief that it is necessary for fulfillment of work-related purpose</li>
+<li>Reasonably necessary to the accomplishment of the work-related purpose</li>
+</ol>
+<h4 id="substance-abuse-testing">Substance Abuse Testing</h4>
+<ul>
+<li>Random testing is <em>illegal</em></li>
+<li>Employers can,
+<ul>
+<li>Forbid drugs/alcohol in workplace</li>
+<li>Require testing for “safety-sensitive” jobs</li>
+<li>Require testing “for cause” or “post-incident”</li>
+</ul></li>
+<li>Positive tests must result in accommodation</li>
+<li>Immediate termination is not generally justifiable</li>
+</ul>
+<h4 id="reducing-job-stress">Reducing Job Stress</h4>
+<p>Employee can:</p>
+<ul>
+<li>Get more sleep, eat better, take vacation, meditate, find a more suitable job, get counselling, organize activities</li>
+</ul>
+<p>Employer/supervisor can:</p>
+<ul>
+<li>Offer an EAP</li>
+<li>Identify symptoms of stress</li>
+<li>Ensure fair treatment</li>
+<li>Permit employee to have more control</li>
+</ul>
+<h4 id="burnout">Burnout</h4>
+<p>Total depletion caused by excessive striving to reach unrealistic work-related goals.</p>
+<p>Avoiding burnout:</p>
+<ul>
+<li>Break patterns</li>
+<li>Get away from it all periodically</li>
+<li>Reassess goals</li>
+<li>Think about work</li>
+<li>Reduce stress</li>
+</ul>
+<h4 id="post-traumatic-stress-disorder">Post-Traumatic Stress Disorder</h4>
+<p>PTSD is a series of symptoms that can develop after exposure to an actual or perceived threat of death or serious injury, or after a threat of injury (including physical and emotional) to self or others.</p>
+<p>PTSD can be triggered by an event or series of events (workplace related or not), and is prevalent in specific professions.</p>
+<h4 id="workers-compensation-and-stress-related-disability-claims">Workers’ Compensation and Stress-Related Disability Claims</h4>
+<ul>
+<li>Benefits for post-traumatic stress from specific and sudden workplace incidents</li>
+<li>Limited or no coverage for chronic stress, in some jurisdictions</li>
+<li>Attitude is that stress has multiple causes</li>
+</ul>
+<h3 id="prevention-and-control-of-workplace-violence">Prevention and Control of Workplace Violence</h3>
+<ul>
+<li>Identify jobs with high risk of violence</li>
+<li>Institute workplace violence policy</li>
+<li>Create a healthy work environment</li>
+<li>Heighten security measures</li>
+<li>Provide workplace violence training</li>
+<li>Improve employee screening</li>
+</ul>
+<h3 id="employee-wellness-programs">Employee Wellness Programs</h3>
+<ul>
+<li>Proactive approach to employee health and well-being</li>
+<li>Measurable outcomes related to productivity, recruitment/retention, and profit</li>
+<li>Often include stress management, nutrition/weight management, smoking cessation programs, tai chi, heart health/physical fitness programs, ergonomics, etc</li>
+</ul>
+<h2 id="chapter-16-labour-relations">Chapter 16 - Labour Relations</h2>
+<p><strong>Labour Union</strong> (Union)<br>
+A recognized association of employees.<br>
+Collective voice in dealing with management.</p>
+<p><strong>Labour-Management Relations</strong><br>
+Ongoing interactions between labour unions and management.</p>
+<p><strong>Collective Bargaining Agreement</strong><br>
+A formal agreement regarding terms and conditions of employment.</p>
+<p><strong>Bargaining Unit</strong><br>
+Group of employees recognized for collective bargaining purposes.</p>
+<h3 id="wilfred-laurier-university">Wilfred Laurier University</h3>
+<p>Many were contract workers when they should have been full-times (constant renewal of contracts).</p>
+<h3 id="canadas-labour-laws">Canada’s Labour Laws</h3>
+<p>Purposes:</p>
+<ol style="list-style-type: decimal">
+<li>To provide a common set of rules for fair negotiations</li>
+<li>To protect public interest by preventing impact of labour disputes</li>
+</ol>
+<p>Common Characteristics:</p>
+<ul>
+<li>Union certification procedures</li>
+<li>Minimum one-year collective agreements</li>
+<li>Procedures preceding legal strike/lockout</li>
+<li>No strikes/lockouts during life of contract</li>
+<li>Interpretation disputes settled by arbitration</li>
+<li>Prohibition of unfair labour practices</li>
+<li>Establishment of labour relations board</li>
+</ul>
+<h3 id="introduction-to-labour-relations">Introduction to Labour Relations</h3>
+<h4 id="the-labour-movement-in-canada-today">The Labour Movement in Canada Today</h4>
+<p>The primary goal of labour unions active in Canada today is to obtain economic benefits and improved treatment for their members.</p>
+<p>It may involve lobbying for legislative changes pertaining to these issues.<br>
+This union philosophy, with its emphasis on economic and welfare goals, has become known as <strong>business unionism</strong>.</p>
+<p>Most unions today also become involved in broader political and social issues affecting their members.</p>
+<p>Activities aimed at influencing government economic and social policies are known as <strong>social (reform) unionism</strong>.</p>
+<h4 id="types-of-unions">Types of Unions</h4>
+<ul>
+<li>Type of worker
+<ul>
+<li>craft, industrial</li>
+</ul></li>
+<li>Geographical scope
+<ul>
+<li>international, national, local</li>
+</ul></li>
+<li>Labour congress affiliation
+<ul>
+<li>CLC, CNTU, AFL-CIO</li>
+</ul></li>
+</ul>
+<h4 id="membership-trends">Membership Trends</h4>
+<p>Canadian unions refocusing on:</p>
+<ul>
+<li>Global competition
+<ul>
+<li>More labour concessions</li>
+</ul></li>
+<li>Demographics
+<ul>
+<li>Aging workforce bringing management and unions together</li>
+</ul></li>
+<li>Unionization of white-collar employees
+<ul>
+<li>Lower job security and increased grievances</li>
+</ul></li>
+</ul>
+<h3 id="labour-relations-process">Labour Relations Process</h3>
+<div class="figure">
+<img src="../HRM%20200/Assets-3/figure-16.1.png?0.9170759037208074">
+
+</div>
+<h4 id="step-1-desire-for-collective-representation">Step 1: Desire for Collective Representation</h4>
+<p>Why individuals join unions:</p>
+<ul>
+<li>Dissonance-based reasons:
+<ul>
+<li>Unpleasant work environment, low pay</li>
+</ul></li>
+<li>Utility-based reasons
+<ul>
+<li>Cost/benefit analysis</li>
+</ul></li>
+<li>Political/ideological reasons
+<ul>
+<li>Desire to work for collective versus individual purposes</li>
+</ul></li>
+</ul>
+<h4 id="step-2-union-organizing-campaign">Step 2: Union Organizing Campaign</h4>
+<p>Steps:</p>
+<ol style="list-style-type: decimal">
+<li>Employee/union contact</li>
+<li>Initial organizational meeting</li>
+<li>Formation of in-house organizing committee</li>
+<li>Organizing campaign</li>
+<li>Outcome</li>
+</ol>
+<p><strong>Employer Rights</strong>:</p>
+<ul>
+<li>Express views on unions</li>
+<li>State position on remaining non-union</li>
+<li>Prohibit union activity on company property/time</li>
+<li>Increase wages in normal course of business</li>
+<li>Assemble employees to state position if:
+<ul>
+<li>purpose of meeting stated in advance</li>
+<li>attendance is optional</li>
+<li>no threats/promises</li>
+</ul></li>
+</ul>
+<h4 id="step-3-union-recognition">Step 3: Union Recognition</h4>
+<p>Ways to obtain recognition:</p>
+<ol style="list-style-type: decimal">
+<li>voluntary recognition by employer</li>
+<li>regular certification by LRB</li>
+<li>Pre-hearing votes</li>
+</ol>
+<p>Ways to terminate bargaining rights:</p>
+<ul>
+<li>Decertification</li>
+<li>Termination and abandonment</li>
+</ul>
+<h4 id="step-4-collective-bargaining">Step 4: Collective Bargaining</h4>
+<p>Formal collective agreement is established.<br>
+Parties must bargain in good faith.</p>
+<div class="figure">
+<img src="../HRM%20200/Assets-3/figure-16.2.png?0.21126064613014472">
+
+</div>
+<p>Three steps:</p>
+<ol style="list-style-type: decimal">
+<li>Preparation for bargaining
+<ul>
+<li>Union and management:
+<ul>
+<li>Gather data on general economic trends</li>
+<li>Analyze other collective agreements</li>
+<li>Conduct an analysis of grievances</li>
+<li>Review existing contract or union’s promises</li>
+<li>Conduct wage and salary surveys</li>
+<li>Prepare cost estimates of monetary proposals</li>
+<li>Make plans for possible strike or lockout</li>
+</ul></li>
+</ul></li>
+<li>Face-to-face negotiations
+<ul>
+<li>Location:
+<ul>
+<li>Neutral, off-site location</li>
+<li>Each side holds separate caucus sessions</li>
+</ul></li>
+<li>Frequency:
+<ul>
+<li>As often as either or both parties desire</li>
+</ul></li>
+<li>Duration:
+<ul>
+<li>As long as progress is being made</li>
+</ul></li>
+<li><strong>Distributive Bargaining</strong>
+<ul>
+<li>One party gains at the others expense</li>
+</ul></li>
+<li><strong>Integrative Bargaining</strong>
+<ul>
+<li>Using mutual trust, finding creative solutions</li>
+</ul></li>
+<li><strong>Mutual Gains (interest-based) Bargaining</strong>
+<ul>
+<li>Effective problem solving and conflict resolution</li>
+<li>Interests of all stakeholders considered</li>
+</ul></li>
+</ul></li>
+<li>Obtaining approval for proposed contract</li>
+</ol>
+<p><strong>Contract Approval Process</strong><br>
+<strong>Memorandum of Settlement</strong><br>
+Summary of terms/conditions agreed to.<br>
+Submitted for final approval by employees and management.<br>
+<strong>Ratification</strong><br>
+Formal approval by secret ballot of the bargaining unit members of the agreement.</p>
+<p><strong>Third-Party Assistance and Bargaining Impasses</strong><br>
+<strong>Conciliation</strong><br>
+Mandatory use of neutral third party to bring union and management together to negotiate.<br>
+<strong>Mediation</strong><br>
+Voluntary use of neutral third party to help to reach a mutually satisfactory collective agreement.<br>
+<strong>Union Rights</strong><br>
+Strike, picket, boycott.<br>
+<strong>Management Rights</strong><br>
+Lockout.<br>
+<strong>Arbitration</strong><br>
+Imposition of settlement by third party.</p>
+<p><strong>Collective Agreement Typical Provisions</strong><br>
+Union recognition clause.<br>
+Union security/checkoff clause.<br>
+No-strike-or-lockout provision.<br>
+Management right clause.<br>
+Arbitration clause.</p>
+<h4 id="step-5-contract-administration">Step 5: Contract Administration</h4>
+<p>Major sources of disagreement:</p>
+<ul>
+<li>Seniority
+<ul>
+<li>Length of service in the bargaining unit</li>
+</ul></li>
+<li>Discipline
+<ul>
+<li>Different interpretation of just cause</li>
+<li>Must be handled in accordance with the collective agreement</li>
+<li>Ensure carefully documented evidence</li>
+</ul></li>
+</ul>
+<h3 id="grievance-resolution-and-right-arbitration">Grievance Resolution and Right Arbitration</h3>
+<p><strong>Grievance</strong><br>
+Allegation of a contract violation, filed by individual, the union, or management.</p>
+<p><strong>Rights Dispute</strong><br>
+Grievance relating to interpretation of the collective agreement.</p>
+<p><strong>Rights Arbitration</strong><br>
+Process of resolving a rights dispute.</p>
+<h3 id="impact-of-unionization-on-hrm">Impact of Unionization on HRM</h3>
+<p>Building effective labour-management relations:</p>
+<ul>
+<li>Institute an open-door policy</li>
+<li>Extend the courtesy of prior consultation</li>
+<li>Demonstrate concern for employee well-being</li>
+<li>Form join committees, joint training programs</li>
+<li>Meet regularly</li>
+<li>Use third-party assistance</li>
+</ul>
+<h2 id="chapter-17-managing-human-resources-in-a-global-business">Chapter 17 - Managing Human Resources in a Global Business</h2>
+<h3 id="globalization-of-business-and-strategic-hr">Globalization of Business and Strategic HR</h3>
+<p><strong>Workforce Mobility</strong><br>
+Managing recruitment, relocation and retention of employees outside the core region.</p>
+<p><strong>Expatriates</strong><br>
+Citizens of the parent company country who are sent to work in another country.</p>
+<h3 id="how-inter-country-differences-affect-hrm">How Inter-country Differences Affect HRM</h3>
+<p>Selecting, training and managing employees abroad is complicated by different:</p>
+<ul>
+<li>cultural factors</li>
+<li>economic systems</li>
+<li>legal systems</li>
+<li>labour cost factors</li>
+<li>industrial relations factors</li>
+</ul>
+<h3 id="global-relocation">Global Relocation</h3>
+<p>Considerations for relocating expatriates:</p>
+<ol style="list-style-type: decimal">
+<li>Candidate identification, selection</li>
+<li>Cost projections</li>
+<li>Assignment letters</li>
+<li>Compensation, benefits, tax programs</li>
+<li>Relocation assistance</li>
+<li>Family support</li>
+</ol>
+<h4 id="why-expatriate-assignments-fail">Why Expatriate Assignments Fail</h4>
+<p>Reducing the early return of an expatriate:</p>
+<ul>
+<li>Select expatriates carefully</li>
+<li>Help spouses get jobs abroad</li>
+<li>Provide ongoing support to family</li>
+<li>Formal “global buddy” program</li>
+</ul>
+<h3 id="considerations-in-gloabl-hrm">Considerations in Gloabl HRM</h3>
+<h4 id="gloabl-staffing-policy">Gloabl Staffing Policy</h4>
+<p><em>Three</em> international staffing policies.</p>
+<p>An <strong>ethnocentric staffing policy</strong> is based on the attitude that home-country managers are superior to those in the host country, and all key management positions are filled by parent-country nationals.</p>
+<p>A <strong>polycentric staffing policy</strong> is based on the belief that only host-country managers can understand the culture and behaviour of the host-country market, and therefore foreign subsidiaries should be staffed with host-country nationals and its home office headquarters with parent-country nationals.</p>
+<p>A <strong>geocentric staffing policy</strong> assumes that management candidates must be searched for globally, on the assumption that the best manager for any specific position anywhere on the globe may be found in any of the countries in which the firm operates.</p>
+<h4 id="selection-for-global-assignments">Selection for Global Assignments</h4>
+<p>Reasons to use local management:</p>
+<ul>
+<li>Many prefer not to work in a foreign country</li>
+<li>High cost of using expatriates</li>
+<li>May be viewed as “better citizen”</li>
+<li>Expatriates may emphasize short-term initiatives</li>
+</ul>
+<p>Reasons to use expatriates:</p>
+<ul>
+<li>Technical competence</li>
+<li>Step in leadership development</li>
+<li>Corporate control</li>
+</ul>
+<h3 id="orienting-and-training-employees-for-global-assignments">Orienting and Training Employees for Global Assignments</h3>
+<div class="figure">
+<img src="../HRM%20200/Assets-3/figure-17.1.png?0.3214964775165503">
+
+</div>
+<ul>
+<li>Cross-cultural training
+<ol style="list-style-type: decimal">
+<li>Raise awareness of differences</li>
+<li>Understand how attitudes influence behaviour</li>
+<li>Factual knowledge of the country</li>
+<li>Language, adjustment, adaptation</li>
+</ol></li>
+<li>Leadership development opportunities</li>
+</ul>
+<h3 id="international-compensation">International Compensation</h3>
+<p>Considerations:</p>
+<ul>
+<li>Integration (maximize effectiveness)</li>
+<li>Differentiation
+<ul>
+<li>Motivate expatriate employees</li>
+<li>Meet needs of specific categories or locations</li>
+</ul></li>
+<li>Motivate local and internationally mobile employees</li>
+</ul>
+<div class="figure">
+<img src="../HRM%20200/Assets-3/figure-17.2.png?0.969591240028373">
+
+</div>
+<p><strong>Balance Sheet Approach</strong><br>
+Equalized purchasing power for expatriate.</p>
+<p><strong>Variable Pay</strong><br>
+Focus on individual performance rewards.</p>
+<p><strong>International EAP</strong><br>
+Employee assistance program to help deal with culture shock.</p>
+<h3 id="performance-appraisal-of-global-managers">Performance Appraisal of Global Managers</h3>
+<p>Suggestions:</p>
+<ul>
+<li>Stipulate the assignment’s difficulty level</li>
+<li>Focus more toward the on-site manager’s appraisal</li>
+<li>Use a former expatriate to provide background advice</li>
+<li>Modify criteria to fit the specific position</li>
+<li>Give credit for qualitative insights</li>
+</ul>
+<h3 id="repatriation">Repatriation</h3>
+<p>Suggestions:</p>
+<ul>
+<li>Write repatriation agreements</li>
+<li>Assign a sponsor</li>
+<li>Provide career counselling</li>
+<li>Keep communication open</li>
+<li>Offer financial support</li>
+<li>Develop reorientation program</li>
+<li>Build in return trips</li>
+</ul>
+<h3 id="managing-global-workers-within-canada">Managing Global Workers Within Canada</h3>
+<p>Advantages to employers:</p>
+<ul>
+<li>Increased language skills</li>
+<li>Generation of new ideas</li>
+<li>Enhances company’s reputation</li>
+<li>Higher quality decisions</li>
+<li>More creative problem solving techniques</li>
+<li>Potential for higher productivity levels</li>
+</ul>
+<p>Challenges for foreign workers:</p>
+<ul>
+<li>Lower pay levels</li>
+<li>Lower employment levels</li>
+</ul>
+<p>Possible causes:</p>
+<ul>
+<li>Lack of Canadian experience
+<ul>
+<li>“catch-22” situation: employers want experience, cannot get experience without a job</li>
+<li>lack of recognition for foreign work experience</li>
+</ul></li>
+<li>Poor transferability of credentials
+<ul>
+<li>local licensing bodies may not accept foreign certification</li>
+<li>under-utilization of foreign workers</li>
+<li>differentiation also based on gender, age, and country of study</li>
+<li>prior learning assessment and recognition aims to standardize recognition of foreign credentials</li>
+</ul></li>
+<li>Lack of literacy skills
+<ul>
+<li>level of education of immigrants has been rising</li>
+<li>literacy remains a problem</li>
+<li>federal government provides funding for literacy initiatives</li>
+</ul></li>
+</ul>
+<div class="figure">
+<img src="../HRM%20200/Assets-3/figure-17.3.png?0.6572098592876077">
+
+</div>
+
+      </div>
+      <div class="md-sidebar-toc"><ul>
+<li><a href="#hrm-200-introduction-to-human-resource-management">HRM 200 - Introduction to Human Resource Management</a>
+<ul>
+<li><a href="#chapter-11-strategic-pay-plans">Chapter 11 - Strategic Pay Plans</a>
+<ul>
+<li><a href="#aligning-total-rewards-with-strategy">Aligning Total Rewards with Strategy</a></li>
+<li><a href="#five-components-of-total-rewards">Five Components of Total Rewards</a></li>
+<li><a href="#impact-of-rewards">Impact of Rewards</a></li>
+<li><a href="#basic-considerations-in-determining-pay-rates">Basic Considerations in Determining Pay Rates</a></li>
+<li><a href="#establishing-pay-rates">Establishing Pay Rates</a>
+<ul>
+<li><a href="#stage-1-job-evaluation">Stage 1: Job Evaluation</a></li>
+<li><a href="#stage-2-conduct-wagesalary-survey">Stage 2: Conduct Wage/Salary Survey</a></li>
+<li><a href="#stage-3-combine-job-evaluation-and-salary-survey-to-determine-pay">Stage 3: Combine Job Evaluation and Salary Survey to Determine Pay</a></li>
+</ul>
+</li>
+<li><a href="#pay-for-knowledge">Pay for Knowledge</a></li>
+<li><a href="#pay-for-executive-managerial-and-professional-jobs">Pay for Executive, Managerial and Professional Jobs</a></li>
+<li><a href="#five-elements-of-compensating-executives-and-managers">Five Elements of Compensating Executives and Managers</a></li>
+<li><a href="#compensating-professional-employees">Compensating Professional Employees</a></li>
+<li><a href="#pay-equity">Pay Equity</a></li>
+</ul>
+</li>
+<li><a href="#chapter-12-pay-for-performance-and-financial-incentives">Chapter 12 - Pay-for-Performance and Financial Incentives</a>
+<ul>
+<li><a href="#money-and-motivation">Money and Motivation</a>
+<ul>
+<li><a href="#types-of-incentive-plans">Types of Incentive Plans</a></li>
+</ul>
+</li>
+<li><a href="#incentives-for-all-employees">Incentives for All Employees</a></li>
+<li><a href="#incentives-for-operations-employees">Incentives for Operations Employees</a>
+<ul>
+<li><a href="#piecework-plans">Piecework Plans</a></li>
+<li><a href="#team-or-group-incentives">Team or Group Incentives</a></li>
+</ul>
+</li>
+<li><a href="#incentives-for-senior-managers-and-executives">Incentives for Senior Managers and Executives</a></li>
+<li><a href="#incentives-for-salespeople">Incentives for Salespeople</a>
+<ul>
+<li><a href="#salary-plan">Salary Plan</a></li>
+<li><a href="#commission-plan">Commission Plan</a></li>
+<li><a href="#combination-plan">Combination Plan</a></li>
+</ul>
+</li>
+<li><a href="#developing-effective-incentive-plans">Developing Effective Incentive Plans</a></li>
+<li><a href="#how-to-implement-incentive-plans">How to Implement Incentive Plans</a></li>
+<li><a href="#employee-recognition-programs">Employee Recognition Programs</a></li>
+</ul>
+</li>
+<li><a href="#chapter-13-employee-benefits-and-services">Chapter 13 - Employee Benefits and Services</a>
+<ul>
+<li><a href="#employee-benefits">Employee Benefits</a></li>
+<li><a href="#government-mandated-benefits">Government-Mandated Benefits</a></li>
+<li><a href="#voluntary-employer-sponsored-benefits">Voluntary Employer-Sponsored Benefits</a>
+<ul>
+<li><a href="#reducing-health-benefit-costs">Reducing Health Benefit Costs</a></li>
+</ul>
+</li>
+<li><a href="#employee-services">Employee Services</a></li>
+<li><a href="#flexible-benefits-programs">Flexible Benefits Programs</a></li>
+<li><a href="#benefits-administration">Benefits Administration</a></li>
+</ul>
+</li>
+<li><a href="#chapter-14-occupational-health-and-safety">Chapter 14 - Occupational Health and Safety</a>
+<ul>
+<li><a href="#basic-facts-about-organizational-health-and-safety-legislation">Basic Facts About Organizational Health and Safety Legislation</a>
+<ul>
+<li><a href="#employer-responsibilities">Employer Responsibilities</a></li>
+<li><a href="#employees-responsibilities-and-rights">Employees Responsibilities and Rights</a></li>
+<li><a href="#joint-health-and-safety-committees">Joint Health and Safety Committees</a></li>
+<li><a href="#the-supervisors-role-in-safety">The Supervisor's Role in Safety</a></li>
+<li><a href="#enforcement-of-ohs-laws">Enforcement of OHS Laws</a></li>
+<li><a href="#workplace-hazardous-materials-information-system-whmis">Workplace Hazardous Materials Information System (WHMIS)</a></li>
+<li><a href="#ohs-and-other-legislation">OHS and Other Legislation</a></li>
+</ul>
+</li>
+<li><a href="#causes-of-accidents">Causes of Accidents</a></li>
+<li><a href="#how-to-prevent-accidents">How to Prevent Accidents</a>
+<ul>
+<li><a href="#controlling-workers-compensation-costs">Controlling Workers' Compensation Costs</a></li>
+</ul>
+</li>
+<li><a href="#ohs-challenges-in-canada">OHS Challenges in Canada</a>
+<ul>
+<li><a href="#substance-abuse-and-the-law">Substance Abuse and the Law</a></li>
+<li><a href="#substance-abuse-testing">Substance Abuse Testing</a></li>
+<li><a href="#reducing-job-stress">Reducing Job Stress</a></li>
+<li><a href="#burnout">Burnout</a></li>
+<li><a href="#post-traumatic-stress-disorder">Post-Traumatic Stress Disorder</a></li>
+<li><a href="#workers-compensation-and-stress-related-disability-claims">Workers' Compensation and Stress-Related Disability Claims</a></li>
+</ul>
+</li>
+<li><a href="#prevention-and-control-of-workplace-violence">Prevention and Control of Workplace Violence</a></li>
+<li><a href="#employee-wellness-programs">Employee Wellness Programs</a></li>
+</ul>
+</li>
+<li><a href="#chapter-16-labour-relations">Chapter 16 - Labour Relations</a>
+<ul>
+<li><a href="#wilfred-laurier-university">Wilfred Laurier University</a></li>
+<li><a href="#canadas-labour-laws">Canada's Labour Laws</a></li>
+<li><a href="#introduction-to-labour-relations">Introduction to Labour Relations</a>
+<ul>
+<li><a href="#the-labour-movement-in-canada-today">The Labour Movement in Canada Today</a></li>
+<li><a href="#types-of-unions">Types of Unions</a></li>
+<li><a href="#membership-trends">Membership Trends</a></li>
+</ul>
+</li>
+<li><a href="#labour-relations-process">Labour Relations Process</a>
+<ul>
+<li><a href="#step-1-desire-for-collective-representation">Step 1: Desire for Collective Representation</a></li>
+<li><a href="#step-2-union-organizing-campaign">Step 2: Union Organizing Campaign</a></li>
+<li><a href="#step-3-union-recognition">Step 3: Union Recognition</a></li>
+<li><a href="#step-4-collective-bargaining">Step 4: Collective Bargaining</a></li>
+<li><a href="#step-5-contract-administration">Step 5: Contract Administration</a></li>
+</ul>
+</li>
+<li><a href="#grievance-resolution-and-right-arbitration">Grievance Resolution and Right Arbitration</a></li>
+<li><a href="#impact-of-unionization-on-hrm">Impact of Unionization on HRM</a></li>
+</ul>
+</li>
+<li><a href="#chapter-17-managing-human-resources-in-a-global-business">Chapter 17 - Managing Human Resources in a Global Business</a>
+<ul>
+<li><a href="#globalization-of-business-and-strategic-hr">Globalization of Business and Strategic HR</a></li>
+<li><a href="#how-inter-country-differences-affect-hrm">How Inter-country Differences Affect HRM</a></li>
+<li><a href="#global-relocation">Global Relocation</a>
+<ul>
+<li><a href="#why-expatriate-assignments-fail">Why Expatriate Assignments Fail</a></li>
+</ul>
+</li>
+<li><a href="#considerations-in-gloabl-hrm">Considerations in Gloabl HRM</a>
+<ul>
+<li><a href="#gloabl-staffing-policy">Gloabl Staffing Policy</a></li>
+<li><a href="#selection-for-global-assignments">Selection for Global Assignments</a></li>
+</ul>
+</li>
+<li><a href="#orienting-and-training-employees-for-global-assignments">Orienting and Training Employees for Global Assignments</a></li>
+<li><a href="#international-compensation">International Compensation</a></li>
+<li><a href="#performance-appraisal-of-global-managers">Performance Appraisal of Global Managers</a></li>
+<li><a href="#repatriation">Repatriation</a></li>
+<li><a href="#managing-global-workers-within-canada">Managing Global Workers Within Canada</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+      <a id="sidebar-toc-btn">≡</a>
+    </body>
+    
+    
+    
+    <script>
+(function bindTaskListEvent() {
+  var taskListItemCheckboxes = document.body.getElementsByClassName('task-list-item-checkbox')
+  for (var i = 0; i < taskListItemCheckboxes.length; i++) {
+    var checkbox = taskListItemCheckboxes[i]
+    var li = checkbox.parentElement
+    if (li.tagName !== 'LI') li = li.parentElement
+    if (li.tagName === 'LI') {
+      li.classList.add('task-list-item')
+    }
+  }
+}())    
+</script>
+    
+<script>
+
+var sidebarTOCBtn = document.getElementById('sidebar-toc-btn')
+sidebarTOCBtn.addEventListener('click', function(event) {
+  event.stopPropagation()
+  if (document.body.hasAttribute('html-show-sidebar-toc')) {
+    document.body.removeAttribute('html-show-sidebar-toc')
+  } else {
+    document.body.setAttribute('html-show-sidebar-toc', true)
+  }
+})
+</script>
+      
+  </html>
