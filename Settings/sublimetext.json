@@ -1,83 +1,54 @@
 {
-  "added_words":
-  [
-    "iostream",
-    "cmath",
-    "Shen"
-  ],
-  "always_show_minimap_viewport": true,
-  "auto_complete_commit_on_tab": true,
-  "auto_complete_with_fields": true,
-  "binary_file_patterns":
-  [
-    "*.jpg",
-    "*.jpeg",
-    "*.png",
-    "*.gif",
-    "*.ttf",
-    "*.tga",
-    "*.dds",
-    "*.ico",
-    "*.eot",
-    "*.pdf",
-    "*.swf",
-    "*.jar",
-    "*.zip"
-  ],
-  "bold_folder_labels": true,
-  "color_scheme": "Packages/User/SublimeLinter/Monokai (SL).tmTheme",
-  "ensure_newline_at_eof_on_save": true,
-  "fallback_encoding": "ASCII",
-  "file_exclude_patterns":
-  [
-    "*.pyc",
-    "*.pyo",
-    "*.exe",
-    "*.dll",
-    "*.obj",
-    "*.o",
-    "*.a",
-    "*.lib",
-    "*.so",
-    "*.dylib",
-    "*.ncb",
-    "*.sdf",
-    "*.suo",
-    "*.pdb",
-    "*.idb",
-    ".DS_Store",
-    "*.class",
-    "*.psd",
-    "*.db",
-    "*.sublime-workspace"
-  ],
-  "folder_exclude_patterns":
-  [
-    ".svn",
-    ".git",
-    ".hg",
-    "CVS",
-    ".vscode"
-  ],
-  "font_size": 12,
-  "highlight_modified_tabs": true,
-  "ignored_packages":
-  [
-    "Vintage"
-  ],
-  "indent_subsequent_lines": false,
-  "indent_to_bracket": true,
-  "open_files_in_new_window": false,
-  "rulers":
-  [
-    80
-  ],
-  "scroll_past_end": true,
-  "spell_check": true,
-  "tab_size": 2,
-  "theme": "Default.sublime-theme",
-  "translate_tabs_to_spaces": true,
-  "trim_trailing_white_space_on_save": true,
-  "word_wrap": true,
-  "wrap_width": 80
+	"always_show_minimap_viewport": true,
+	"auto_complete": false,
+	"auto_complete_commit_on_tab": true,
+	"auto_complete_with_fields": true,
+	"auto_find_in_selection": true,
+	"bold_folder_labels": true,
+	"color_scheme": "Packages/User/SublimeLinter/Monokai (SL).tmTheme",
+	"draw_minimap_border": true,
+	"ensure_newline_at_eof_on_save": true,
+	"fallback_encoding": "UTF-8",
+	"file_exclude_patterns":
+	[
+		".DS_Store",
+		"*.pid",
+		"*.pyc",
+		".createpg*"
+	],
+	"find_selected_text": true,
+	"folder_exclude_patterns":
+	[
+		".git",
+		".vscode",
+		"__pycache__",
+		"build",
+		"node_modules"
+	],
+	"font_face": "Fira Code",
+	"font_options":
+	[
+		"subpixel_antialias",
+		"no_bold"
+	],
+	"font_size": 13,
+	"highlight_line": true,
+	"highlight_modified_tabs": true,
+	"ignored_packages":
+	[
+		"Vintage"
+	],
+	"index_exclude_patterns":
+	[
+		"*.log"
+	],
+	"match_brackets_angle": true,
+	"scroll_past_end": false,
+	"show_encoding": true,
+	"show_full_path": true,
+	"spell_check": true,
+	"theme": "Adaptive.sublime-theme",
+	"translate_tabs_to_spaces": true,
+	"trim_trailing_white_space_on_save": true,
+	"word_wrap": true
 }
