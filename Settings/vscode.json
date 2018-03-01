@@ -47,8 +47,14 @@
     "**/**/*.pyc": true,
     "**/CVS": true,
     "node_modules": true,
+    ".lock-waf*": true,
+    ".waf-*": true,
+    ".pgconf-*": true,
     ".cache": true,
     ".vscode": true,
+    ".tox": true,
+    ".mypy_cache": true,
+    ".happypack": true
   },
   "files.hotExit": "onExitAndWindowClose",
   "files.insertFinalNewline": true,
@@ -122,6 +128,48 @@
   },
 
   /* Extensions */
+  /* Code Spell Check */
+  "cSpell.checkLimit": 4096,
+  "cSpell.diagnosticLevel": "Warning",
+  "cSpell.languageSettings": [
+    {
+      "languageId": "*",
+      "dictionaries": [
+        "companies",
+        "softwareTerms",
+        "misc"
+      ]
+    },
+    {
+      "languageId": "python",
+      "allowCompoundWords": true,
+      "dictionaries": [
+        "python"
+      ]
+    },
+    {
+      "languageId": "javascript",
+      "dictionaries": [
+        "typescript",
+        "node"
+      ]
+    },
+    {
+      "languageId": "javascriptreact",
+      "dictionaries": [
+        "typescript",
+        "node"
+      ]
+    },
+    {
+      "languageId": "scss",
+      "dictionaries": [
+        "fonts",
+        "css"
+      ]
+    }
+  ],
+
   /* Gitlens */
   "gitlens.advanced.messages": {
     "suppressCommitHasNoPreviousCommitWarning": false,
