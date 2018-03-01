@@ -1,134 +1,151 @@
-// Place your settings in this file to overwrite the default settings
 {
-    /* Editor */
-    "editor.acceptSuggestionOnEnter": "smart",
-    "editor.autoIndent": true,
-    "editor.cursorBlinking": "phase",
-    "editor.cursorStyle": "line",
-    "editor.detectIndentation": true,
-    "editor.dragAndDrop": true,
-    "editor.fontFamily": "Fira Code",
-    "editor.fontSize": 14,
-    "editor.fontLigatures": true,
-    "editor.formatOnPaste": true,
-    "editor.insertSpaces": true,
-    "editor.minimap.showSlider": "always",
-    "editor.minimap.renderCharacters": true,
-    "editor.multiCursorModifier": "ctrlCmd",
-    "editor.renderIndentGuides": true,
-    "editor.renderLineHighlight": "all",
-    "editor.renderWhitespace": "boundary",
-    "editor.tabCompletion": true,
-    "editor.tabSize": 2,
-    "editor.wrappingIndent": "indent",
+  /* Editor */
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "editor.acceptSuggestionOnEnter": "off",
+  "editor.accessibilitySupport": "off",
+  "editor.autoIndent": true,
+  "editor.cursorBlinking": "phase",
+  "editor.cursorStyle": "line",
+  "editor.detectIndentation": true,
+  "editor.dragAndDrop": false,
+  "editor.fontFamily": "Fira Code",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 12,
+  "editor.fontWeight": "500",
+  "editor.insertSpaces": true,
+  "editor.minimap.renderCharacters": true,
+  "editor.minimap.showSlider": "always",
+  "editor.multiCursorModifier": "ctrlCmd",
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": false
+  },
+  "editor.quickSuggestionsDelay": 0,
+  "editor.renderIndentGuides": true,
+  "editor.renderLineHighlight": "all",
+  "editor.renderWhitespace": "boundary",
+  "editor.showFoldingControls": "always",
+  "editor.stablePeek": true,
+  "editor.tabCompletion": true,
+  "editor.tabSize": 4,
+  "editor.useTabStops": true,
+  "editor.wordWrap": "on",
+  "editor.wrappingIndent": "indent",
+
+  /* Explorer */
+  "explorer.autoReveal": false,
+
+  /* Files */
+  "files.encoding": "utf8",
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.DS_Store": true,
+    "**/.git": true,
+    "**/.hg": true,
+    "**/.svn": true,
+    "**/**/*.pyc": true,
+    "**/CVS": true,
+    "node_modules": true,
+    ".cache": true,
+    ".vscode": true,
+  },
+  "files.hotExit": "onExitAndWindowClose",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "files.useExperimentalFileWatcher": true,
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true
+  },
+
+  /* Git */
+  "git.confirmSync": true,
+  "git.enabled": false,
+
+  /* Search */
+  "search.exclude": {
+    "**/.git": true,
+    "**/bower_components": true,
+    "**/node_modules": true
+  },
+  "search.smartCase": true,
+
+  /* Telemetry */
+  "telemetry.enableCrashReporter": false,
+  "telemetry.enableTelemetry": false,
+
+  /* Terminal */
+  "terminal.external.osxExec": "iTerm.app",
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.cursorStyle": "line",
+  "terminal.integrated.fontFamily": "Meslo LG M for Powerline",
+  "terminal.integrated.lineHeight": 0,
+  "terminal.integrated.scrollback": 65535,
+
+  /* Window */
+  "window.nativeTabs": true,
+  "window.openFoldersInNewWindow": "off",
+  "window.restoreWindows": "all",
+  "window.title": "${activeEditorMedium}${separator}${rootName}${separator}${rootPath}",
+  "window.zoomLevel": 0,
+
+  /* Workbench */
+  "workbench.colorTheme": "Monokai Pro",
+  "workbench.commandPalette.preserveInput": true,
+  "workbench.editor.closeOnFileDelete": false,
+  "workbench.editor.labelFormat": "medium",
+  "workbench.editor.swipeToNavigate": true,
+  "workbench.editor.tabSizing": "shrink",
+  "workbench.fontAliasing": "auto",
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.startupEditor": "none",
+  "workbench.statusBar.feedback.visible": false,
+
+  /* JSON-only */
+  "[json]": {
+      "editor.tabSize": 2
+  },
+
+  /* Markdown-only */
+  "[markdown]": {
+    "editor.quickSuggestions": false,
     "editor.wordWrap": "on",
-
-    /* Files */
-    "files.encoding": "utf8",
-    "files.exclude": {
-        "**/.git": true,
-        "**/.svn": true,
-        "**/.hg": true,
-        "**/.DS_Store": true,
-        "**/node_modules": true,
-        "**/.idea": true,
-        "**/.gradle": true,
-        "**/build": true,
-        "**/.dropbox": true
-    },
-    "files.hotExit": "onExitAndWindowClose",
-    "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": false,
+  },
 
-    /* Git */
-    "git.confirmSync": true,
+  /* Python-only */
+  "[python]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4
+  },
 
-    /* Search */
-    "search.exclude": {
-        "**/node_modules": true,
-        "**/bower_components": true
-    },
+  /* Extensions */
+  /* Gitlens */
+  "gitlens.advanced.messages": {
+    "suppressCommitHasNoPreviousCommitWarning": false,
+    "suppressCommitNotFoundWarning": false,
+    "suppressFileNotUnderSourceControlWarning": false,
+    "suppressGitVersionWarning": false,
+    "suppressLineUncommittedWarning": false,
+    "suppressNoRepositoryWarning": false,
+    "suppressResultsExplorerNotice": false,
+    "suppressUpdateNotice": false,
+    "suppressWelcomeNotice": true
+  },
 
-    /* Telemetry */
-    "telemetry.enableCrashReporter": false,
-    "telemetry.enableTelemetry": false,
+  /* Python */
+  "python.autoComplete.preloadModules": ["numpy"],
+  "python.formatting.provider": "none",
+  "python.linting.maxNumberOfProblems": 255,
+  "python.linting.pylintArgs": ["--rcfile", "~/Documents/pylintrc"],
+  "python.pythonPath": "/usr/local/bin/python3",
 
-    /* Terminal */
-    "terminal.integrated.cursorBlinking": true,
-    "terminal.integrated.cursorStyle": "line",
-    "terminal.integrated.fontLigatures": true,
-    "terminal.integrated.lineHeight": 0,
-    "terminal.integrated.scrollback": 32767,
-    "terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe",
-
-    /* Window */
-    "window.openFoldersInNewWindow": "off",
-    "window.restoreWindows": "all",
-    "window.nativeTabs": true,
-
-    /* Workbench */
-    "workbench.colorTheme": "One Dark Pro",
-    "workbench.iconTheme": "vscode-icons",
-
-    /* Extensions */
-    /* C/C++ Configuration */
-    "C_Cpp.clang_format_style": "Chromium",
-    
-    /* Code Spell Checker */
-    "cSpell.minWordLength": 4,
-    "cSpell.ignorePaths": [
-        "**/node_modules/**",
-        "**/vscode-extension/**",
-        "**/.git/**",
-        ".vscode",
-        "typings",
-        "settings.json"
-    ],
-
-    /* LaTeX Workshop */
-    "latex-workshop.latex.clean.enabled": true,
-    "latex-workshop.latex.clean.fileTypes": [
-        "*.aux",
-        "*.bbl",
-        "*.blg",
-        "*.idx",
-        "*.ilg",
-        "*.ind",
-        "*.lof",
-        "*.lot",
-        "*.out",
-        "*.toc",
-        "*.acn",
-        "*.acr",
-        "*.alg",
-        "*.glg",
-        "*.glo",
-        "*.gls",
-        "*.ist",
-        "*.fls",
-        "*.log",
-        "*.fdb_latexmk",
-        "*.synctex.gz"
-    ],
-    "latex-workshop.chktex.enabled": true,
-
-    /* markdownlint */
-    "markdownlint.config": {
-        "MD009": {
-            "br_spaces": 2
-        },
-        "MD013": false,
-        "MD029": {
-            "style": "ordered"
-        },
-        "MD033": {
-            "allowed_elements": [
-                "sup", "sub"
-            ]
-        },
-        "MD035": {
-            "style": "---"
-        },
-        "MD041": false
-    }
+  /* vsicons */
+  "vsicons.dontShowNewVersionMessage": true,
+  "vsicons.presets.angular": true,
+  "vsicons.presets.jsOfficial": true,
+  "vsicons.presets.jsonOfficial": true,
+  "vsicons.presets.tsOfficial": true
 }
