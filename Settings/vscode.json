@@ -47,14 +47,8 @@
     "**/**/*.pyc": true,
     "**/CVS": true,
     "node_modules": true,
-    ".lock-waf*": true,
-    ".waf-*": true,
-    ".pgconf-*": true,
     ".cache": true,
-    ".vscode": true,
-    ".tox": true,
-    ".mypy_cache": true,
-    ".happypack": true
+    ".vscode": true
   },
   "files.hotExit": "onExitAndWindowClose",
   "files.insertFinalNewline": true,
