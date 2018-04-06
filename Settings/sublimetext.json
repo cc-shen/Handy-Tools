@@ -8,18 +8,55 @@
 	"color_scheme": "Packages/User/SublimeLinter/Monokai (SL).tmTheme",
 	"draw_minimap_border": true,
 	"ensure_newline_at_eof_on_save": true,
+	"extra_file_exclude_patterns":
+	[
+		".DS_Store",
+		"*.pid",
+		"*.pyc"
+	],
+	"extra_folder_exclude_patterns":
+	[
+		".cache",
+		".git",
+		".mypy_cache",
+		".vscode",
+		"__pycache__",
+		"build",
+		"node_modules"
+	],
 	"fallback_encoding": "UTF-8",
 	"file_exclude_patterns":
 	[
 		".DS_Store",
+		"*.log",
 		"*.pid",
+		".createpg*",
 		"*.pyc",
-		".createpg*"
+		"*.pyo",
+		"*.exe",
+		"*.dll",
+		"*.obj",
+		"*.o",
+		"*.a",
+		"*.lib",
+		"*.so",
+		"*.dylib",
+		"*.ncb",
+		"*.sdf",
+		"*.suo",
+		"*.pdb",
+		"*.idb",
+		"*.class",
+		"*.psd",
+		"*.db",
+		"*.sublime-workspace"
 	],
 	"find_selected_text": true,
 	"folder_exclude_patterns":
 	[
+		".cache",
 		".git",
+		".mypy_cache",
 		".vscode",
 		"__pycache__",
 		"build",
@@ -38,12 +75,13 @@
 	[
 		"Vintage"
 	],
+	"indent_to_bracket": true,
 	"index_exclude_patterns":
 	[
 		"*.log"
 	],
 	"match_brackets_angle": true,
-	"scroll_past_end": false,
+	"scroll_past_end": true,
 	"show_encoding": true,
 	"show_full_path": true,
 	"spell_check": true,
