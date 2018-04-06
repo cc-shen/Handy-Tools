@@ -36,6 +36,9 @@
   /* Explorer */
   "explorer.autoReveal": false,
 
+  /* Extensions */
+  "extensions.showRecommendationsOnlyOnDemand": true,
+
   /* Files */
   "files.encoding": "utf8",
   "files.exclude": {
@@ -44,11 +47,12 @@
     "**/.git": true,
     "**/.hg": true,
     "**/.svn": true,
-    "**/**/*.pyc": true,
+    "**/*.pyc": true,
     "**/CVS": true,
-    "node_modules": true,
-    ".cache": true,
-    ".vscode": true
+    "**/.cache": true,
+    "**/.mypy_cache": true,
+    "**/.vscode": true,
+    "**/node_modules": true,
   },
   "files.hotExit": "onExitAndWindowClose",
   "files.insertFinalNewline": true,
@@ -62,13 +66,14 @@
 
   /* Git */
   "git.confirmSync": true,
-  "git.enabled": false,
+  "git.enabled": true,
 
   /* Search */
   "search.exclude": {
     "**/.git": true,
     "**/bower_components": true,
-    "**/node_modules": true
+    "**/node_modules": true,
+    "**/*.pyc": true
   },
   "search.smartCase": true,
 
@@ -103,13 +108,24 @@
   "workbench.startupEditor": "none",
   "workbench.statusBar.feedback.visible": false,
 
+  /* ZenMode */
+  "zenMode.hideActivityBar": false,
+  "zenMode.hideTabs": false,
+  "zenMode.restore": true,
+  
+  /* HTML-only */
+  "[html]": {
+    "editor.tabSize": 2,
+  },
+
   /* JSON-only */
   "[json]": {
-      "editor.tabSize": 2
+    "editor.tabSize": 2
   },
 
   /* Markdown-only */
   "[markdown]": {
+    "editor.insertSpaces": false,
     "editor.quickSuggestions": false,
     "editor.wordWrap": "on",
     "files.trimTrailingWhitespace": false,
@@ -122,48 +138,6 @@
   },
 
   /* Extensions */
-  /* Code Spell Check */
-  "cSpell.checkLimit": 4096,
-  "cSpell.diagnosticLevel": "Warning",
-  "cSpell.languageSettings": [
-    {
-      "languageId": "*",
-      "dictionaries": [
-        "companies",
-        "softwareTerms",
-        "misc"
-      ]
-    },
-    {
-      "languageId": "python",
-      "allowCompoundWords": true,
-      "dictionaries": [
-        "python"
-      ]
-    },
-    {
-      "languageId": "javascript",
-      "dictionaries": [
-        "typescript",
-        "node"
-      ]
-    },
-    {
-      "languageId": "javascriptreact",
-      "dictionaries": [
-        "typescript",
-        "node"
-      ]
-    },
-    {
-      "languageId": "scss",
-      "dictionaries": [
-        "fonts",
-        "css"
-      ]
-    }
-  ],
-
   /* Gitlens */
   "gitlens.advanced.messages": {
     "suppressCommitHasNoPreviousCommitWarning": false,
@@ -173,21 +147,18 @@
     "suppressLineUncommittedWarning": false,
     "suppressNoRepositoryWarning": false,
     "suppressResultsExplorerNotice": false,
+    "suppressShowKeyBindingsNotice": true,
     "suppressUpdateNotice": false,
     "suppressWelcomeNotice": true
   },
-
-  /* Python */
-  "python.autoComplete.preloadModules": ["numpy"],
-  "python.formatting.provider": "none",
-  "python.linting.maxNumberOfProblems": 255,
-  "python.linting.pylintArgs": ["--rcfile", "~/Documents/pylintrc"],
-  "python.pythonPath": "/usr/local/bin/python3",
+  "gitlens.currentLine.format": "${authorAgo} • ${id}",
 
   /* vsicons */
   "vsicons.dontShowNewVersionMessage": true,
   "vsicons.presets.angular": true,
   "vsicons.presets.jsOfficial": true,
   "vsicons.presets.jsonOfficial": true,
-  "vsicons.presets.tsOfficial": true
+  "vsicons.presets.tsOfficial": true,
+  "vsicons.projectDetection.disableDetect": true,
+  "gitlens.keymap": "chorded",
 }
