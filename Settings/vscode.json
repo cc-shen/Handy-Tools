@@ -10,12 +10,16 @@
   "editor.dragAndDrop": false,
   "editor.fontFamily": "Fira Code",
   "editor.fontLigatures": true,
-  "editor.fontSize": 12,
-  "editor.fontWeight": "500",
+  "editor.fontSize": 14,
+  "editor.fontWeight": "400",
+  "editor.hideCursorInOverviewRuler": true,
   "editor.insertSpaces": true,
-  "editor.minimap.renderCharacters": true,
+  "editor.minimap.enabled": true,
+  "editor.minimap.renderCharacters": false,
   "editor.minimap.showSlider": "always",
+  "editor.minimap.side": "left",
   "editor.multiCursorModifier": "ctrlCmd",
+  "editor.overviewRulerBorder": false,
   "editor.quickSuggestions": {
     "other": true,
     "comments": false,
@@ -25,18 +29,21 @@
   "editor.renderIndentGuides": true,
   "editor.renderLineHighlight": "all",
   "editor.renderWhitespace": "boundary",
+  "editor.scrollbar.horizontal": "hidden",
+  "editor.scrollbar.vertical": "hidden",
+  "editor.scrollBeyondLastColumn": 0,
   "editor.showFoldingControls": "always",
   "editor.stablePeek": true,
   "editor.tabCompletion": true,
-  "editor.tabSize": 4,
+  "editor.tabSize": 2,
   "editor.useTabStops": true,
   "editor.wordWrap": "on",
   "editor.wrappingIndent": "indent",
 
   /* Explorer */
-  "explorer.autoReveal": false,
+  "explorer.autoReveal": true,
 
-  /* Extensions */
+  /* Extension Sidebar */
   "extensions.showRecommendationsOnlyOnDemand": true,
 
   /* Files */
@@ -47,12 +54,11 @@
     "**/.git": true,
     "**/.hg": true,
     "**/.svn": true,
-    "**/*.pyc": true,
+    "**/**/*.pyc": true,
     "**/CVS": true,
-    "**/.cache": true,
-    "**/.mypy_cache": true,
-    "**/.vscode": true,
-    "**/node_modules": true,
+    "node_modules": true,
+    ".cache": true,
+    ".vscode": true
   },
   "files.hotExit": "onExitAndWindowClose",
   "files.insertFinalNewline": true,
@@ -68,14 +74,30 @@
   "git.confirmSync": true,
   "git.enabled": true,
 
+  /* HTML */
+  "html.suggest.angular1": false,
+
+  /* Javascript */
+  "javascript.preferences.quoteStyle": "single",
+
+  /* npm */
+  "npm.packageManager": "yarn",
+
+  /* SCSS */
+  "scss.lint.duplicateProperties": "warning",
+  "scss.lint.float": "warning",
+  "scss.lint.universalSelector": "warning",
+  "scss.lint.zeroUnits": "error",
+  "scss.lint.boxModel": "warning",
+
   /* Search */
   "search.exclude": {
     "**/.git": true,
     "**/bower_components": true,
-    "**/node_modules": true,
-    "**/*.pyc": true
+    "**/node_modules": true
   },
   "search.smartCase": true,
+  "searchrg.enable": true,
 
   /* Telemetry */
   "telemetry.enableCrashReporter": false,
@@ -85,7 +107,6 @@
   "terminal.external.osxExec": "iTerm.app",
   "terminal.integrated.cursorBlinking": true,
   "terminal.integrated.cursorStyle": "line",
-  "terminal.integrated.fontFamily": "Meslo LG M for Powerline",
   "terminal.integrated.lineHeight": 0,
   "terminal.integrated.scrollback": 65535,
 
@@ -97,14 +118,14 @@
   "window.zoomLevel": 0,
 
   /* Workbench */
-  "workbench.colorTheme": "Monokai Pro",
+  "workbench.colorTheme": "Ayu Light",
   "workbench.commandPalette.preserveInput": true,
   "workbench.editor.closeOnFileDelete": false,
   "workbench.editor.labelFormat": "medium",
   "workbench.editor.swipeToNavigate": true,
   "workbench.editor.tabSizing": "shrink",
   "workbench.fontAliasing": "auto",
-  "workbench.iconTheme": "vscode-icons",
+  "workbench.iconTheme": "ayu",
   "workbench.startupEditor": "none",
   "workbench.statusBar.feedback.visible": false,
 
@@ -112,20 +133,10 @@
   "zenMode.hideActivityBar": false,
   "zenMode.hideTabs": false,
   "zenMode.restore": true,
-  
-  /* HTML-only */
-  "[html]": {
-    "editor.tabSize": 2,
-  },
-
-  /* JSON-only */
-  "[json]": {
-    "editor.tabSize": 2
-  },
 
   /* Markdown-only */
   "[markdown]": {
-    "editor.insertSpaces": false,
+    "editor.tabSize": 4,
     "editor.quickSuggestions": false,
     "editor.wordWrap": "on",
     "files.trimTrailingWhitespace": false,
@@ -134,7 +145,6 @@
   /* Python-only */
   "[python]": {
     "editor.insertSpaces": true,
-    "editor.tabSize": 4
   },
 
   /* Extensions */
@@ -143,6 +153,7 @@
     "suppressCommitHasNoPreviousCommitWarning": false,
     "suppressCommitNotFoundWarning": false,
     "suppressFileNotUnderSourceControlWarning": false,
+    "suppressGitDisabledWarning": true,
     "suppressGitVersionWarning": false,
     "suppressLineUncommittedWarning": false,
     "suppressNoRepositoryWarning": false,
@@ -151,14 +162,39 @@
     "suppressUpdateNotice": false,
     "suppressWelcomeNotice": true
   },
-  "gitlens.currentLine.format": "${authorAgo} • ${id}",
-
-  /* vsicons */
-  "vsicons.dontShowNewVersionMessage": true,
-  "vsicons.presets.angular": true,
-  "vsicons.presets.jsOfficial": true,
-  "vsicons.presets.jsonOfficial": true,
-  "vsicons.presets.tsOfficial": true,
-  "vsicons.projectDetection.disableDetect": true,
+  "gitlens.codeLens.authors.enabled": false,
+  "gitlens.codeLens.recentChange.enabled": false,
+  "gitlens.codeLens.scopes": ["containers", "blocks"],
+  "gitlens.currentLine.format": "${authorAgoOrDate} • ${id}",
+  "gitlens.currentLine.scrollable": false,
+  "gitlens.historyExplorer.enabled": true,
   "gitlens.keymap": "chorded",
+  "gitlens.statusBar.reduceFlicker": true,
+
+  /* LaTeX */
+  "latex-workshop.chktex.enabled": false,
+  "latex-workshop.latex.clean.enabled": true,
+  "latex-workshop.latex.clean.fileTypes": [
+    "*.aux", "*.bbl", "*.blg", "*.idx", "*.ind", "*.lof",
+    "*.lot", "*.out", "*.toc", "*.acn", "*.acr", "*.alg",
+    "*.glg", "*.glo", "*.gls", "*.ist", "*.fls", "*.log",
+    "*.fdb_latexmk", "*.synctex.gz",
+  ],
+  "latex-workshop.view.pdf.viewer": "tab",
+
+  /* Live Share */
+  "liveshare.diagnosticLogging": false,
+  "liveshare.features": "stable",
+  "liveshare.guestApprovalRequired": true,
+
+  /* Path-Intellisense */
+  "path-intellisense.autoSlashAfterDirectory": true,
+
+  /* Python */
+  "python.autoComplete.preloadModules": [
+    "numpy"
+  ],
+  "python.formatting.provider": "none",
+  "python.linting.maxNumberOfProblems": 255,
+  "python.pythonPath": "/usr/local/bin/python3",
 }
